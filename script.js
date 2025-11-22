@@ -1,0 +1,326 @@
+// Portfolio Gallery Script
+// Data is loaded from data/artworks.json for easy editing
+// See HOW-TO-ADD-ARTWORK.md for instructions on adding new artwork
+
+let artData = {};
+
+// State management
+let currentCategory = 'illustrations';
+let currentYear = '2025';
+let currentLightboxIndex = 0;
+let currentFilteredItems = [];
+
+// Load artwork data from JSON file
+async function loadArtworkData() {
+    try {
+        const response = await fetch('data/artworks.json');
+        const data = await response.json();
+
+        // Transform data structure to match internal format
+        // This converts the JSON structure to what the rest of the code expects
+        Object.keys(data).forEach(category => {
+            artData[category] = data[category].map(artwork => {
+                // Build images array with main image first, then related images
+                const images = [];
+
+                // Add main image first
+                if (artwork.mainImage) {
+                    images.push({
+                        url: artwork.mainImage,
+                        label: "Final"
+                    });
+                }
+
+                // Add related images
+                if (artwork.relatedImages && artwork.relatedImages.length > 0) {
+                    images.push(...artwork.relatedImages);
+                }
+
+                return {
+                    ...artwork,
+                    image: artwork.mainImage, // For backward compatibility
+                    images: images.length > 0 ? images : undefined
+                };
+            });
+        });
+
+        return true;
+    } catch (error) {
+        console.error('Error loading artwork data:', error);
+        console.log('Using fallback data. Please make sure data/artworks.json exists.');
+
+        // Fallback to minimal data if JSON loading fails
+        artData = {
+            illustrations: [],
+            "graphic-design": [],
+            animation: []
+        };
+
+        return false;
+    }
+}
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', async () => {
+    // Load data first
+    await loadArtworkData();
+
+    // Then initialize everything else
+    initializeEventListeners();
+    renderGallery();
+});
+
+// Event Listeners
+function initializeEventListeners() {
+    // Category toggle listeners
+    const categoryRadios = document.querySelectorAll('input[name="category"]');
+    categoryRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            currentCategory = e.target.value;
+            renderGallery();
+        });
+    });
+
+    // Year filter listeners
+    const yearButtons = document.querySelectorAll('.year-btn');
+    yearButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            // Update active state
+            yearButtons.forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+
+            // Update current year and re-render
+            currentYear = e.target.dataset.year;
+            renderGallery();
+        });
+    });
+
+    // Lightbox listeners
+    const lightbox = document.getElementById('lightbox');
+    const lightboxClose = document.getElementById('lightbox-close');
+    const lightboxCloseLeft = document.getElementById('lightbox-close-left');
+    const lightboxPrev = document.getElementById('lightbox-prev');
+    const lightboxNext = document.getElementById('lightbox-next');
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightboxCloseLeft.addEventListener('click', closeLightbox);
+    lightboxPrev.addEventListener('click', () => navigateLightbox(-1));
+    lightboxNext.addEventListener('click', () => navigateLightbox(1));
+
+    // Close lightbox on background click (outside images)
+    lightbox.addEventListener('click', (e) => {
+        // Close if clicking on the lightbox background
+        if (e.target === lightbox || e.target.classList.contains('lightbox-scroll-container')) {
+            closeLightbox();
+        }
+    });
+
+    // Keyboard navigation for lightbox
+    document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+
+        if (e.key === 'Escape') {
+            closeLightbox();
+        } else if (e.key === 'ArrowLeft') {
+            navigateLightbox(-1);
+        } else if (e.key === 'ArrowRight') {
+            navigateLightbox(1);
+        }
+    });
+}
+
+// Render the gallery based on current filters
+function renderGallery() {
+    const gallery = document.getElementById('gallery');
+
+    // Add loading state
+    gallery.classList.add('loading');
+
+    // Small delay for smooth transition
+    setTimeout(() => {
+        // Get filtered items
+        const categoryItems = artData[currentCategory] || [];
+        currentFilteredItems = categoryItems.filter(item => item.year === currentYear);
+
+        // Clear gallery
+        gallery.innerHTML = '';
+
+        // If no items, show message
+        if (currentFilteredItems.length === 0) {
+            gallery.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: var(--text-secondary);">
+                    <p style="font-size: 1.2rem;">No items found for this period</p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">Add artwork to data/artworks.json to see it here!</p>
+                </div>
+            `;
+            gallery.classList.remove('loading');
+            return;
+        }
+
+        // Create gallery items
+        currentFilteredItems.forEach((item, index) => {
+            const galleryItem = createGalleryItem(item, index);
+            gallery.appendChild(galleryItem);
+        });
+
+        gallery.classList.remove('loading');
+    }, 150);
+}
+
+// Create a single gallery item
+function createGalleryItem(item, index) {
+    const div = document.createElement('div');
+    div.className = 'gallery-item';
+    div.innerHTML = `
+        <img src="${item.image}" alt="${item.title}" class="gallery-item-image">
+        <div class="gallery-item-info">
+            <h3 class="gallery-item-title">${item.title}</h3>
+            <p class="gallery-item-description">${item.description}</p>
+        </div>
+    `;
+
+    // Add click listener to open lightbox
+    div.addEventListener('click', () => openLightbox(index));
+
+    return div;
+}
+
+// Enhanced Lightbox functions
+function openLightbox(index) {
+    currentLightboxIndex = index;
+    const item = currentFilteredItems[index];
+
+    populateLightbox(item);
+
+    const lightbox = document.getElementById('lightbox');
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // Scroll to top of modal
+    const scrollContainer = document.querySelector('.lightbox-scroll-container');
+    if (scrollContainer) {
+        scrollContainer.scrollTop = 0;
+    }
+}
+
+function populateLightbox(item) {
+    // Main image
+    const lightboxImg = document.getElementById('lightbox-img');
+    lightboxImg.src = item.image;
+    lightboxImg.alt = item.title;
+
+    // Title and description
+    document.getElementById('lightbox-title').textContent = item.title;
+    document.getElementById('lightbox-full-description').textContent =
+        item.fullDescription || item.description;
+
+    // Metadata
+    populateMetadata(item);
+
+    // Tags
+    populateTags(item.tags);
+
+    // Related images
+    populateRelatedImages(item.images);
+}
+
+function populateMetadata(item) {
+    // Software
+    const softwareSection = document.getElementById('software-section');
+    const softwareValue = document.getElementById('lightbox-software');
+    if (item.software && item.software.length > 0) {
+        softwareValue.textContent = item.software.join(', ');
+        softwareSection.style.display = 'flex';
+    } else {
+        softwareSection.style.display = 'none';
+    }
+
+    // Time spent
+    const timeSection = document.getElementById('time-section');
+    const timeValue = document.getElementById('lightbox-time');
+    if (item.timeSpent) {
+        timeValue.textContent = item.timeSpent;
+        timeSection.style.display = 'flex';
+    } else {
+        timeSection.style.display = 'none';
+    }
+
+    // Dimensions
+    const dimensionsSection = document.getElementById('dimensions-section');
+    const dimensionsValue = document.getElementById('lightbox-dimensions');
+    if (item.dimensions) {
+        dimensionsValue.textContent = item.dimensions;
+        dimensionsSection.style.display = 'flex';
+    } else {
+        dimensionsSection.style.display = 'none';
+    }
+}
+
+function populateTags(tags) {
+    const tagsContainer = document.getElementById('lightbox-tags');
+    tagsContainer.innerHTML = '';
+
+    if (tags && tags.length > 0) {
+        tags.forEach(tag => {
+            const tagEl = document.createElement('span');
+            tagEl.className = 'tag';
+            tagEl.textContent = tag;
+            tagsContainer.appendChild(tagEl);
+        });
+        tagsContainer.style.display = 'flex';
+    } else {
+        tagsContainer.style.display = 'none';
+    }
+}
+
+function populateRelatedImages(images) {
+    const relatedContainer = document.getElementById('related-images');
+    relatedContainer.innerHTML = '';
+
+    if (images && images.length > 1) {
+        // Show all images except the first (which is the main image)
+        images.slice(1).forEach((img) => {
+            const relatedItem = document.createElement('div');
+            relatedItem.className = 'related-image-item';
+            relatedItem.innerHTML = `
+                <img src="${img.url}" alt="${img.label}">
+            `;
+
+            relatedContainer.appendChild(relatedItem);
+        });
+    }
+}
+
+function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    lightbox.classList.remove('active');
+    document.body.style.overflow = ''; // Restore scrolling
+}
+
+function navigateLightbox(direction) {
+    currentLightboxIndex += direction;
+
+    // Wrap around
+    if (currentLightboxIndex < 0) {
+        currentLightboxIndex = currentFilteredItems.length - 1;
+    } else if (currentLightboxIndex >= currentFilteredItems.length) {
+        currentLightboxIndex = 0;
+    }
+
+    const item = currentFilteredItems[currentLightboxIndex];
+
+    // Fade out
+    const content = document.querySelector('.lightbox-content');
+    content.style.opacity = '0';
+
+    setTimeout(() => {
+        populateLightbox(item);
+        content.style.opacity = '1';
+
+        // Scroll to top
+        const scrollContainer = document.querySelector('.lightbox-scroll-container');
+        if (scrollContainer) {
+            scrollContainer.scrollTop = 0;
+        }
+    }, 150);
+}

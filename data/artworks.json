@@ -1,0 +1,80 @@
+{
+  "illustrations": [
+    {
+      "id": 1,
+      "title": "Hinata Final",
+      "description": "Character illustration",
+      "fullDescription": "A detailed character illustration featuring Hinata in a dynamic pose. This piece explores character personality through expressive linework and vibrant colors, capturing the energy and determination of the character.",
+      "year": "2025",
+      "mainImage": "images/illustrations/bianca-banu-hinatafin3.webp",
+      "relatedImages": [
+        {
+          "url": "images/illustrations/bianca-banu-kagehinarunning.webp",
+          "label": "Sketch"
+        },
+        {
+          "url": "images/illustrations/bianca-banu-hinatafin3.webp",
+          "label": "Progress"
+        }
+      ],
+      "software": ["Clip Studio Paint", "Photoshop"],
+      "timeSpent": "12 hours",
+      "dimensions": "3000 x 4000 px",
+      "tags": ["character design", "digital art", "fan art"]
+    },
+    {
+      "id": 2,
+      "title": "Kagehina Running",
+      "description": "Dynamic character artwork",
+      "fullDescription": "An action-packed illustration showing dynamic movement and interaction between characters. This piece focuses on capturing motion and energy through composition and flowing lines.",
+      "year": "2025",
+      "mainImage": "images/illustrations/bianca-banu-kagehinarunning.webp",
+      "relatedImages": [
+        {
+          "url": "images/illustrations/bianca-banu-hinatafin3.webp",
+          "label": "Rough Sketch"
+        },
+        {
+          "url": "images/illustrations/bianca-banu-kagehinarunning.webp",
+          "label": "Line Art"
+        }
+      ],
+      "software": ["Procreate", "Photoshop"],
+      "timeSpent": "8 hours",
+      "dimensions": "2500 x 3500 px",
+      "tags": ["action", "character art", "digital painting"]
+    }
+  ],
+
+  "graphic-design": [
+    {
+      "id": 3,
+      "title": "Brand Identity Project",
+      "description": "Complete brand identity design",
+      "fullDescription": "A comprehensive brand identity system including logo, color palette, and visual guidelines.",
+      "year": "2025",
+      "mainImage": "images/graphic-design/bianca-banu-hinatafin3.webp",
+      "relatedImages": [],
+      "software": ["Illustrator", "Photoshop"],
+      "timeSpent": "20 hours",
+      "dimensions": "Various",
+      "tags": ["branding", "logo design", "identity"]
+    }
+  ],
+
+  "animation": [
+    {
+      "id": 4,
+      "title": "Motion Graphics",
+      "description": "Animated logo sequence",
+      "fullDescription": "A smooth animated logo reveal with dynamic transitions and effects.",
+      "year": "2025",
+      "mainImage": "images/animation/bianca-banu-hinatafin3.webp",
+      "relatedImages": [],
+      "software": ["After Effects"],
+      "timeSpent": "15 hours",
+      "dimensions": "1920 x 1080 px",
+      "tags": ["motion graphics", "logo animation", "video"]
+    }
+  ]
+}

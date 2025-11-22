@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About & Contact - Bianca Banu</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="nav">
+            <a href="index.html" class="nav-link">Portfolio</a>
+            <a href="about.html" class="nav-link active">About & Contact</a>
+            <a href="commissions.html" class="nav-link">Commissions</a>
+        </nav>
+
+        <!-- Header -->
+        <header class="page-header">
+            <h1 class="page-title">About & Contact</h1>
+        </header>
+
+        <!-- About Section -->
+        <section class="about-section">
+            <div class="about-grid">
+                <!-- Profile Image -->
+                <div class="about-image-container">
+                    <div class="about-image">
+                        <img src="images/illustrations/bianca-banu-hinatafin3.webp" alt="Bianca Banu">
+                    </div>
+                </div>
+
+                <!-- About Content -->
+                <div class="about-content">
+                    <h2 class="section-title">About Me</h2>
+                    <p class="about-text">
+                        Hi, I'm Bianca Banu, a digital artist specializing in illustrations, graphic design, and animation.
+                        I'm passionate about creating vibrant characters and bringing stories to life through art.
+                    </p>
+                    <p class="about-text">
+                        With a focus on character design and dynamic compositions, I love exploring different styles
+                        and techniques to create unique and engaging artwork. Whether it's illustrations for personal
+                        projects or commissioned work, I put my heart into every piece.
+                    </p>
+                    <p class="about-text">
+                        When I'm not drawing, you can find me exploring new animation techniques, studying character
+                        movement, or getting inspired by other artists in the community.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Links Section -->
+        <section class="social-section">
+            <h2 class="section-title">Connect With Me</h2>
+            <div class="social-grid">
+                <a href="#" class="social-card" target="_blank" rel="noopener noreferrer">
+                    <div class="social-icon">📷</div>
+                    <h3>Instagram</h3>
+                    <p>@biancabanu</p>
+                </a>
+                <a href="#" class="social-card" target="_blank" rel="noopener noreferrer">
+                    <div class="social-icon">🎨</div>
+                    <h3>ArtStation</h3>
+                    <p>artstation.com/biancabanu</p>
+                </a>
+                <a href="#" class="social-card" target="_blank" rel="noopener noreferrer">
+                    <div class="social-icon">🐦</div>
+                    <h3>Twitter/X</h3>
+                    <p>@biancabanu</p>
+                </a>
+                <a href="#" class="social-card" target="_blank" rel="noopener noreferrer">
+                    <div class="social-icon">💼</div>
+                    <h3>LinkedIn</h3>
+                    <p>linkedin.com/in/biancabanu</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Email Me</h3>
+                    <p class="contact-text">
+                        For general inquiries, collaborations, or just to say hi, feel free to reach out!
+                    </p>
+                    <a href="mailto:hello@biancabanu.com" class="contact-email">hello@biancabanu.com</a>
+                    <p class="contact-subtext">I typically respond within 1-2 business days</p>
+                </div>
+
+                <div class="contact-form-container">
+                    <form class="contact-form" id="contact-form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <div class="form-status" id="form-status"></div>
+                        <button type="submit" class="submit-btn" id="submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="contact.js"></script>
+</body>
+</html>
