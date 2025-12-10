@@ -3,78 +3,488 @@
     {
       "id": 1,
       "title": "Hinata Final",
-      "description": "Character illustration",
+      "description": "Dynamic character illustration",
       "fullDescription": "A detailed character illustration featuring Hinata in a dynamic pose. This piece explores character personality through expressive linework and vibrant colors, capturing the energy and determination of the character.",
       "year": "2025",
-      "mainImage": "images/illustrations/bianca-banu-hinatafin3.webp",
-      "relatedImages": [
-        {
-          "url": "images/illustrations/bianca-banu-kagehinarunning.webp",
-          "label": "Sketch"
-        },
-        {
-          "url": "images/illustrations/bianca-banu-hinatafin3.webp",
-          "label": "Progress"
-        }
-      ],
-      "software": ["Clip Studio Paint", "Photoshop"],
-      "timeSpent": "12 hours",
-      "dimensions": "3000 x 4000 px",
-      "tags": ["character design", "digital art", "fan art"]
+      "mainImage": "images/illustrations/hinatafin3.png",
+      "software": ["Clip Studio Paint"]
     },
     {
       "id": 2,
       "title": "Kagehina Running",
-      "description": "Dynamic character artwork",
+      "description": "Action-packed character artwork",
       "fullDescription": "An action-packed illustration showing dynamic movement and interaction between characters. This piece focuses on capturing motion and energy through composition and flowing lines.",
       "year": "2025",
-      "mainImage": "images/illustrations/bianca-banu-kagehinarunning.webp",
-      "relatedImages": [
-        {
-          "url": "images/illustrations/bianca-banu-hinatafin3.webp",
-          "label": "Rough Sketch"
-        },
-        {
-          "url": "images/illustrations/bianca-banu-kagehinarunning.webp",
-          "label": "Line Art"
-        }
-      ],
-      "software": ["Procreate", "Photoshop"],
-      "timeSpent": "8 hours",
-      "dimensions": "2500 x 3500 px",
-      "tags": ["action", "character art", "digital painting"]
+      "mainImage": "images/illustrations/kagehinarunning.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 3,
+      "title": "Jinshi",
+      "description": "Character portrait illustration",
+      "fullDescription": "A detailed character portrait with focus on facial features and expression.",
+      "year": "2025",
+      "mainImage": "images/illustrations/jinshifin.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 4,
+      "title": "Paschia",
+      "description": "Fantasy character design",
+      "fullDescription": "A fantasy character illustration with intricate costume design and magical elements.",
+      "year": "2025",
+      "mainImage": "images/illustrations/pxasgachiafinsig.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 5,
+      "title": "Spicy Hoji",
+      "description": "Character illustration with warm tones",
+      "fullDescription": "Character artwork featuring warm color palette and expressive design.",
+      "year": "2025",
+      "mainImage": "images/illustrations/spicyhojfinforartstation.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 6,
+      "title": "Korai Hinata",
+      "description": "Sports character artwork",
+      "fullDescription": "Dynamic sports-themed character illustration with energy and movement.",
+      "year": "2025",
+      "mainImage": "images/illustrations/koraihinatafin2.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 7,
+      "title": "Meilin",
+      "description": "Character portrait",
+      "fullDescription": "Elegant character portrait with detailed costume design.",
+      "year": "2025",
+      "mainImage": "images/illustrations/meilin.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 8,
+      "title": "Yoshki x Hikaru",
+      "description": "Character interaction artwork",
+      "fullDescription": "Character illustration featuring interaction between two characters.",
+      "year": "2025",
+      "mainImage": "images/illustrations/yoshkixhikarufin_IGedited.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 9,
+      "title": "Kageyama Edit",
+      "description": "Character artwork",
+      "fullDescription": "Sports character illustration with dynamic composition.",
+      "year": "2025",
+      "mainImage": "images/illustrations/kageyama edit2media.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 10,
+      "title": "Wonder September",
+      "description": "Fantasy character design",
+      "fullDescription": "Fantasy-themed character illustration with magical elements.",
+      "year": "2025",
+      "mainImage": "images/illustrations/wonderseptember01.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 11,
+      "title": "Wonder Temporion",
+      "description": "Fantasy character artwork",
+      "fullDescription": "Fantasy character design with elaborate costume details.",
+      "year": "2025",
+      "mainImage": "images/illustrations/wonder2 temporion7fin.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 12,
+      "title": "Lindormi",
+      "description": "Fantasy character illustration",
+      "fullDescription": "Fantasy-themed character with detailed costume and magical elements.",
+      "year": "2025",
+      "mainImage": "images/illustrations/lindormifinlowres.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 13,
+      "title": "Kyb",
+      "description": "Character portrait",
+      "fullDescription": "Character illustration with focus on personality and expression.",
+      "year": "2025",
+      "mainImage": "images/illustrations/kybfin2.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 14,
+      "title": "Nelf",
+      "description": "Fantasy character design",
+      "fullDescription": "Fantasy character illustration with nature-inspired elements.",
+      "year": "2025",
+      "mainImage": "images/illustrations/nelfdmedia.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 15,
+      "title": "Rogue",
+      "description": "Character artwork",
+      "fullDescription": "Character design with detailed costume and accessories.",
+      "year": "2025",
+      "mainImage": "images/illustrations/roguezfd.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 16,
+      "title": "Plunder Lord",
+      "description": "Character design",
+      "fullDescription": "Character illustration with bold design and strong personality.",
+      "year": "2025",
+      "mainImage": "images/illustrations/plunderlord6.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 17,
+      "title": "Haikyuu Sign",
+      "description": "Fan art illustration",
+      "fullDescription": "Fan art featuring characters from Haikyuu series.",
+      "year": "2025",
+      "mainImage": "images/illustrations/haikyuuusign.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 18,
+      "title": "Cover Piece",
+      "description": "Illustration artwork",
+      "fullDescription": "Cover illustration with detailed composition and character design.",
+      "year": "2025",
+      "mainImage": "images/illustrations/cover piecesk12.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 19,
+      "title": "Demonster Art",
+      "description": "Character illustration",
+      "fullDescription": "Character artwork with unique design elements.",
+      "year": "2025",
+      "mainImage": "images/illustrations/demonsterartfinx.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 20,
+      "title": "Bored Pixel",
+      "description": "Digital character art",
+      "fullDescription": "Digital character illustration with modern aesthetic.",
+      "year": "2025",
+      "mainImage": "images/illustrations/boredpixlet10media.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 21,
+      "title": "Illustration 4",
+      "description": "Character artwork",
+      "fullDescription": "Character illustration with atmospheric lighting.",
+      "year": "2025",
+      "mainImage": "images/illustrations/Illustration4.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 22,
+      "title": "Illustration 4 Lamps",
+      "description": "Character with lighting",
+      "fullDescription": "Character illustration exploring lighting and atmosphere.",
+      "year": "2025",
+      "mainImage": "images/illustrations/Illustration4lamps.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 23,
+      "title": "Illustration X3CF",
+      "description": "Character design",
+      "fullDescription": "Character illustration with detailed costume design.",
+      "year": "2025",
+      "mainImage": "images/illustrations/Illustrationx3cf.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 24,
+      "title": "REVx9",
+      "description": "Character artwork",
+      "fullDescription": "Character illustration with dynamic pose and composition.",
+      "year": "2025",
+      "mainImage": "images/illustrations/REVx9.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 25,
+      "title": "ILL DDQ",
+      "description": "Digital artwork",
+      "fullDescription": "Digital illustration with unique style and composition.",
+      "year": "2025",
+      "mainImage": "images/illustrations/illddqartstation.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 26,
+      "title": "THS Final",
+      "description": "Character illustration",
+      "fullDescription": "Character artwork with polished final details.",
+      "year": "2025",
+      "mainImage": "images/illustrations/thsfinal.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 27,
+      "title": "Character Study",
+      "description": "Character portrait",
+      "fullDescription": "Character study exploring expression and personality.",
+      "year": "2025",
+      "mainImage": "images/illustrations/IMG20251130124644.png",
+      "software": ["Clip Studio Paint"]
     }
   ],
 
   "graphic-design": [
     {
-      "id": 3,
-      "title": "Brand Identity Project",
+      "id": 101,
+      "title": "Grozav Studio Logo",
       "description": "Complete brand identity design",
-      "fullDescription": "A comprehensive brand identity system including logo, color palette, and visual guidelines.",
+      "fullDescription": "A comprehensive logo design for Grozav Studio featuring modern aesthetics and versatile applications. The design includes multiple variations and presentations.",
       "year": "2025",
-      "mainImage": "images/graphic-design/bianca-banu-hinatafin3.webp",
-      "relatedImages": [],
-      "software": ["Illustrator", "Photoshop"],
-      "timeSpent": "20 hours",
-      "dimensions": "Various",
-      "tags": ["branding", "logo design", "identity"]
+      "mainImage": "images/graphic-design/Grozav Studio Logo/1.png",
+      "relatedImages": [
+        {
+          "url": "images/graphic-design/Grozav Studio Logo/2.png",
+          "label": "Logo Variation 2"
+        },
+        {
+          "url": "images/graphic-design/Grozav Studio Logo/3.png",
+          "label": "Logo Variation 3"
+        },
+        {
+          "url": "images/graphic-design/Grozav Studio Logo/4.png",
+          "label": "Logo Variation 4"
+        },
+        {
+          "url": "images/graphic-design/Grozav Studio Logo/5.png",
+          "label": "Logo Variation 5"
+        }
+      ],
+      "software": ["Illustrator", "Photoshop"]
+    },
+    {
+      "id": 102,
+      "title": "Z Axis Manga Logo",
+      "description": "Manga series logo design",
+      "fullDescription": "Logo design for the Z Axis manga series. The logo captures the essence of the manga with bold typography and dynamic design elements that reflect the story's themes.",
+      "year": "2025",
+      "mainImage": "images/graphic-design/Z Axis Manga Logo/1.png",
+      "relatedImages": [
+        {
+          "url": "images/graphic-design/Z Axis Manga Logo/2.png",
+          "label": "Logo Variation 2"
+        },
+        {
+          "url": "images/graphic-design/Z Axis Manga Logo/3.jpg",
+          "label": "Logo Application 1"
+        },
+        {
+          "url": "images/graphic-design/Z Axis Manga Logo/4.jpg",
+          "label": "Logo Application 2"
+        }
+      ],
+      "software": ["Illustrator", "Photoshop"]
     }
   ],
 
   "animation": [
     {
-      "id": 4,
-      "title": "Motion Graphics",
-      "description": "Animated logo sequence",
-      "fullDescription": "A smooth animated logo reveal with dynamic transitions and effects.",
+      "id": 201,
+      "title": "Animation Project 1",
+      "description": "Character animation series",
+      "fullDescription": "A dynamic animated sequence featuring character movement and transitions with multiple variations exploring different animation techniques.",
       "year": "2025",
-      "mainImage": "images/animation/bianca-banu-hinatafin3.webp",
-      "relatedImages": [],
-      "software": ["After Effects"],
-      "timeSpent": "15 hours",
-      "dimensions": "1920 x 1080 px",
-      "tags": ["motion graphics", "logo animation", "video"]
+      "mainImage": "images/animations/project1/main.gif",
+      "relatedImages": [
+        {
+          "url": "images/animations/project1/second.gif",
+          "label": "Variation 2"
+        }
+      ],
+      "software": ["After Effects", "Clip Studio Paint"]
+    },
+    {
+      "id": 202,
+      "title": "Animation Project 2",
+      "description": "Motion graphics animation",
+      "fullDescription": "Motion graphics animation with dynamic transitions and smooth character movements.",
+      "year": "2025",
+      "mainImage": "images/animations/project2/p2.gif",
+      "software": ["After Effects", "Clip Studio Paint"]
+    }
+  ],
+
+  "concept-art": [
+    {
+      "id": 301,
+      "title": "House Interior",
+      "description": "Interior environment design",
+      "fullDescription": "Detailed interior environment concept showcasing architectural design and atmospheric lighting for a residential space.",
+      "year": "2025",
+      "mainImage": "images/environment-&-character-design/house interior.png",
+      "software": ["Photoshop", "Clip Studio Paint"]
+    },
+    {
+      "id": 302,
+      "title": "Demonsterf",
+      "description": "Character concept design",
+      "fullDescription": "Character concept art exploring unique design elements and personality traits.",
+      "year": "2025",
+      "mainImage": "images/environment-&-character-design/demonsterf.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 303,
+      "title": "Kao2",
+      "description": "Character design exploration",
+      "fullDescription": "Character design concept with focus on costume and visual storytelling.",
+      "year": "2025",
+      "mainImage": "images/environment-&-character-design/kao2.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 304,
+      "title": "Scary Girl with a Bat",
+      "description": "Character concept art",
+      "fullDescription": "Character design featuring a mysterious figure with dramatic lighting and composition.",
+      "year": "2025",
+      "mainImage": "images/environment-&-character-design/scarygirlwithabat.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 305,
+      "title": "THSX",
+      "description": "Character design",
+      "fullDescription": "Character concept exploring unique design aesthetics and personality.",
+      "year": "2025",
+      "mainImage": "images/environment-&-character-design/thsx.png",
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 306,
+      "title": "04",
+      "description": "Environment concept",
+      "fullDescription": "Environmental concept art with atmospheric design elements.",
+      "year": "2025",
+      "mainImage": "images/environment-&-character-design/04.png",
+      "software": ["Photoshop"]
+    }
+  ],
+
+  "comics": [
+    {
+      "id": 401,
+      "title": "Z Axis - Chapter 0",
+      "description": "Chapter 0 of Z Axis manga series",
+      "fullDescription": "The beginning of the Z Axis saga. This introductory chapter sets up the world, characters, and the adventure that awaits. Follow the story through 18 pages of sequential art.",
+      "year": "2025",
+      "mainImage": "images/z axis-comic-series/Cover/z_axiscover.png",
+      "isComic": true,
+      "images": [
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_1.png", "label": "Page 1" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_2.jpg", "label": "Page 2" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_3.jpg", "label": "Page 3" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_4.png", "label": "Page 4" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_5.jpg", "label": "Page 5" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_6.jpg", "label": "Page 6" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_7.jpg", "label": "Page 7" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_8.jpg", "label": "Page 8" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_9.jpg", "label": "Page 9" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_10.jpg", "label": "Page 10" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_11.jpg", "label": "Page 11" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_12.jpg", "label": "Page 12" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_13.jpg", "label": "Page 13" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_14.jpg", "label": "Page 14" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_15.jpg", "label": "Page 15" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_16.jpg", "label": "Page 16" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_17.jpg", "label": "Page 17" },
+        { "url": "images/z axis-comic-series/Chapter 0 Pages/ch0_18.jpg", "label": "Page 18" }
+      ],
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 402,
+      "title": "Z Axis - Chapter 1",
+      "description": "Chapter 1 of Z Axis manga series",
+      "fullDescription": "The story continues in Chapter 1, where our heroes face new challenges and discoveries. Dive into 23 pages of sequential storytelling with dynamic action and character development.",
+      "year": "2025",
+      "mainImage": "images/z axis-comic-series/Cover/lumioncovervol01_02mark.png",
+      "isComic": true,
+      "images": [
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_1.png", "label": "Page 1" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_2.jpg", "label": "Page 2" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_3.jpg", "label": "Page 3" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_4.jpg", "label": "Page 4" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_5.jpg", "label": "Page 5" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_6.jpg", "label": "Page 6" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_7.jpg", "label": "Page 7" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_8.jpg", "label": "Page 8" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_9.jpg", "label": "Page 9" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_10.jpg", "label": "Page 10" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_11.jpg", "label": "Page 11" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_12.jpg", "label": "Page 12" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_13.jpg", "label": "Page 13" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_14.jpg", "label": "Page 14" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_15.jpg", "label": "Page 15" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_16.jpg", "label": "Page 16" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_17.jpg", "label": "Page 17" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_18.jpg", "label": "Page 18" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_19.jpg", "label": "Page 19" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_20.jpg", "label": "Page 20" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_21.jpg", "label": "Page 21" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_22.jpg", "label": "Page 22" },
+        { "url": "images/z axis-comic-series/Chapter 1 Pages/ch1_23.jpg", "label": "Page 23" }
+      ],
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 403,
+      "title": "Z Axis - Character Exploration",
+      "description": "Character design sheets for Z Axis",
+      "fullDescription": "Comprehensive character exploration sheets for the Z Axis series, featuring character designs, turnarounds, and visual development.",
+      "year": "2025",
+      "mainImage": "images/z axis-comic-series/Characters Exploration-Sheet/Z ch sheet.jpg",
+      "relatedImages": [
+        {
+          "url": "images/z axis-comic-series/Characters Exploration-Sheet/maou.jpg",
+          "label": "Maou Character Sheet"
+        }
+      ],
+      "software": ["Clip Studio Paint"]
+    },
+    {
+      "id": 404,
+      "title": "Z Axis - Cover Artwork",
+      "description": "Cover illustrations for Z Axis series",
+      "fullDescription": "Collection of cover artwork for the Z Axis manga series, featuring key characters and dramatic compositions.",
+      "year": "2025",
+      "mainImage": "images/z axis-comic-series/Cover/z_axiscover.png",
+      "relatedImages": [
+        {
+          "url": "images/z axis-comic-series/Cover/lumioncovervol01_02mark.png",
+          "label": "Volume 1 Cover"
+        },
+        {
+          "url": "images/z axis-comic-series/Cover/lumioncovervol01bw.png",
+          "label": "Volume 1 Cover B&W"
+        },
+        {
+          "url": "images/z axis-comic-series/Cover/z_axiscoverfortapas.png",
+          "label": "Tapas Cover"
+        }
+      ],
+      "software": ["Clip Studio Paint", "Photoshop"]
     }
   ]
 }

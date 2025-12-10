@@ -19,9 +19,11 @@
         <header class="header">
             <h1 class="site-title">Bianca Banu Portfolio</h1>
 
-            <!-- Three-way Toggle Switch -->
+            <!-- Segmented Control -->
             <div class="toggle-container">
-                <div class="toggle-switch">
+                <div class="toggle-switch" id="toggle-switch">
+                    <div class="toggle-slider" id="toggle-slider"></div>
+
                     <input type="radio" id="illustrations" name="category" value="illustrations" checked>
                     <label for="illustrations" class="toggle-label">Illustrations</label>
 
@@ -31,7 +33,11 @@
                     <input type="radio" id="animation" name="category" value="animation">
                     <label for="animation" class="toggle-label">Animation</label>
 
-                    <div class="toggle-slider"></div>
+                    <input type="radio" id="comics" name="category" value="comics">
+                    <label for="comics" class="toggle-label">Comics</label>
+
+                    <input type="radio" id="concept-art" name="category" value="concept-art">
+                    <label for="concept-art" class="toggle-label">Concept Art</label>
                 </div>
             </div>
 
@@ -51,8 +57,8 @@
 
     <!-- Enhanced Lightbox Modal -->
     <div class="lightbox" id="lightbox">
-        <button class="lightbox-close lightbox-close-left" id="lightbox-close-left">&times;</button>
-        <button class="lightbox-close lightbox-close-right" id="lightbox-close">&times;</button>
+        <button class="lightbox-close lightbox-close-left" id="lightbox-close-left"></button>
+        <button class="lightbox-close lightbox-close-right" id="lightbox-close"></button>
         <button class="lightbox-nav lightbox-prev" id="lightbox-prev">&#8249;</button>
         <button class="lightbox-nav lightbox-next" id="lightbox-next">&#8250;</button>
 
@@ -70,6 +76,7 @@
 
                 <!-- Info Panel at Bottom -->
                 <div class="lightbox-info-panel">
+                    <div class="lightbox-software-pill" id="lightbox-software-pill"></div>
                     <h2 id="lightbox-title"></h2>
                     <p id="lightbox-full-description"></p>
 
@@ -91,6 +98,25 @@
                     <div class="lightbox-tags" id="lightbox-tags"></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Comic Reader Modal -->
+    <div class="comic-reader" id="comic-reader">
+        <div class="comic-reader-header" id="comic-reader-header">
+            <button class="comic-reader-close" id="comic-reader-close"></button>
+            <div class="comic-reader-title-container">
+                <h2 id="comic-reader-title"></h2>
+                <span class="comic-reader-page-counter" id="comic-page-counter"></span>
+            </div>
+        </div>
+        <button class="comic-scroll-to-top" id="comic-scroll-to-top">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 4L10 16M10 4L6 8M10 4L14 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        <div class="comic-reader-content" id="comic-reader-content">
+            <!-- Comic pages will be inserted here -->
         </div>
     </div>
 

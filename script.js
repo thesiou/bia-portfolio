@@ -20,6 +20,14 @@ async function loadArtworkData() {
         // This converts the JSON structure to what the rest of the code expects
         Object.keys(data).forEach(category => {
             artData[category] = data[category].map(artwork => {
+                // For comics, preserve the existing images array
+                if (artwork.isComic && artwork.images) {
+                    return {
+                        ...artwork,
+                        image: artwork.mainImage // For backward compatibility
+                    };
+                }
+
                 // Build images array with main image first, then related images
                 const images = [];
 
@@ -53,7 +61,9 @@ async function loadArtworkData() {
         artData = {
             illustrations: [],
             "graphic-design": [],
-            animation: []
+            animation: [],
+            comics: [],
+            "concept-art": []
         };
 
         return false;
@@ -70,13 +80,51 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderGallery();
 });
 
+// Segmented Control Functions
+function initializeSegmentedControl() {
+    const checkedRadio = document.querySelector('input[name="category"]:checked');
+    if (checkedRadio) {
+        updateSegmentedControlSlider(checkedRadio);
+    }
+
+    // Update slider on window resize
+    window.addEventListener('resize', () => {
+        const checkedRadio = document.querySelector('input[name="category"]:checked');
+        if (checkedRadio) {
+            updateSegmentedControlSlider(checkedRadio);
+        }
+    });
+}
+
+function updateSegmentedControlSlider(radioElement) {
+    const slider = document.getElementById('toggle-slider');
+    const label = document.querySelector(`label[for="${radioElement.id}"]`);
+
+    if (!slider || !label) return;
+
+    // Get label dimensions and position
+    const labelRect = label.getBoundingClientRect();
+    const containerRect = label.parentElement.getBoundingClientRect();
+
+    // Calculate position relative to container
+    const left = labelRect.left - containerRect.left;
+
+    // Set slider width and position
+    slider.style.width = `${labelRect.width}px`;
+    slider.style.transform = `translateX(${left}px)`;
+}
+
 // Event Listeners
 function initializeEventListeners() {
+    // Initialize segmented control slider
+    initializeSegmentedControl();
+
     // Category toggle listeners
     const categoryRadios = document.querySelectorAll('input[name="category"]');
     categoryRadios.forEach(radio => {
         radio.addEventListener('change', (e) => {
             currentCategory = e.target.value;
+            updateSegmentedControlSlider(e.target);
             renderGallery();
         });
     });
@@ -117,16 +165,27 @@ function initializeEventListeners() {
 
     // Keyboard navigation for lightbox
     document.addEventListener('keydown', (e) => {
-        if (!lightbox.classList.contains('active')) return;
+        const lightboxActive = lightbox.classList.contains('active');
+        const comicReaderActive = document.getElementById('comic-reader').classList.contains('active');
 
-        if (e.key === 'Escape') {
-            closeLightbox();
-        } else if (e.key === 'ArrowLeft') {
-            navigateLightbox(-1);
-        } else if (e.key === 'ArrowRight') {
-            navigateLightbox(1);
+        if (lightboxActive) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            } else if (e.key === 'ArrowLeft') {
+                navigateLightbox(-1);
+            } else if (e.key === 'ArrowRight') {
+                navigateLightbox(1);
+            }
+        }
+
+        if (comicReaderActive && e.key === 'Escape') {
+            closeComicReader();
         }
     });
+
+    // Comic reader listeners
+    const comicReaderClose = document.getElementById('comic-reader-close');
+    comicReaderClose.addEventListener('click', closeComicReader);
 }
 
 // Render the gallery based on current filters
@@ -179,8 +238,12 @@ function createGalleryItem(item, index) {
         </div>
     `;
 
-    // Add click listener to open lightbox
-    div.addEventListener('click', () => openLightbox(index));
+    // Add click listener - open comic reader for comics, lightbox for others
+    if (item.isComic) {
+        div.addEventListener('click', () => openComicReader(item));
+    } else {
+        div.addEventListener('click', () => openLightbox(index));
+    }
 
     return div;
 }
@@ -225,52 +288,33 @@ function populateLightbox(item) {
 }
 
 function populateMetadata(item) {
-    // Software
-    const softwareSection = document.getElementById('software-section');
-    const softwareValue = document.getElementById('lightbox-software');
+    // Software pills - top right
+    const softwarePillContainer = document.getElementById('lightbox-software-pill');
+    softwarePillContainer.innerHTML = '';
+
     if (item.software && item.software.length > 0) {
-        softwareValue.textContent = item.software.join(', ');
-        softwareSection.style.display = 'flex';
-    } else {
-        softwareSection.style.display = 'none';
+        item.software.forEach(software => {
+            const badge = document.createElement('span');
+            badge.className = 'software-badge';
+            badge.textContent = software;
+            softwarePillContainer.appendChild(badge);
+        });
     }
 
-    // Time spent
+    // Hide old metadata sections
+    const softwareSection = document.getElementById('software-section');
     const timeSection = document.getElementById('time-section');
-    const timeValue = document.getElementById('lightbox-time');
-    if (item.timeSpent) {
-        timeValue.textContent = item.timeSpent;
-        timeSection.style.display = 'flex';
-    } else {
-        timeSection.style.display = 'none';
-    }
-
-    // Dimensions
     const dimensionsSection = document.getElementById('dimensions-section');
-    const dimensionsValue = document.getElementById('lightbox-dimensions');
-    if (item.dimensions) {
-        dimensionsValue.textContent = item.dimensions;
-        dimensionsSection.style.display = 'flex';
-    } else {
-        dimensionsSection.style.display = 'none';
-    }
+
+    softwareSection.style.display = 'none';
+    timeSection.style.display = 'none';
+    dimensionsSection.style.display = 'none';
 }
 
 function populateTags(tags) {
+    // Hide tags section
     const tagsContainer = document.getElementById('lightbox-tags');
-    tagsContainer.innerHTML = '';
-
-    if (tags && tags.length > 0) {
-        tags.forEach(tag => {
-            const tagEl = document.createElement('span');
-            tagEl.className = 'tag';
-            tagEl.textContent = tag;
-            tagsContainer.appendChild(tagEl);
-        });
-        tagsContainer.style.display = 'flex';
-    } else {
-        tagsContainer.style.display = 'none';
-    }
+    tagsContainer.style.display = 'none';
 }
 
 function populateRelatedImages(images) {
@@ -323,4 +367,103 @@ function navigateLightbox(direction) {
             scrollContainer.scrollTop = 0;
         }
     }, 150);
+}
+
+// Comic Reader functions
+let lastScrollTop = 0;
+
+function openComicReader(item) {
+    const comicReader = document.getElementById('comic-reader');
+    const comicReaderTitle = document.getElementById('comic-reader-title');
+    const comicReaderContent = document.getElementById('comic-reader-content');
+    const comicPageCounter = document.getElementById('comic-page-counter');
+    const comicHeader = document.getElementById('comic-reader-header');
+    const scrollToTopBtn = document.getElementById('comic-scroll-to-top');
+
+    // Set title
+    comicReaderTitle.textContent = item.title;
+
+    // Clear content
+    comicReaderContent.innerHTML = '';
+
+    // Get all comic pages from images array
+    const pages = item.images || [];
+
+    // Update page counter
+    comicPageCounter.textContent = `${pages.length} ${pages.length === 1 ? 'Page' : 'Pages'}`;
+
+    // Add all pages vertically
+    pages.forEach((page, index) => {
+        const img = document.createElement('img');
+        img.src = page.url;
+        img.alt = `${item.title} - Page ${index + 1}`;
+        img.className = 'comic-page';
+        comicReaderContent.appendChild(img);
+    });
+
+    // Show comic reader
+    comicReader.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // Reset header and button states
+    comicHeader.classList.remove('hidden');
+    scrollToTopBtn.classList.remove('visible');
+    lastScrollTop = 0;
+
+    // Scroll to top
+    comicReaderContent.scrollTop = 0;
+
+    // Add scroll listener for auto-hide header and scroll-to-top button
+    comicReaderContent.addEventListener('scroll', handleComicScroll);
+
+    // Add click listener to scroll-to-top button
+    scrollToTopBtn.addEventListener('click', scrollComicToTop);
+}
+
+function handleComicScroll() {
+    const comicReaderContent = document.getElementById('comic-reader-content');
+    const comicHeader = document.getElementById('comic-reader-header');
+    const scrollToTopBtn = document.getElementById('comic-scroll-to-top');
+    const scrollTop = comicReaderContent.scrollTop;
+
+    // Auto-hide header on scroll down, show on scroll up
+    if (scrollTop > lastScrollTop && scrollTop > 100) {
+        // Scrolling down
+        comicHeader.classList.add('hidden');
+        comicReaderContent.classList.add('header-hidden');
+    } else {
+        // Scrolling up
+        comicHeader.classList.remove('hidden');
+        comicReaderContent.classList.remove('header-hidden');
+    }
+
+    lastScrollTop = scrollTop;
+
+    // Show scroll-to-top button after scrolling down 500px
+    if (scrollTop > 500) {
+        scrollToTopBtn.classList.add('visible');
+    } else {
+        scrollToTopBtn.classList.remove('visible');
+    }
+}
+
+function scrollComicToTop() {
+    const comicReaderContent = document.getElementById('comic-reader-content');
+    comicReaderContent.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+function closeComicReader() {
+    const comicReader = document.getElementById('comic-reader');
+    const comicReaderContent = document.getElementById('comic-reader-content');
+    const scrollToTopBtn = document.getElementById('comic-scroll-to-top');
+
+    // Remove scroll listener
+    comicReaderContent.removeEventListener('scroll', handleComicScroll);
+    scrollToTopBtn.removeEventListener('click', scrollComicToTop);
+
+    comicReader.classList.remove('active');
+    document.body.style.overflow = '';
 }
