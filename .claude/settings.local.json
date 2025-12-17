@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(python3:*)",
+      "Bash(pkill:*)"
     ],
     "deny": [],
     "ask": []

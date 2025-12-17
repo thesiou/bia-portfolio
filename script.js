@@ -60,9 +60,12 @@ async function loadArtworkData() {
         // Fallback to minimal data if JSON loading fails
         artData = {
             illustrations: [],
+            linework: [],
+            timelapse: [],
+            manga: [],
+            storyboards: [],
             "graphic-design": [],
             animation: [],
-            comics: [],
             "concept-art": []
         };
 
@@ -188,6 +191,37 @@ function initializeEventListeners() {
     comicReaderClose.addEventListener('click', closeComicReader);
 }
 
+// Masonry grid resize function
+function resizeGridItem(item, img) {
+    const grid = document.getElementById('gallery');
+    const rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-auto-rows'));
+    const rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('gap'));
+
+    // Get the actual rendered height of the image
+    const imageHeight = img.getBoundingClientRect().height;
+
+    // Calculate how many rows this item should span
+    const rowSpan = Math.ceil((imageHeight + rowGap) / (rowHeight + rowGap));
+
+    // Set the grid-row-end to span the calculated rows
+    item.style.gridRowEnd = `span ${rowSpan}`;
+}
+
+// Recalculate masonry layout on window resize
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        galleryItems.forEach(item => {
+            const img = item.querySelector('.gallery-item-image');
+            if (img && img.complete) {
+                resizeGridItem(item, img);
+            }
+        });
+    }, 200);
+});
+
 // Render the gallery based on current filters
 function renderGallery() {
     const gallery = document.getElementById('gallery');
@@ -200,6 +234,13 @@ function renderGallery() {
         // Get filtered items
         const categoryItems = artData[currentCategory] || [];
         currentFilteredItems = categoryItems.filter(item => item.year === currentYear);
+
+        // Sort by date (most recent first)
+        currentFilteredItems.sort((a, b) => {
+            const dateA = a.date ? new Date(a.date) : new Date(0);
+            const dateB = b.date ? new Date(b.date) : new Date(0);
+            return dateB - dateA;
+        });
 
         // Clear gallery
         gallery.innerHTML = '';
@@ -230,17 +271,74 @@ function renderGallery() {
 function createGalleryItem(item, index) {
     const div = document.createElement('div');
     div.className = 'gallery-item';
-    div.innerHTML = `
-        <img src="${item.image}" alt="${item.title}" class="gallery-item-image">
-        <div class="gallery-item-info">
-            <h3 class="gallery-item-title">${item.title}</h3>
-            <p class="gallery-item-description">${item.description}</p>
-        </div>
-    `;
 
-    // Add click listener - open comic reader for comics, lightbox for others
+    // Handle video timelapses differently
+    if (item.isVideo) {
+        div.innerHTML = `
+            <div class="gallery-item-video-container">
+                <img src="${item.image}" alt="${item.title}" class="gallery-item-image video-poster">
+                <video class="gallery-item-video" muted loop playsinline>
+                    <source src="${item.videoFile}" type="video/mp4">
+                </video>
+                <div class="video-play-indicator">▶</div>
+            </div>
+        `;
+
+        // Add hover functionality for video preview
+        const videoElement = div.querySelector('.gallery-item-video');
+        const posterElement = div.querySelector('.video-poster');
+        const playIndicator = div.querySelector('.video-play-indicator');
+
+        // Setup masonry for poster image
+        posterElement.addEventListener('load', () => {
+            resizeGridItem(div, posterElement);
+        });
+
+        if (posterElement.complete) {
+            resizeGridItem(div, posterElement);
+        }
+
+        div.addEventListener('mouseenter', () => {
+            videoElement.style.opacity = '1';
+            posterElement.style.opacity = '0';
+            playIndicator.style.opacity = '0';
+            videoElement.play().catch(e => console.log('Video play failed:', e));
+        });
+
+        div.addEventListener('mouseleave', () => {
+            videoElement.pause();
+            videoElement.currentTime = 0;
+            videoElement.style.opacity = '0';
+            posterElement.style.opacity = '1';
+            playIndicator.style.opacity = '1';
+        });
+    } else {
+        // Regular image items
+        div.innerHTML = `
+            <img src="${item.image}" alt="${item.title}" class="gallery-item-image">
+        `;
+    }
+
+    // Add loading animation with light sweep effect
+    const imgElement = div.querySelector('.gallery-item-image');
+    if (imgElement) {
+        imgElement.addEventListener('load', () => {
+            div.classList.add('image-loaded');
+            // Calculate masonry grid row span based on image aspect ratio
+            resizeGridItem(div, imgElement);
+        });
+
+        // Also calculate on initial load if image is cached
+        if (imgElement.complete) {
+            resizeGridItem(div, imgElement);
+        }
+    }
+
+    // Add click listener - open comic reader for comics, video modal for videos, lightbox for others
     if (item.isComic) {
         div.addEventListener('click', () => openComicReader(item));
+    } else if (item.isVideo) {
+        div.addEventListener('click', () => openVideoModal(item));
     } else {
         div.addEventListener('click', () => openLightbox(index));
     }
@@ -466,4 +564,82 @@ function closeComicReader() {
 
     comicReader.classList.remove('active');
     document.body.style.overflow = '';
+}
+
+// Video Modal for Timelapses
+function openVideoModal(item) {
+    // Create modal if it doesn't exist
+    let videoModal = document.getElementById('video-modal');
+    if (!videoModal) {
+        videoModal = document.createElement('div');
+        videoModal.id = 'video-modal';
+        videoModal.className = 'video-modal';
+        videoModal.innerHTML = `
+            <button class="video-modal-close" id="video-modal-close"></button>
+            <div class="video-modal-content">
+                <video id="video-modal-player" controls autoplay>
+                    <source src="" type="video/mp4">
+                </video>
+                <div class="video-modal-info">
+                    <h2 id="video-modal-title"></h2>
+                    <p id="video-modal-description"></p>
+                    <div class="video-modal-software" id="video-modal-software"></div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(videoModal);
+
+        // Add close listeners
+        const closeBtn = videoModal.querySelector('#video-modal-close');
+        closeBtn.addEventListener('click', closeVideoModal);
+
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) {
+                closeVideoModal();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && videoModal.classList.contains('active')) {
+                closeVideoModal();
+            }
+        });
+    }
+
+    // Populate modal
+    const videoPlayer = document.getElementById('video-modal-player');
+    const videoTitle = document.getElementById('video-modal-title');
+    const videoDescription = document.getElementById('video-modal-description');
+    const videoSoftware = document.getElementById('video-modal-software');
+
+    videoPlayer.querySelector('source').src = item.videoFile;
+    videoPlayer.load();
+    videoTitle.textContent = item.title;
+    videoDescription.textContent = item.fullDescription || item.description;
+
+    // Software badges
+    videoSoftware.innerHTML = '';
+    if (item.software && item.software.length > 0) {
+        item.software.forEach(software => {
+            const badge = document.createElement('span');
+            badge.className = 'software-badge';
+            badge.textContent = software;
+            videoSoftware.appendChild(badge);
+        });
+    }
+
+    // Show modal
+    videoModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeVideoModal() {
+    const videoModal = document.getElementById('video-modal');
+    const videoPlayer = document.getElementById('video-modal-player');
+
+    if (videoModal) {
+        videoPlayer.pause();
+        videoModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 }

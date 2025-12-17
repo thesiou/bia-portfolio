@@ -7,7 +7,8 @@
       "fullDescription": "A detailed character illustration featuring Hinata in a dynamic pose. This piece explores character personality through expressive linework and vibrant colors, capturing the energy and determination of the character.",
       "year": "2025",
       "mainImage": "images/illustrations/hinatafin3.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-10-16"
     },
     {
       "id": 2,
@@ -16,7 +17,8 @@
       "fullDescription": "An action-packed illustration showing dynamic movement and interaction between characters. This piece focuses on capturing motion and energy through composition and flowing lines.",
       "year": "2025",
       "mainImage": "images/illustrations/kagehinarunning.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-04"
     },
     {
       "id": 3,
@@ -25,7 +27,8 @@
       "fullDescription": "A detailed character portrait with focus on facial features and expression.",
       "year": "2025",
       "mainImage": "images/illustrations/jinshifin.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-11"
     },
     {
       "id": 4,
@@ -34,7 +37,8 @@
       "fullDescription": "A fantasy character illustration with intricate costume design and magical elements.",
       "year": "2025",
       "mainImage": "images/illustrations/pxasgachiafinsig.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-08-26"
     },
     {
       "id": 5,
@@ -43,7 +47,8 @@
       "fullDescription": "Character artwork featuring warm color palette and expressive design.",
       "year": "2025",
       "mainImage": "images/illustrations/spicyhojfinforartstation.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2024-12-06"
     },
     {
       "id": 6,
@@ -52,7 +57,8 @@
       "fullDescription": "Dynamic sports-themed character illustration with energy and movement.",
       "year": "2025",
       "mainImage": "images/illustrations/koraihinatafin2.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-15"
     },
     {
       "id": 7,
@@ -61,7 +67,8 @@
       "fullDescription": "Elegant character portrait with detailed costume design.",
       "year": "2025",
       "mainImage": "images/illustrations/meilin.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-01-25"
     },
     {
       "id": 8,
@@ -70,7 +77,18 @@
       "fullDescription": "Character illustration featuring interaction between two characters.",
       "year": "2025",
       "mainImage": "images/illustrations/yoshkixhikarufin_IGedited.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-10-14"
+    },
+    {
+      "id": 28,
+      "title": "Hikaru Final",
+      "description": "Character portrait illustration",
+      "fullDescription": "Detailed character portrait of Hikaru with dynamic composition and vibrant colors.",
+      "year": "2025",
+      "mainImage": "images/illustrations/hikarufn1.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-08-28"
     },
     {
       "id": 9,
@@ -79,7 +97,8 @@
       "fullDescription": "Sports character illustration with dynamic composition.",
       "year": "2025",
       "mainImage": "images/illustrations/kageyama edit2media.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-10-18"
     },
     {
       "id": 10,
@@ -88,7 +107,8 @@
       "fullDescription": "Fantasy-themed character illustration with magical elements.",
       "year": "2025",
       "mainImage": "images/illustrations/wonderseptember01.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2023-09-12"
     },
     {
       "id": 11,
@@ -97,7 +117,8 @@
       "fullDescription": "Fantasy character design with elaborate costume details.",
       "year": "2025",
       "mainImage": "images/illustrations/wonder2 temporion7fin.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-01-18"
     },
     {
       "id": 12,
@@ -106,7 +127,8 @@
       "fullDescription": "Fantasy-themed character with detailed costume and magical elements.",
       "year": "2025",
       "mainImage": "images/illustrations/lindormifinlowres.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-07-07"
     },
     {
       "id": 13,
@@ -115,7 +137,8 @@
       "fullDescription": "Character illustration with focus on personality and expression.",
       "year": "2025",
       "mainImage": "images/illustrations/kybfin2.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-02-09"
     },
     {
       "id": 14,
@@ -124,7 +147,8 @@
       "fullDescription": "Fantasy character illustration with nature-inspired elements.",
       "year": "2025",
       "mainImage": "images/illustrations/nelfdmedia.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2023-09-08"
     },
     {
       "id": 15,
@@ -133,7 +157,8 @@
       "fullDescription": "Character design with detailed costume and accessories.",
       "year": "2025",
       "mainImage": "images/illustrations/roguezfd.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2023-09-04"
     },
     {
       "id": 16,
@@ -142,7 +167,8 @@
       "fullDescription": "Character illustration with bold design and strong personality.",
       "year": "2025",
       "mainImage": "images/illustrations/plunderlord6.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-06-18"
     },
     {
       "id": 17,
@@ -151,16 +177,8 @@
       "fullDescription": "Fan art featuring characters from Haikyuu series.",
       "year": "2025",
       "mainImage": "images/illustrations/haikyuuusign.png",
-      "software": ["Clip Studio Paint"]
-    },
-    {
-      "id": 18,
-      "title": "Cover Piece",
-      "description": "Illustration artwork",
-      "fullDescription": "Cover illustration with detailed composition and character design.",
-      "year": "2025",
-      "mainImage": "images/illustrations/cover piecesk12.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-09-30"
     },
     {
       "id": 19,
@@ -169,7 +187,8 @@
       "fullDescription": "Character artwork with unique design elements.",
       "year": "2025",
       "mainImage": "images/illustrations/demonsterartfinx.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-07-29"
     },
     {
       "id": 20,
@@ -178,7 +197,8 @@
       "fullDescription": "Digital character illustration with modern aesthetic.",
       "year": "2025",
       "mainImage": "images/illustrations/boredpixlet10media.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-08-21"
     },
     {
       "id": 21,
@@ -187,7 +207,8 @@
       "fullDescription": "Character illustration with atmospheric lighting.",
       "year": "2025",
       "mainImage": "images/illustrations/Illustration4.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-12-08"
     },
     {
       "id": 22,
@@ -196,7 +217,8 @@
       "fullDescription": "Character illustration exploring lighting and atmosphere.",
       "year": "2025",
       "mainImage": "images/illustrations/Illustration4lamps.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-09-24"
     },
     {
       "id": 23,
@@ -205,7 +227,8 @@
       "fullDescription": "Character illustration with detailed costume design.",
       "year": "2025",
       "mainImage": "images/illustrations/Illustrationx3cf.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-12-04"
     },
     {
       "id": 24,
@@ -214,7 +237,8 @@
       "fullDescription": "Character illustration with dynamic pose and composition.",
       "year": "2025",
       "mainImage": "images/illustrations/REVx9.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-04-03"
     },
     {
       "id": 25,
@@ -223,7 +247,8 @@
       "fullDescription": "Digital illustration with unique style and composition.",
       "year": "2025",
       "mainImage": "images/illustrations/illddqartstation.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2024-12-06"
     },
     {
       "id": 26,
@@ -232,16 +257,8 @@
       "fullDescription": "Character artwork with polished final details.",
       "year": "2025",
       "mainImage": "images/illustrations/thsfinal.png",
-      "software": ["Clip Studio Paint"]
-    },
-    {
-      "id": 27,
-      "title": "Character Study",
-      "description": "Character portrait",
-      "fullDescription": "Character study exploring expression and personality.",
-      "year": "2025",
-      "mainImage": "images/illustrations/IMG20251130124644.png",
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2023-12-17"
     }
   ],
 
@@ -382,7 +399,366 @@
     }
   ],
 
-  "comics": [
+  "linework": [
+    {
+      "id": 701,
+      "title": "Linework 001",
+      "description": "Character linework illustration",
+      "fullDescription": "Detailed character linework showcasing clean line quality and form.",
+      "year": "2025",
+      "mainImage": "images/Linework/001.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-08-04"
+    },
+    {
+      "id": 702,
+      "title": "Linework 002",
+      "description": "Character linework study",
+      "fullDescription": "Character linework study exploring form and composition.",
+      "year": "2025",
+      "mainImage": "images/Linework/002.jpg",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-08-18"
+    },
+    {
+      "id": 703,
+      "title": "Linework 003",
+      "description": "Character sketch",
+      "fullDescription": "Character sketch with clean linework and dynamic pose.",
+      "year": "2025",
+      "mainImage": "images/Linework/003.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-08-25"
+    },
+    {
+      "id": 704,
+      "title": "Linework 004",
+      "description": "Character linework",
+      "fullDescription": "Expressive character linework with detailed line quality.",
+      "year": "2025",
+      "mainImage": "images/Linework/004.jpg",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-09-13"
+    },
+    {
+      "id": 705,
+      "title": "Linework 005",
+      "description": "Character study",
+      "fullDescription": "Character study with clean linework and strong composition.",
+      "year": "2025",
+      "mainImage": "images/Linework/005.jpg",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-09-13"
+    },
+    {
+      "id": 706,
+      "title": "Linework 006",
+      "description": "Character illustration",
+      "fullDescription": "Character illustration showcasing linework technique.",
+      "year": "2025",
+      "mainImage": "images/Linework/006.jpg",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-10-02"
+    },
+    {
+      "id": 707,
+      "title": "Linework 007",
+      "description": "Character sketch",
+      "fullDescription": "Dynamic character sketch with clean linework.",
+      "year": "2025",
+      "mainImage": "images/Linework/007.jpg",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-10-03"
+    },
+    {
+      "id": 708,
+      "title": "Linework 008",
+      "description": "Character study",
+      "fullDescription": "Character study exploring linework and form.",
+      "year": "2025",
+      "mainImage": "images/Linework/008.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-10-04"
+    },
+    {
+      "id": 709,
+      "title": "Linework 009",
+      "description": "Character illustration",
+      "fullDescription": "Character illustration with expressive linework.",
+      "year": "2025",
+      "mainImage": "images/Linework/009.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-12"
+    },
+    {
+      "id": 710,
+      "title": "Linework 010",
+      "description": "Character sketch",
+      "fullDescription": "Detailed character sketch with clean lines.",
+      "year": "2025",
+      "mainImage": "images/Linework/010.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-10-08"
+    },
+    {
+      "id": 711,
+      "title": "Linework 011",
+      "description": "Character study",
+      "fullDescription": "Character study showcasing linework technique.",
+      "year": "2025",
+      "mainImage": "images/Linework/011.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-10-27"
+    },
+    {
+      "id": 712,
+      "title": "Linework 012",
+      "description": "Character illustration",
+      "fullDescription": "Character illustration with dynamic linework.",
+      "year": "2025",
+      "mainImage": "images/Linework/012.jpg",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-12-04"
+    },
+    {
+      "id": 713,
+      "title": "Linework 013",
+      "description": "Character sketch",
+      "fullDescription": "Expressive character sketch with clean lines.",
+      "year": "2025",
+      "mainImage": "images/Linework/013.jpg",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-12-04"
+    },
+    {
+      "id": 714,
+      "title": "Linework 014.1",
+      "description": "Character study",
+      "fullDescription": "Character study exploring form and composition.",
+      "year": "2025",
+      "mainImage": "images/Linework/014.1.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-12"
+    },
+    {
+      "id": 715,
+      "title": "Linework 014",
+      "description": "Character illustration",
+      "fullDescription": "Character illustration with refined linework.",
+      "year": "2025",
+      "mainImage": "images/Linework/014.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-12-17"
+    },
+    {
+      "id": 716,
+      "title": "Linework 015",
+      "description": "Character sketch",
+      "fullDescription": "Dynamic character sketch with expressive lines.",
+      "year": "2025",
+      "mainImage": "images/Linework/015.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-08"
+    },
+    {
+      "id": 717,
+      "title": "Linework 016",
+      "description": "Character study",
+      "fullDescription": "Character study with detailed linework.",
+      "year": "2025",
+      "mainImage": "images/Linework/016.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-11"
+    },
+    {
+      "id": 718,
+      "title": "Linework 017",
+      "description": "Character illustration",
+      "fullDescription": "Character illustration showcasing line quality.",
+      "year": "2025",
+      "mainImage": "images/Linework/017.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-07"
+    },
+    {
+      "id": 719,
+      "title": "Linework 018",
+      "description": "Character sketch",
+      "fullDescription": "Character sketch with clean linework.",
+      "year": "2025",
+      "mainImage": "images/Linework/018.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-03"
+    },
+    {
+      "id": 720,
+      "title": "Linework 019",
+      "description": "Character study",
+      "fullDescription": "Detailed character study with expressive lines.",
+      "year": "2025",
+      "mainImage": "images/Linework/019.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-30"
+    },
+    {
+      "id": 721,
+      "title": "Linework 020",
+      "description": "Character illustration",
+      "fullDescription": "Character illustration with dynamic composition.",
+      "year": "2025",
+      "mainImage": "images/Linework/020.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-12-09"
+    },
+    {
+      "id": 722,
+      "title": "Linework 021",
+      "description": "Character sketch",
+      "fullDescription": "Character sketch showcasing linework technique.",
+      "year": "2025",
+      "mainImage": "images/Linework/021.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-12-15"
+    },
+    {
+      "id": 723,
+      "title": "Linework 022",
+      "description": "Character study",
+      "fullDescription": "Character study with refined lines and form.",
+      "year": "2025",
+      "mainImage": "images/Linework/022.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-03"
+    },
+    {
+      "id": 724,
+      "title": "Linework 023",
+      "description": "Character illustration",
+      "fullDescription": "Character illustration with clean linework.",
+      "year": "2025",
+      "mainImage": "images/Linework/023.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-30"
+    }
+  ],
+
+  "timelapse": [
+    {
+      "id": 801,
+      "title": "Lumion Cover Vol 1 - 30s Timelapse",
+      "description": "Cover artwork creation timelapse",
+      "fullDescription": "Watch the creation process of the Lumion Cover Vol 1 artwork in this 30-second timelapse video showing the full illustration process.",
+      "year": "2025",
+      "mainImage": "images/z axis-comic-series/Cover/lumioncovervol01_02mark.png",
+      "videoFile": "images/Timelapses/lumioncovervol1 30s.mp4",
+      "isVideo": true,
+      "software": ["Clip Studio Paint"],
+      "date": "2025-09-25"
+    },
+    {
+      "id": 802,
+      "title": "Chapter 1 Page 15 - Timelapse",
+      "description": "Manga page creation timelapse",
+      "fullDescription": "Timelapse video documenting the creation of Chapter 1, Page 15 of the manga, showing the complete workflow from sketch to final line art.",
+      "year": "2025",
+      "mainImage": "images/z axis-comic-series/Chapter 1 Pages/ch1_15.jpg",
+      "videoFile": "images/Timelapses/Chapter1 pg 15.mp4",
+      "isVideo": true,
+      "software": ["Clip Studio Paint"],
+      "date": "2025-10-07"
+    },
+    {
+      "id": 803,
+      "title": "Page 04 Background - Timelapse",
+      "description": "Background creation timelapse",
+      "fullDescription": "Detailed timelapse of background illustration process for manga page 04, showcasing environment design and rendering technique.",
+      "year": "2025",
+      "mainImage": "images/z axis-comic-series/Chapter 0 Pages/ch0_4.png",
+      "videoFile": "images/Timelapses/page04 background.mp4",
+      "isVideo": true,
+      "software": ["Clip Studio Paint"],
+      "date": "2025-09-11"
+    },
+    {
+      "id": 804,
+      "title": "Page 112 - Timelapse",
+      "description": "Manga page timelapse",
+      "fullDescription": "Complete timelapse of manga page 112 creation, from initial sketch to final inks and details.",
+      "year": "2025",
+      "mainImage": "images/z axis-comic-series/Chapter 1 Pages/ch1_1.png",
+      "videoFile": "images/Timelapses/page112.mp4",
+      "isVideo": true,
+      "software": ["Clip Studio Paint"],
+      "date": "2025-09-18"
+    },
+    {
+      "id": 805,
+      "title": "Page 9 - Timelapse",
+      "description": "Manga page creation process",
+      "fullDescription": "Timelapse video showing the complete creation of manga page 9, documenting the artistic process from start to finish.",
+      "year": "2025",
+      "mainImage": "images/z axis-comic-series/Chapter 0 Pages/ch0_9.jpg",
+      "videoFile": "images/Timelapses/page9.mp4",
+      "isVideo": true,
+      "software": ["Clip Studio Paint"],
+      "date": "2025-09-17"
+    }
+  ],
+
+  "storyboards": [
+    {
+      "id": 901,
+      "title": "Storyboard Sequence 1",
+      "description": "Animation storyboard planning",
+      "fullDescription": "Storyboard sequence for animation planning, showcasing scene composition and camera angles.",
+      "year": "2025",
+      "mainImage": "images/Storyboards/20028eaec7cad54ab5f87f8f88397ff0.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-04"
+    },
+    {
+      "id": 902,
+      "title": "Storyboard Sequence 2",
+      "description": "Scene planning and layout",
+      "fullDescription": "Detailed storyboard for scene planning with multiple camera angles and composition studies.",
+      "year": "2025",
+      "mainImage": "images/Storyboards/30b2ca1b0f9d1122b29715cac78f3500.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-04"
+    },
+    {
+      "id": 903,
+      "title": "Storyboard Sequence 3",
+      "description": "Action sequence planning",
+      "fullDescription": "Storyboard for action sequence, detailing movement and dynamic camera work.",
+      "year": "2025",
+      "mainImage": "images/Storyboards/3861be4c93c2c996d120c3438eef7654.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-11-04"
+    },
+    {
+      "id": 904,
+      "title": "Storyboard Sequence 4",
+      "description": "Scene composition study",
+      "fullDescription": "Comprehensive storyboard showcasing scene composition and narrative flow.",
+      "year": "2025",
+      "mainImage": "images/Storyboards/eb761a7ba71fa48c5a8e6f8933396820.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-09-23"
+    },
+    {
+      "id": 905,
+      "title": "Storyboard Overview",
+      "description": "Complete storyboard compilation",
+      "fullDescription": "Overview of storyboard work showcasing various sequences and scene planning.",
+      "year": "2025",
+      "mainImage": "images/Storyboards/storyboards.jpg",
+      "software": ["Clip Studio Paint"],
+      "date": "2025-09-26"
+    }
+  ],
+
+  "manga": [
     {
       "id": 401,
       "title": "Z Axis - Chapter 0",
@@ -459,9 +835,18 @@
         {
           "url": "images/z axis-comic-series/Characters Exploration-Sheet/maou.jpg",
           "label": "Maou Character Sheet"
+        },
+        {
+          "url": "images/z axis-comic-series/Characters Exploration-Sheet/charactersheet.png",
+          "label": "Character Design Sheet"
+        },
+        {
+          "url": "images/z axis-comic-series/Characters Exploration-Sheet/zee.png",
+          "label": "Zee Character Sheet"
         }
       ],
-      "software": ["Clip Studio Paint"]
+      "software": ["Clip Studio Paint"],
+      "date": "2025-09-24"
     },
     {
       "id": 404,
