@@ -1683,9 +1683,12 @@ html {
 .status-indicator {
     width: 16px;
     height: 16px;
+    min-width: 16px;
+    min-height: 16px;
     border-radius: 50%;
     background: #ef4444;
     animation: pulse 2s ease-in-out infinite;
+    flex-shrink: 0;
 }
 
 .status-card.open .status-indicator {
@@ -2195,5 +2198,18 @@ html {
 
     .contact-form-container {
         padding: 1.5rem;
+    }
+
+    .status-card {
+        padding: 1.5rem 2rem;
+        gap: 1rem;
+    }
+
+    .status-card h2 {
+        font-size: 1.25rem;
+    }
+
+    .status-card p {
+        font-size: 0.9rem;
     }
 }
