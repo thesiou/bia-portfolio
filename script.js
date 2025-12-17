@@ -191,36 +191,32 @@ function initializeEventListeners() {
     comicReaderClose.addEventListener('click', closeComicReader);
 }
 
-// Masonry grid resize function
-function resizeGridItem(item, img) {
-    const grid = document.getElementById('gallery');
-    const rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-auto-rows'));
-    const rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('gap'));
+// Add orientation class based on image aspect ratio
+function addOrientationClass(item, img) {
+    // Wait for image to load to get natural dimensions
+    if (!img.complete) return;
 
-    // Get the actual rendered height of the image
-    const imageHeight = img.getBoundingClientRect().height;
+    const width = img.naturalWidth;
+    const height = img.naturalHeight;
+    const aspectRatio = width / height;
 
-    // Calculate how many rows this item should span
-    const rowSpan = Math.ceil((imageHeight + rowGap) / (rowHeight + rowGap));
+    // Remove any existing orientation classes
+    item.classList.remove('landscape', 'ultra-wide', 'large-square');
 
-    // Set the grid-row-end to span the calculated rows
-    item.style.gridRowEnd = `span ${rowSpan}`;
+    // Add class based on aspect ratio and size
+    if (aspectRatio >= 1.8) {
+        item.classList.add('ultra-wide');
+    } else if (aspectRatio >= 1.2) {
+        item.classList.add('landscape');
+    } else if (aspectRatio >= 0.9 && aspectRatio <= 1.1) {
+        // Square images: check if they're large enough
+        // If width/height is >= 2000px, make them span 2 columns
+        if (width >= 2000 || height >= 2000) {
+            item.classList.add('large-square');
+        }
+    }
+    // Portrait images stay default (1 column)
 }
-
-// Recalculate masonry layout on window resize
-let resizeTimeout;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-        const galleryItems = document.querySelectorAll('.gallery-item');
-        galleryItems.forEach(item => {
-            const img = item.querySelector('.gallery-item-image');
-            if (img && img.complete) {
-                resizeGridItem(item, img);
-            }
-        });
-    }, 200);
-});
 
 // Render the gallery based on current filters
 function renderGallery() {
@@ -289,13 +285,13 @@ function createGalleryItem(item, index) {
         const posterElement = div.querySelector('.video-poster');
         const playIndicator = div.querySelector('.video-play-indicator');
 
-        // Setup masonry for poster image
+        // Setup orientation class for poster image
         posterElement.addEventListener('load', () => {
-            resizeGridItem(div, posterElement);
+            addOrientationClass(div, posterElement);
         });
 
         if (posterElement.complete) {
-            resizeGridItem(div, posterElement);
+            addOrientationClass(div, posterElement);
         }
 
         div.addEventListener('mouseenter', () => {
@@ -324,13 +320,13 @@ function createGalleryItem(item, index) {
     if (imgElement) {
         imgElement.addEventListener('load', () => {
             div.classList.add('image-loaded');
-            // Calculate masonry grid row span based on image aspect ratio
-            resizeGridItem(div, imgElement);
+            // Add orientation class based on aspect ratio
+            addOrientationClass(div, imgElement);
         });
 
-        // Also calculate on initial load if image is cached
+        // Also add orientation class if image is cached
         if (imgElement.complete) {
-            resizeGridItem(div, imgElement);
+            addOrientationClass(div, imgElement);
         }
     }
 

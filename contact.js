@@ -6,7 +6,7 @@
 // 4. Replace 'YOUR_ACCESS_KEY' below with your actual access key
 // 5. That's it! The form will now send emails to your address
 
-const WEB3FORMS_KEY = 'YOUR_ACCESS_KEY'; // Replace with your Web3Forms access key
+const WEB3FORMS_KEY = '5bde5d8b-5093-4099-89e6-5c18c67c57ac'; // Web3Forms access key
 
 document.addEventListener('DOMContentLoaded', () => {
     const contactForm = document.getElementById('contact-form');
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (WEB3FORMS_KEY === '166f1c09-6401-4bd7-878e-43a28d8345f9') {
                     statusDiv.textContent = '⚠ Please add your Web3Forms access key in contact.js first.';
                 } else {
-                    statusDiv.textContent = '✗ Failed to send message. Please try again or email directly at hello@biancabanu.com';
+                    statusDiv.textContent = '✗ Failed to send message. Please try again or email directly at contact@lunaart.net';
                 }
 
                 console.error('Form submission error:', error);

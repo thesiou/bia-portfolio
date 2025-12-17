@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+    <!-- Homepage -->
+    <url>
+        <loc>https://lunaart.net/</loc>
+        <lastmod>2025-12-18</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+        <!-- Featured artwork images -->
+        <image:image>
+            <image:loc>https://lunaart.net/images/illustrations/hinatafin3.png</image:loc>
+            <image:title>Hinata Final - Haikyuu Fanart Character Illustration</image:title>
+        </image:image>
+        <image:image>
+            <image:loc>https://lunaart.net/images/illustrations/hikarufn1.png</image:loc>
+            <image:title>Hikaru Final - Character Portrait</image:title>
+        </image:image>
+        <image:image>
+            <image:loc>https://lunaart.net/images/illustrations/kagehinarunning.png</image:loc>
+            <image:title>Kageyama and Hinata - Haikyuu Fanart</image:title>
+        </image:image>
+    </url>
+
+    <!-- About & Contact Page -->
+    <url>
+        <loc>https://lunaart.net/about.html</loc>
+        <lastmod>2025-12-18</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Commissions Page -->
+    <url>
+        <loc>https://lunaart.net/commissions.html</loc>
+        <lastmod>2025-12-18</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+</urlset>

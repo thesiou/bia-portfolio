@@ -3,7 +3,10 @@
     "allow": [
       "Bash(tree:*)",
       "Bash(python3:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(find:*)",
+      "Bash(sips:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
