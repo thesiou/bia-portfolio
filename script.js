@@ -290,6 +290,16 @@ function createGalleryItem(item, index) {
         div.addEventListener('mouseleave', () => {
             videoElement.pause();
         });
+    } else if (item.isComic) {
+        // Comic items with chapter label and read CTA
+        const imgAttrs = index < 3 ? 'fetchpriority="high"' : 'loading="lazy"';
+        div.innerHTML = `
+            <img src="${item.image}" alt="${item.title}" class="gallery-item-image" ${imgAttrs}>
+            <div class="comic-overlay">
+                <span class="comic-chapter-label">${item.title.replace('Z Axis - ', '')}</span>
+                <span class="comic-read-cta">Read</span>
+            </div>
+        `;
     } else {
         // Regular image items
         const imgAttrs = index < 3 ? 'fetchpriority="high"' : 'loading="lazy"';

@@ -307,6 +307,45 @@ body {
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
+/* Comic Chapter Overlay */
+.comic-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), transparent);
+    z-index: 3;
+}
+
+.comic-chapter-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    letter-spacing: 0.03em;
+}
+
+.comic-read-cta {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 20px;
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s ease;
+}
+
+.gallery-item:hover .comic-read-cta:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
 /* Loading Animation with Light Sweep */
 .gallery-item {
     min-height: 250px;
