@@ -6,7 +6,6 @@ let artData = {};
 
 // State management
 let currentCategory = 'illustrations';
-let currentYear = '2025';
 let currentLightboxIndex = 0;
 let currentFilteredItems = [];
 
@@ -132,20 +131,6 @@ function initializeEventListeners() {
         });
     });
 
-    // Year filter listeners
-    const yearButtons = document.querySelectorAll('.year-btn');
-    yearButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            // Update active state
-            yearButtons.forEach(btn => btn.classList.remove('active'));
-            e.target.classList.add('active');
-
-            // Update current year and re-render
-            currentYear = e.target.dataset.year;
-            renderGallery();
-        });
-    });
-
     // Lightbox listeners
     const lightbox = document.getElementById('lightbox');
     const lightboxClose = document.getElementById('lightbox-close');
@@ -227,9 +212,8 @@ function renderGallery() {
 
     // Small delay for smooth transition
     setTimeout(() => {
-        // Get filtered items
-        const categoryItems = artData[currentCategory] || [];
-        currentFilteredItems = categoryItems.filter(item => item.year === currentYear);
+        // Get all items for the current category
+        currentFilteredItems = [...(artData[currentCategory] || [])];
 
         // Sort by date (most recent first)
         currentFilteredItems.sort((a, b) => {
@@ -270,10 +254,12 @@ function createGalleryItem(item, index) {
 
     // Handle video timelapses differently
     if (item.isVideo) {
+        const imgAttrs = index < 3 ? 'fetchpriority="high"' : 'loading="lazy"';
+        const videoPreload = index === 0 ? 'preload="metadata"' : 'preload="none"';
         div.innerHTML = `
             <div class="gallery-item-video-container">
-                <img src="${item.image}" alt="${item.title}" class="gallery-item-image video-poster">
-                <video class="gallery-item-video" muted loop playsinline>
+                <img src="${item.image}" alt="${item.title}" class="gallery-item-image video-poster" ${imgAttrs}>
+                <video class="gallery-item-video" muted loop playsinline ${videoPreload}>
                     <source src="${item.videoFile}" type="video/mp4">
                 </video>
                 <div class="video-play-indicator">▶</div>
@@ -303,15 +289,12 @@ function createGalleryItem(item, index) {
 
         div.addEventListener('mouseleave', () => {
             videoElement.pause();
-            videoElement.currentTime = 0;
-            videoElement.style.opacity = '0';
-            posterElement.style.opacity = '1';
-            playIndicator.style.opacity = '1';
         });
     } else {
         // Regular image items
+        const imgAttrs = index < 3 ? 'fetchpriority="high"' : 'loading="lazy"';
         div.innerHTML = `
-            <img src="${item.image}" alt="${item.title}" class="gallery-item-image">
+            <img src="${item.image}" alt="${item.title}" class="gallery-item-image" ${imgAttrs}>
         `;
     }
 
@@ -324,8 +307,9 @@ function createGalleryItem(item, index) {
             addOrientationClass(div, imgElement);
         });
 
-        // Also add orientation class if image is cached
-        if (imgElement.complete) {
+        // Also handle already-cached images
+        if (imgElement.complete && imgElement.naturalWidth > 0) {
+            div.classList.add('image-loaded');
             addOrientationClass(div, imgElement);
         }
     }

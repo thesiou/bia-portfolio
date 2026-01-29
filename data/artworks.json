@@ -1,6 +1,36 @@
 {
   "illustrations": [
     {
+      "id": 27,
+      "title": "Cover 02",
+      "description": "Character illustration",
+      "fullDescription": "Character illustration with detailed composition and vibrant colors.",
+      "year": "2026",
+      "mainImage": "images/illustrations/cover02try1.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2026-01-29"
+    },
+    {
+      "id": 29,
+      "title": "Hawks Final",
+      "description": "Character illustration",
+      "fullDescription": "Character illustration featuring Hawks with dynamic pose and detailed rendering.",
+      "year": "2026",
+      "mainImage": "images/illustrations/hawksfin3.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2026-01-29"
+    },
+    {
+      "id": 30,
+      "title": "Kilof",
+      "description": "Character illustration",
+      "fullDescription": "Character illustration with unique design and expressive composition.",
+      "year": "2026",
+      "mainImage": "images/illustrations/kilof.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2026-01-29"
+    },
+    {
       "id": 1,
       "title": "Hinata Final",
       "description": "Dynamic character illustration",
@@ -317,6 +347,18 @@
 
   "animation": [
     {
+      "id": 203,
+      "title": "January Animation Reel",
+      "description": "Animation reel compilation",
+      "fullDescription": "Animation reel showcasing work from January, featuring character animation and motion sequences.",
+      "year": "2026",
+      "mainImage": "images/animations/thumbnails/animationreeljan-thumbnail.jpg",
+      "videoFile": "images/animations/january animation reel.mp4",
+      "isVideo": true,
+      "software": ["After Effects", "Clip Studio Paint"],
+      "date": "2026-01-29"
+    },
+    {
       "id": 201,
       "title": "Animation Project 1",
       "description": "Character animation series",
@@ -343,6 +385,26 @@
   ],
 
   "concept-art": [
+    {
+      "id": 307,
+      "title": "Haruka",
+      "description": "Character concept design",
+      "fullDescription": "Character concept art for Haruka, exploring design and visual identity.",
+      "year": "2026",
+      "mainImage": "images/environment-&-character-design/haruka.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2026-01-29"
+    },
+    {
+      "id": 308,
+      "title": "Pyo Character Sheet",
+      "description": "Character design sheet",
+      "fullDescription": "Character design exploration sheet for Pyo, featuring detailed character development and visual references.",
+      "year": "2026",
+      "mainImage": "images/environment-&-character-design/pyo ch sheet.png",
+      "software": ["Clip Studio Paint"],
+      "date": "2026-01-29"
+    },
     {
       "id": 301,
       "title": "House Interior",
@@ -643,6 +705,18 @@
   ],
 
   "timelapse": [
+    {
+      "id": 806,
+      "title": "Timelapse",
+      "description": "Art creation timelapse",
+      "fullDescription": "Timelapse video documenting the art creation process from start to finish.",
+      "year": "2026",
+      "mainImage": "images/animations/thumbnails/TL-thumbnail.jpg",
+      "videoFile": "images/Timelapses/TL.mp4",
+      "isVideo": true,
+      "software": ["Clip Studio Paint"],
+      "date": "2026-01-29"
+    },
     {
       "id": 801,
       "title": "Lumion Cover Vol 1 - 30s Timelapse",

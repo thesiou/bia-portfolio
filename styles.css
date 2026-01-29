@@ -252,8 +252,10 @@ body {
     object-fit: contain;
     display: block;
     background: transparent;
+    opacity: 0;
     transition: transform var(--transition-speed) var(--transition-smooth),
-                filter var(--transition-speed) var(--transition-smooth);
+                filter var(--transition-speed) var(--transition-smooth),
+                opacity 0.4s ease;
 }
 
 .gallery-item:hover .gallery-item-image {
@@ -283,7 +285,7 @@ body {
     z-index: 2;
 }
 
-.video-poster {
+.gallery-item-image.video-poster {
     width: 100%;
     height: auto;
     display: block;
@@ -306,12 +308,11 @@ body {
 }
 
 /* Loading Animation with Light Sweep */
-.gallery-item-image {
-    position: relative;
-    overflow: hidden;
+.gallery-item {
+    min-height: 250px;
 }
 
-.gallery-item-image::before {
+.gallery-item::before {
     content: '';
     position: absolute;
     top: 0;
@@ -321,14 +322,22 @@ body {
     background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0.08) 50%,
         transparent 100%
     );
-    animation: shimmer 2s infinite;
+    animation: shimmer 1.5s infinite;
     z-index: 1;
 }
 
-.gallery-item.image-loaded .gallery-item-image::before {
+.gallery-item.image-loaded {
+    min-height: 0;
+}
+
+.gallery-item.image-loaded .gallery-item-image {
+    opacity: 1;
+}
+
+.gallery-item.image-loaded::before {
     animation: none;
     opacity: 0;
 }
