@@ -252,6 +252,7 @@ if (isPortfolio) {
           <svg width="28" height="28" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
             <path d="M1 4.5V1h3.5M8.5 1H12v3.5M12 8.5V12H8.5M4.5 12H1V8.5"/>
           </svg>
+          <span class="anim-btn-hint">Main animation</span>
         </span>
       `;
       btn.addEventListener('click', () => {

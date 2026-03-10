@@ -129,7 +129,7 @@ a {
   font-weight: 400;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.92);
   margin-top: 8px;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 1), 0 0 30px rgba(0, 0, 0, 0.9);
 }
@@ -358,6 +358,7 @@ html::-webkit-scrollbar { display: none; }
 }
 
 .slide-grid {
+  position: relative;
   display: grid;
   width: 100%;
   height: 100%;
@@ -402,7 +403,10 @@ html::-webkit-scrollbar { display: none; }
   object-position: center top;
   display: block;
   transition: transform 0.55s ease;
+  image-rendering: high-quality;
+  -webkit-image-rendering: -webkit-optimize-contrast;
 }
+
 
 /* ── Piece cards ─────────────────────────────────────────── */
 .piece-card {
@@ -477,18 +481,16 @@ html::-webkit-scrollbar { display: none; }
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  opacity: 0.9;
 }
 
 .anim-toggle-btn {
   position: absolute;
-  top: 24px;
+  bottom: 80px;
   left: 36px;
   z-index: 50;
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.85);
   filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 1)) drop-shadow(0 0 20px rgba(0, 0, 0, 0.9));
   transition: color 0.2s ease;
 }
@@ -903,19 +905,11 @@ body.page-subcategory #piece-detail-images figure img {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg);
+  background: #000;
 }
 
 #piece-img-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  filter: blur(14px) brightness(0.45);
-  transform: scale(1.06);
-  z-index: 0;
+  display: none;
 }
 
 #piece-img {
