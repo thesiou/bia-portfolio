@@ -1,635 +1,599 @@
-// Portfolio Gallery Script
-// Data is loaded from data/artworks.json for easy editing
-// See HOW-TO-ADD-ARTWORK.md for instructions on adding new artwork
+/* ============================================================
+   BIANCA BANU — PORTFOLIO SCRIPT
+   Landing · Portfolio (category grid) · Piece detail page
+   ============================================================ */
 
-let artData = {};
+const isLanding   = document.body.id === 'page-landing';
+const isPortfolio = document.body.id === 'page-portfolio';
+const isPiece     = document.body.id === 'page-piece';
 
-// State management
-let currentCategory = 'illustrations';
-let currentLightboxIndex = 0;
-let currentFilteredItems = [];
-
-// Load artwork data from JSON file
-async function loadArtworkData() {
-    try {
-        const response = await fetch('data/artworks.json');
-        const data = await response.json();
-
-        // Transform data structure to match internal format
-        // This converts the JSON structure to what the rest of the code expects
-        Object.keys(data).forEach(category => {
-            artData[category] = data[category].map(artwork => {
-                // For comics, preserve the existing images array
-                if (artwork.isComic && artwork.images) {
-                    return {
-                        ...artwork,
-                        image: artwork.mainImage // For backward compatibility
-                    };
-                }
-
-                // Build images array with main image first, then related images
-                const images = [];
-
-                // Add main image first
-                if (artwork.mainImage) {
-                    images.push({
-                        url: artwork.mainImage,
-                        label: "Final"
-                    });
-                }
-
-                // Add related images
-                if (artwork.relatedImages && artwork.relatedImages.length > 0) {
-                    images.push(...artwork.relatedImages);
-                }
-
-                return {
-                    ...artwork,
-                    image: artwork.mainImage, // For backward compatibility
-                    images: images.length > 0 ? images : undefined
-                };
-            });
-        });
-
-        return true;
-    } catch (error) {
-        console.error('Error loading artwork data:', error);
-        console.log('Using fallback data. Please make sure data/artworks.json exists.');
-
-        // Fallback to minimal data if JSON loading fails
-        artData = {
-            illustrations: [],
-            linework: [],
-            timelapse: [],
-            manga: [],
-            storyboards: [],
-            "graphic-design": [],
-            animation: [],
-            "concept-art": []
-        };
-
-        return false;
-    }
+// ── Data helpers ──────────────────────────────────────────────
+function getCategories() {
+  return window.ARTWORKS?.categories ?? [];
 }
 
-// Initialize the page
-document.addEventListener('DOMContentLoaded', async () => {
-    // Load data first
-    await loadArtworkData();
-
-    // Then initialize everything else
-    initializeEventListeners();
-    renderGallery();
-});
-
-// Segmented Control Functions
-function initializeSegmentedControl() {
-    const checkedRadio = document.querySelector('input[name="category"]:checked');
-    if (checkedRadio) {
-        updateSegmentedControlSlider(checkedRadio);
-    }
-
-    // Update slider on window resize
-    window.addEventListener('resize', () => {
-        const checkedRadio = document.querySelector('input[name="category"]:checked');
-        if (checkedRadio) {
-            updateSegmentedControlSlider(checkedRadio);
-        }
-    });
+// ── Escape HTML ───────────────────────────────────────────────
+function esc(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-function updateSegmentedControlSlider(radioElement) {
-    const slider = document.getElementById('toggle-slider');
-    const label = document.querySelector(`label[for="${radioElement.id}"]`);
-
-    if (!slider || !label) return;
-
-    // Get label dimensions and position
-    const labelRect = label.getBoundingClientRect();
-    const containerRect = label.parentElement.getBoundingClientRect();
-
-    // Calculate position relative to container
-    const left = labelRect.left - containerRect.left;
-
-    // Set slider width and position
-    slider.style.width = `${labelRect.width}px`;
-    slider.style.transform = `translateX(${left}px)`;
+// ── Video detection ───────────────────────────────────────────
+function isVideo(src) {
+  return /\.(mp4|webm|mov)$/i.test(src ?? '');
 }
 
-// Event Listeners
-function initializeEventListeners() {
-    // Initialize segmented control slider
-    initializeSegmentedControl();
-
-    // Category toggle listeners
-    const categoryRadios = document.querySelectorAll('input[name="category"]');
-    categoryRadios.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            currentCategory = e.target.value;
-            updateSegmentedControlSlider(e.target);
-            renderGallery();
-        });
-    });
-
-    // Lightbox listeners
-    const lightbox = document.getElementById('lightbox');
-    const lightboxClose = document.getElementById('lightbox-close');
-    const lightboxCloseLeft = document.getElementById('lightbox-close-left');
-    const lightboxPrev = document.getElementById('lightbox-prev');
-    const lightboxNext = document.getElementById('lightbox-next');
-
-    lightboxClose.addEventListener('click', closeLightbox);
-    lightboxCloseLeft.addEventListener('click', closeLightbox);
-    lightboxPrev.addEventListener('click', () => navigateLightbox(-1));
-    lightboxNext.addEventListener('click', () => navigateLightbox(1));
-
-    // Close lightbox on background click (outside images)
-    lightbox.addEventListener('click', (e) => {
-        // Close if clicking on the lightbox background
-        if (e.target === lightbox || e.target.classList.contains('lightbox-scroll-container')) {
-            closeLightbox();
-        }
-    });
-
-    // Keyboard navigation for lightbox
-    document.addEventListener('keydown', (e) => {
-        const lightboxActive = lightbox.classList.contains('active');
-        const comicReaderActive = document.getElementById('comic-reader').classList.contains('active');
-
-        if (lightboxActive) {
-            if (e.key === 'Escape') {
-                closeLightbox();
-            } else if (e.key === 'ArrowLeft') {
-                navigateLightbox(-1);
-            } else if (e.key === 'ArrowRight') {
-                navigateLightbox(1);
-            }
-        }
-
-        if (comicReaderActive && e.key === 'Escape') {
-            closeComicReader();
-        }
-    });
-
-    // Comic reader listeners
-    const comicReaderClose = document.getElementById('comic-reader-close');
-    comicReaderClose.addEventListener('click', closeComicReader);
+// ── Aspect ratio helper ───────────────────────────────────────
+function applyAspectClass(img, el, landscapeClass) {
+  const apply = () => {
+    if (img.naturalWidth / img.naturalHeight >= 1.4)
+      el.classList.add(landscapeClass);
+  };
+  img.complete && img.naturalWidth > 0 ? apply() : img.addEventListener('load', apply, { once: true });
 }
 
-// Add orientation class based on image aspect ratio
-function addOrientationClass(item, img) {
-    // Wait for image to load to get natural dimensions
-    if (!img.complete) return;
+/* ============================================================
+   LANDING PAGE
+   ============================================================ */
+if (isLanding) {
+  const src = window.ARTWORKS?.featuredImage ?? getCategories()[0]?.pieces[0]?.mainImage;
 
-    const width = img.naturalWidth;
-    const height = img.naturalHeight;
-    const aspectRatio = width / height;
-
-    // Remove any existing orientation classes
-    item.classList.remove('landscape', 'ultra-wide', 'large-square');
-
-    // Add class based on aspect ratio and size
-    if (aspectRatio >= 1.8) {
-        item.classList.add('ultra-wide');
-    } else if (aspectRatio >= 1.2) {
-        item.classList.add('landscape');
-    } else if (aspectRatio >= 0.9 && aspectRatio <= 1.1) {
-        // Square images: check if they're large enough
-        // If width/height is >= 2000px, make them span 2 columns
-        if (width >= 2000 || height >= 2000) {
-            item.classList.add('large-square');
-        }
-    }
-    // Portrait images stay default (1 column)
-}
-
-// Render the gallery based on current filters
-function renderGallery() {
-    const gallery = document.getElementById('gallery');
-
-    // Add loading state
-    gallery.classList.add('loading');
-
-    // Small delay for smooth transition
-    setTimeout(() => {
-        // Get all items for the current category
-        currentFilteredItems = [...(artData[currentCategory] || [])];
-
-        // Sort by date (most recent first)
-        currentFilteredItems.sort((a, b) => {
-            const dateA = a.date ? new Date(a.date) : new Date(0);
-            const dateB = b.date ? new Date(b.date) : new Date(0);
-            return dateB - dateA;
-        });
-
-        // Clear gallery
-        gallery.innerHTML = '';
-
-        // If no items, show message
-        if (currentFilteredItems.length === 0) {
-            gallery.innerHTML = `
-                <div style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: var(--text-secondary);">
-                    <p style="font-size: 1.2rem;">No items found for this period</p>
-                    <p style="font-size: 0.9rem; margin-top: 1rem;">Add artwork to data/artworks.json to see it here!</p>
-                </div>
-            `;
-            gallery.classList.remove('loading');
-            return;
-        }
-
-        // Create gallery items
-        currentFilteredItems.forEach((item, index) => {
-            const galleryItem = createGalleryItem(item, index);
-            gallery.appendChild(galleryItem);
-        });
-
-        gallery.classList.remove('loading');
-    }, 150);
-}
-
-// Create a single gallery item
-function createGalleryItem(item, index) {
-    const div = document.createElement('div');
-    div.className = 'gallery-item';
-
-    // Handle video timelapses differently
-    if (item.isVideo) {
-        const imgAttrs = index < 3 ? 'fetchpriority="high"' : 'loading="lazy"';
-        const videoPreload = index === 0 ? 'preload="metadata"' : 'preload="none"';
-        div.innerHTML = `
-            <div class="gallery-item-video-container">
-                <img src="${item.image}" alt="${item.title}" class="gallery-item-image video-poster" ${imgAttrs}>
-                <video class="gallery-item-video" muted loop playsinline ${videoPreload}>
-                    <source src="${item.videoFile}" type="video/mp4">
-                </video>
-                <div class="video-play-indicator">▶</div>
-            </div>
-        `;
-
-        // Add hover functionality for video preview
-        const videoElement = div.querySelector('.gallery-item-video');
-        const posterElement = div.querySelector('.video-poster');
-        const playIndicator = div.querySelector('.video-play-indicator');
-
-        // Setup orientation class for poster image
-        posterElement.addEventListener('load', () => {
-            addOrientationClass(div, posterElement);
-        });
-
-        if (posterElement.complete) {
-            addOrientationClass(div, posterElement);
-        }
-
-        div.addEventListener('mouseenter', () => {
-            videoElement.style.opacity = '1';
-            posterElement.style.opacity = '0';
-            playIndicator.style.opacity = '0';
-            videoElement.play().catch(e => console.log('Video play failed:', e));
-        });
-
-        div.addEventListener('mouseleave', () => {
-            videoElement.pause();
-        });
-    } else if (item.isComic) {
-        // Comic items with chapter label and read CTA
-        const imgAttrs = index < 3 ? 'fetchpriority="high"' : 'loading="lazy"';
-        div.innerHTML = `
-            <img src="${item.image}" alt="${item.title}" class="gallery-item-image" ${imgAttrs}>
-            <div class="comic-overlay">
-                <span class="comic-chapter-label">${item.title.replace('Z Axis - ', '')}</span>
-                <span class="comic-read-cta">Read</span>
-            </div>
-        `;
+  if (src) {
+    if (isVideo(src)) {
+      // Swap the img for a video element
+      const bg  = document.getElementById('landing-bg');
+      const img = document.getElementById('landing-img');
+      const vid        = document.createElement('video');
+      vid.id           = 'landing-img';
+      vid.autoplay     = true;
+      vid.loop         = true;
+      vid.muted        = true;
+      vid.playsInline  = true;
+      vid.className    = img.className + ' loaded';
+      vid.src          = src;
+      bg.replaceChild(vid, img);
     } else {
-        // Regular image items
-        const imgAttrs = index < 3 ? 'fetchpriority="high"' : 'loading="lazy"';
-        div.innerHTML = `
-            <img src="${item.image}" alt="${item.title}" class="gallery-item-image" ${imgAttrs}>
-        `;
+      const img  = document.getElementById('landing-img');
+      img.onload = () => img.classList.add('loaded');
+      img.src    = src;
+    }
+  }
+
+  // Entrance fade-in for info + CTA
+  const parallaxEls = [
+    document.getElementById('landing-info'),
+    document.getElementById('landing-cta'),
+  ];
+  parallaxEls.forEach((el, i) => {
+    if (!el) return;
+    el.style.opacity    = '0';
+    el.style.transition = 'opacity 0.8s ease';
+    el.style.willChange = 'transform';
+    setTimeout(() => { el.style.opacity = '1'; }, 250 + i * 200);
+  });
+
+  // Parallax on scroll
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const y = window.scrollY * 0.3;
+        parallaxEls.forEach(el => { if (el) el.style.transform = `translateY(${-y}px)`; });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+}
+
+/* ============================================================
+   PORTFOLIO — CATEGORY GRID
+   ============================================================ */
+if (isPortfolio) {
+
+  let categories   = [];
+  let currentIndex = 0;
+  let isTransition = false;
+
+  const savedScrollY = {};
+  let wheelAccumX = 0, wheelTimer = null;
+  let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+
+  // ── Init ─────────────────────────────────────────────────
+  (() => {
+    categories = getCategories();
+    const track      = document.getElementById('slides-track');
+    const emptyState = document.getElementById('empty-state');
+
+    if (!categories.length) {
+      emptyState.hidden = false;
+      const nav = document.getElementById('portfolio-nav');
+      if (nav) nav.style.display = 'none';
+      return;
     }
 
-    // Add loading animation with light sweep effect
-    const imgElement = div.querySelector('.gallery-item-image');
-    if (imgElement) {
-        imgElement.addEventListener('load', () => {
-            div.classList.add('image-loaded');
-            // Add orientation class based on aspect ratio
-            addOrientationClass(div, imgElement);
-        });
-
-        // Also handle already-cached images
-        if (imgElement.complete && imgElement.naturalWidth > 0) {
-            div.classList.add('image-loaded');
-            addOrientationClass(div, imgElement);
-        }
-    }
-
-    // Add click listener - open comic reader for comics, video modal for videos, lightbox for others
-    if (item.isComic) {
-        div.addEventListener('click', () => openComicReader(item));
-    } else if (item.isVideo) {
-        div.addEventListener('click', () => openVideoModal(item));
-    } else {
-        div.addEventListener('click', () => openLightbox(index));
-    }
-
-    return div;
-}
-
-// Enhanced Lightbox functions
-function openLightbox(index) {
-    currentLightboxIndex = index;
-    const item = currentFilteredItems[index];
-
-    populateLightbox(item);
-
-    const lightbox = document.getElementById('lightbox');
-    lightbox.classList.add('active');
-    document.body.style.overflow = 'hidden';
-
-    // Scroll to top of modal
-    const scrollContainer = document.querySelector('.lightbox-scroll-container');
-    if (scrollContainer) {
-        scrollContainer.scrollTop = 0;
-    }
-}
-
-function populateLightbox(item) {
-    // Main image
-    const lightboxImg = document.getElementById('lightbox-img');
-    lightboxImg.src = item.image;
-    lightboxImg.alt = item.title;
-
-    // Title and description
-    document.getElementById('lightbox-title').textContent = item.title;
-    document.getElementById('lightbox-full-description').textContent =
-        item.fullDescription || item.description;
-
-    // Metadata
-    populateMetadata(item);
-
-    // Tags
-    populateTags(item.tags);
-
-    // Related images
-    populateRelatedImages(item.images);
-}
-
-function populateMetadata(item) {
-    // Software pills - top right
-    const softwarePillContainer = document.getElementById('lightbox-software-pill');
-    softwarePillContainer.innerHTML = '';
-
-    if (item.software && item.software.length > 0) {
-        item.software.forEach(software => {
-            const badge = document.createElement('span');
-            badge.className = 'software-badge';
-            badge.textContent = software;
-            softwarePillContainer.appendChild(badge);
-        });
-    }
-
-    // Hide old metadata sections
-    const softwareSection = document.getElementById('software-section');
-    const timeSection = document.getElementById('time-section');
-    const dimensionsSection = document.getElementById('dimensions-section');
-
-    softwareSection.style.display = 'none';
-    timeSection.style.display = 'none';
-    dimensionsSection.style.display = 'none';
-}
-
-function populateTags(tags) {
-    // Hide tags section
-    const tagsContainer = document.getElementById('lightbox-tags');
-    tagsContainer.style.display = 'none';
-}
-
-function populateRelatedImages(images) {
-    const relatedContainer = document.getElementById('related-images');
-    relatedContainer.innerHTML = '';
-
-    if (images && images.length > 1) {
-        // Show all images except the first (which is the main image)
-        images.slice(1).forEach((img) => {
-            const relatedItem = document.createElement('div');
-            relatedItem.className = 'related-image-item';
-            relatedItem.innerHTML = `
-                <img src="${img.url}" alt="${img.label}">
-            `;
-
-            relatedContainer.appendChild(relatedItem);
-        });
-    }
-}
-
-function closeLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    lightbox.classList.remove('active');
-    document.body.style.overflow = ''; // Restore scrolling
-}
-
-function navigateLightbox(direction) {
-    currentLightboxIndex += direction;
-
-    // Wrap around
-    if (currentLightboxIndex < 0) {
-        currentLightboxIndex = currentFilteredItems.length - 1;
-    } else if (currentLightboxIndex >= currentFilteredItems.length) {
-        currentLightboxIndex = 0;
-    }
-
-    const item = currentFilteredItems[currentLightboxIndex];
-
-    // Fade out
-    const content = document.querySelector('.lightbox-content');
-    content.style.opacity = '0';
-
-    setTimeout(() => {
-        populateLightbox(item);
-        content.style.opacity = '1';
-
-        // Scroll to top
-        const scrollContainer = document.querySelector('.lightbox-scroll-container');
-        if (scrollContainer) {
-            scrollContainer.scrollTop = 0;
-        }
-    }, 150);
-}
-
-// Comic Reader functions
-let lastScrollTop = 0;
-
-function openComicReader(item) {
-    const comicReader = document.getElementById('comic-reader');
-    const comicReaderTitle = document.getElementById('comic-reader-title');
-    const comicReaderContent = document.getElementById('comic-reader-content');
-    const comicPageCounter = document.getElementById('comic-page-counter');
-    const comicHeader = document.getElementById('comic-reader-header');
-    const scrollToTopBtn = document.getElementById('comic-scroll-to-top');
-
-    // Set title
-    comicReaderTitle.textContent = item.title;
-
-    // Clear content
-    comicReaderContent.innerHTML = '';
-
-    // Get all comic pages from images array
-    const pages = item.images || [];
-
-    // Update page counter
-    comicPageCounter.textContent = `${pages.length} ${pages.length === 1 ? 'Page' : 'Pages'}`;
-
-    // Add all pages vertically
-    pages.forEach((page, index) => {
-        const img = document.createElement('img');
-        img.src = page.url;
-        img.alt = `${item.title} - Page ${index + 1}`;
-        img.className = 'comic-page';
-        comicReaderContent.appendChild(img);
+    categories.forEach((cat, i) => {
+      savedScrollY[i] = 0;
+      track.appendChild(buildCategorySlide(cat, i));
     });
 
-    // Show comic reader
-    comicReader.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    const counterTotal = document.getElementById('counter-total');
+    if (counterTotal) counterTotal.textContent = pad(categories.length);
+    buildTabs();
 
-    // Reset header and button states
-    comicHeader.classList.remove('hidden');
-    scrollToTopBtn.classList.remove('visible');
-    lastScrollTop = 0;
-
-    // Scroll to top
-    comicReaderContent.scrollTop = 0;
-
-    // Add scroll listener for auto-hide header and scroll-to-top button
-    comicReaderContent.addEventListener('scroll', handleComicScroll);
-
-    // Add click listener to scroll-to-top button
-    scrollToTopBtn.addEventListener('click', scrollComicToTop);
-}
-
-function handleComicScroll() {
-    const comicReaderContent = document.getElementById('comic-reader-content');
-    const comicHeader = document.getElementById('comic-reader-header');
-    const scrollToTopBtn = document.getElementById('comic-scroll-to-top');
-    const scrollTop = comicReaderContent.scrollTop;
-
-    // Auto-hide header on scroll down, show on scroll up
-    if (scrollTop > lastScrollTop && scrollTop > 100) {
-        // Scrolling down
-        comicHeader.classList.add('hidden');
-        comicReaderContent.classList.add('header-hidden');
-    } else {
-        // Scrolling up
-        comicHeader.classList.remove('hidden');
-        comicReaderContent.classList.remove('header-hidden');
+    // Restore category position when returning from a piece page
+    const params   = new URLSearchParams(window.location.search);
+    const catParam = parseInt(params.get('cat') ?? '0', 10);
+    if (catParam > 0 && catParam < categories.length) {
+      track.style.transition = 'none';
+      track.style.transform  = `translateX(calc(${catParam} * -100vw))`;
+      currentIndex = catParam;
+      requestAnimationFrame(() => { track.style.transition = ''; });
     }
 
-    lastScrollTop = scrollTop;
+    updateUI();
+    bindKeyboard();
+    bindWheel();
+    bindTouch();
+  })();
 
-    // Show scroll-to-top button after scrolling down 500px
-    if (scrollTop > 500) {
-        scrollToTopBtn.classList.add('visible');
-    } else {
-        scrollToTopBtn.classList.remove('visible');
-    }
-}
+  // ── Build subcategory slide ("Other Fun Stuff") ───────────
+  function buildSubcategorySlide(cat, catIndex) {
+    const slide         = document.createElement('div');
+    slide.className     = 'slide';
+    slide.dataset.index = catIndex;
 
-function scrollComicToTop() {
-    const comicReaderContent = document.getElementById('comic-reader-content');
-    comicReaderContent.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+    const grid = document.createElement('div');
+    grid.className      = 'slide-grid';
+    grid.dataset.pieces = cat.subcategories.length;
+    grid.dataset.layout = '2x2';
+
+    cat.subcategories.forEach((sub, subIndex) => {
+      const card      = document.createElement('div');
+      card.className  = 'piece-card subcat-card' + (sub.externalLink ? ' external' : '');
+
+      // Mini 2×2 image preview
+      const preview   = document.createElement('div');
+      preview.className = 'subcat-preview';
+      (sub.preview ?? []).slice(0, 4).forEach(src => {
+        const img   = document.createElement('img');
+        img.src     = src;
+        img.alt     = '';
+        img.loading = 'lazy';
+        preview.appendChild(img);
+      });
+      card.appendChild(preview);
+
+      // Label
+      const label       = document.createElement('div');
+      label.className   = 'subcat-label';
+      label.textContent = sub.title;
+      card.appendChild(label);
+
+      // Click
+      card.addEventListener('click', () => {
+        if (sub.externalLink) {
+          window.open(sub.externalLink, '_blank');
+        } else {
+          window.location.href = `piece.html?cat=${catIndex}&sub=${subIndex}`;
+        }
+      });
+
+      grid.appendChild(card);
     });
-}
 
-function closeComicReader() {
-    const comicReader = document.getElementById('comic-reader');
-    const comicReaderContent = document.getElementById('comic-reader-content');
-    const scrollToTopBtn = document.getElementById('comic-scroll-to-top');
+    slide.appendChild(grid);
+    return slide;
+  }
 
-    // Remove scroll listener
-    comicReaderContent.removeEventListener('scroll', handleComicScroll);
-    scrollToTopBtn.removeEventListener('click', scrollComicToTop);
+  // ── Build a category slide ────────────────────────────────
+  function buildCategorySlide(cat, catIndex) {
+    // Subcategory hub (e.g. "Other Fun Stuff")
+    if (cat.subcategories) return buildSubcategorySlide(cat, catIndex);
+    const slide         = document.createElement('div');
+    slide.className     = 'slide';
+    slide.dataset.index = catIndex;
 
-    comicReader.classList.remove('active');
-    document.body.style.overflow = '';
-}
+    // Animation category with a featured hero video
+    if (cat.featuredVideo) {
+      slide.classList.add('slide-animation');
 
-// Video Modal for Timelapses
-function openVideoModal(item) {
-    // Create modal if it doesn't exist
-    let videoModal = document.getElementById('video-modal');
-    if (!videoModal) {
-        videoModal = document.createElement('div');
-        videoModal.id = 'video-modal';
-        videoModal.className = 'video-modal';
-        videoModal.innerHTML = `
-            <button class="video-modal-close" id="video-modal-close"></button>
-            <div class="video-modal-content">
-                <video id="video-modal-player" controls autoplay>
-                    <source src="" type="video/mp4">
-                </video>
-                <div class="video-modal-info">
-                    <h2 id="video-modal-title"></h2>
-                    <p id="video-modal-description"></p>
-                    <div class="video-modal-software" id="video-modal-software"></div>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(videoModal);
-
-        // Add close listeners
-        const closeBtn = videoModal.querySelector('#video-modal-close');
-        closeBtn.addEventListener('click', closeVideoModal);
-
-        videoModal.addEventListener('click', (e) => {
-            if (e.target === videoModal) {
-                closeVideoModal();
-            }
+      // Hero layer — full-screen looping video (pieces[0] is the hero piece)
+      const hero = document.createElement('div');
+      hero.className = 'anim-hero';
+      const heroVid       = document.createElement('video');
+      heroVid.src         = cat.featuredVideo;
+      heroVid.autoplay    = true;
+      heroVid.loop        = true;
+      heroVid.muted       = true;
+      heroVid.playsInline = true;
+      hero.appendChild(heroVid);
+      // Make hero clickable to its detail page (pieces[0])
+      if (cat.pieces?.[0]) {
+        hero.style.cursor = 'pointer';
+        hero.addEventListener('click', () => {
+          window.location.href = `piece.html?cat=${catIndex}&piece=0`;
         });
+      }
+      slide.appendChild(hero);
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && videoModal.classList.contains('active')) {
-                closeVideoModal();
-            }
-        });
+      // Grid layer — hidden until toggle, uses pieces[1+]
+      const gridWrap = document.createElement('div');
+      gridWrap.className = 'anim-grid-wrap';
+      const grid = document.createElement('div');
+      grid.className = 'slide-grid';
+      const gridPieces = (cat.pieces ?? []).slice(1, 5); // skip pieces[0] (hero)
+      const count = Math.min(gridPieces.length, 4);
+      grid.dataset.pieces = count;
+      grid.dataset.layout = cat.gridLayout ?? '';
+      gridPieces.forEach((piece, i) => {
+        grid.appendChild(buildPieceCard(piece, catIndex, i + 1)); // offset index by 1
+      });
+      const gridCtrl = setupVideoGrid(grid, false); // don't autostart — hero is showing
+      gridWrap.appendChild(grid);
+      slide.appendChild(gridWrap);
+
+      // Toggle button
+      const btn = document.createElement('button');
+      btn.className = 'anim-toggle-btn';
+      btn.setAttribute('aria-label', 'Toggle animation view');
+      btn.innerHTML = `
+        <span class="anim-btn-state state-to-grid" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 13 13" fill="currentColor">
+            <rect x="0"   y="0"   width="5.5" height="5.5" rx="0.5"/>
+            <rect x="7.5" y="0"   width="5.5" height="5.5" rx="0.5"/>
+            <rect x="0"   y="7.5" width="5.5" height="5.5" rx="0.5"/>
+            <rect x="7.5" y="7.5" width="5.5" height="5.5" rx="0.5"/>
+          </svg>
+          <span class="anim-btn-hint">More animations</span>
+        </span>
+        <span class="anim-btn-state state-to-full" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+            <path d="M1 4.5V1h3.5M8.5 1H12v3.5M12 8.5V12H8.5M4.5 12H1V8.5"/>
+          </svg>
+        </span>
+      `;
+      btn.addEventListener('click', () => {
+        const isGrid = slide.classList.toggle('show-grid');
+        if (isGrid) {
+          heroVid.pause();
+          gridCtrl.start();
+        } else {
+          heroVid.play();
+          gridCtrl.pause();
+        }
+      });
+      slide.appendChild(btn);
+      return slide;
     }
 
-    // Populate modal
-    const videoPlayer = document.getElementById('video-modal-player');
-    const videoTitle = document.getElementById('video-modal-title');
-    const videoDescription = document.getElementById('video-modal-description');
-    const videoSoftware = document.getElementById('video-modal-software');
+    // Standard category slide
+    const pieces = cat.pieces ?? [];
+    const count  = Math.min(pieces.length, 5);
 
-    videoPlayer.querySelector('source').src = item.videoFile;
-    videoPlayer.load();
-    videoTitle.textContent = item.title;
-    videoDescription.textContent = item.fullDescription || item.description;
+    const grid = document.createElement('div');
+    grid.className = 'slide-grid';
+    grid.dataset.pieces = count;
+    if (cat.gridLayout) grid.dataset.layout = cat.gridLayout;
 
-    // Software badges
-    videoSoftware.innerHTML = '';
-    if (item.software && item.software.length > 0) {
-        item.software.forEach(software => {
-            const badge = document.createElement('span');
-            badge.className = 'software-badge';
-            badge.textContent = software;
-            videoSoftware.appendChild(badge);
-        });
+    pieces.slice(0, 5).forEach((piece, pieceIndex) => {
+      grid.appendChild(buildPieceCard(piece, catIndex, pieceIndex));
+    });
+
+    setupVideoGrid(grid);
+
+    slide.appendChild(grid);
+    return slide;
+  }
+
+  // ── Build a piece card ────────────────────────────────────
+  function buildPieceCard(piece, catIndex, pieceIndex) {
+    const card     = document.createElement('div');
+    card.className = 'piece-card';
+
+    if (piece.mainImage) {
+      if (isVideo(piece.mainImage)) {
+        const vid        = document.createElement('video');
+        vid.src          = piece.mainImage;
+        vid.autoplay     = false; /* playback managed by setupVideoGrid */
+        vid.loop         = true;
+        vid.muted        = true;
+        vid.playsInline  = true;
+        vid.className    = 'piece-card-media';
+        card.appendChild(vid);
+      } else {
+        const img   = document.createElement('img');
+        img.src     = piece.mainImage;
+        img.alt     = piece.title ?? '';
+        img.loading = catIndex === 0 && pieceIndex === 0 ? 'eager' : 'lazy';
+        img.className = 'piece-card-media';
+        card.appendChild(img);
+      }
     }
 
-    // Show modal
-    videoModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    const overlay   = document.createElement('div');
+    overlay.className = 'piece-card-overlay';
+    const title     = document.createElement('span');
+    title.className = 'piece-card-title';
+    title.textContent = piece.title ?? '';
+    overlay.appendChild(title);
+    card.appendChild(overlay);
+
+    card.addEventListener('click', () => {
+      window.location.href = `piece.html?cat=${catIndex}&piece=${pieceIndex}`;
+    });
+
+    return card;
+  }
+
+  // ── Video grid: all play simultaneously ───────────────────
+  function setupVideoGrid(grid, autostart = true) {
+    const videos = Array.from(grid.querySelectorAll('video'));
+    if (autostart) videos.forEach(v => v.play());
+    return {
+      start: () => videos.forEach(v => v.play()),
+      pause: () => videos.forEach(v => v.pause()),
+    };
+  }
+
+  // ── Navigation ────────────────────────────────────────────
+  function navigate(direction) {
+    if (isTransition) return;
+    goToSlide(direction === 'next' ? currentIndex + 1 : currentIndex - 1);
+  }
+
+  function goToSlide(targetIndex) {
+    if (isTransition || targetIndex === currentIndex) return;
+    if (targetIndex < 0 || targetIndex >= categories.length) return;
+
+    isTransition = true;
+    document.getElementById('slides-track').style.transform =
+      `translateX(calc(${targetIndex} * -100vw))`;
+
+    currentIndex = targetIndex;
+    updateUI();
+
+    setTimeout(() => { isTransition = false; }, 750);
+  }
+
+  // ── Build nav tabs (once) ─────────────────────────────────
+  function buildTabs() {
+    const container = document.getElementById('nav-tabs');
+    if (!container) return;
+    categories.forEach((cat, i) => {
+      if (i > 0) {
+        const sep = document.createElement('span');
+        sep.className = 'nav-tab-sep';
+        sep.textContent = '·';
+        sep.setAttribute('aria-hidden', 'true');
+        container.appendChild(sep);
+      }
+      const btn = document.createElement('button');
+      btn.className = 'nav-tab' + (i === currentIndex ? ' active' : '');
+      btn.setAttribute('role', 'tab');
+      btn.setAttribute('aria-selected', i === currentIndex ? 'true' : 'false');
+      btn.innerHTML = `<span>${esc(cat.title)}</span>`;
+      btn.addEventListener('click', () => goToSlide(i));
+      container.appendChild(btn);
+    });
+  }
+
+  // ── UI ────────────────────────────────────────────────────
+  function updateUI() { updateCounter(); updateTabs(); updateSideNav(); }
+
+  function updateCounter() {
+    const el = document.getElementById('counter-current');
+    if (el) el.textContent = pad(currentIndex + 1);
+  }
+
+  function updateTabs() {
+    document.querySelectorAll('.nav-tab').forEach((tab, i) => {
+      tab.classList.toggle('active', i === currentIndex);
+      tab.setAttribute('aria-selected', i === currentIndex ? 'true' : 'false');
+    });
+  }
+
+  function updateSideNav() {
+    const prev = document.getElementById('nav-prev');
+    const next = document.getElementById('nav-next');
+    const prevLabel = document.getElementById('nav-prev-label');
+    const nextLabel = document.getElementById('nav-next-label');
+
+    if (prev) prev.disabled = currentIndex === 0;
+    if (next) next.disabled = currentIndex === categories.length - 1;
+    if (prevLabel) prevLabel.textContent = currentIndex > 0 ? categories[currentIndex - 1].title : '';
+    if (nextLabel) nextLabel.textContent = currentIndex < categories.length - 1 ? categories[currentIndex + 1].title : '';
+  }
+
+  // ── Keyboard ──────────────────────────────────────────────
+  function bindKeyboard() {
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); navigate('prev'); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); navigate('next'); }
+    });
+    document.getElementById('nav-prev')?.addEventListener('click', () => navigate('prev'));
+    document.getElementById('nav-next')?.addEventListener('click', () => navigate('next'));
+  }
+
+  // ── Trackpad horizontal swipe ─────────────────────────────
+  function bindWheel() {
+    document.addEventListener('wheel', e => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.3 && Math.abs(e.deltaX) > 8) {
+        e.preventDefault();
+        wheelAccumX += e.deltaX;
+        clearTimeout(wheelTimer);
+        wheelTimer = setTimeout(() => {
+          if (Math.abs(wheelAccumX) > 40) navigate(wheelAccumX > 0 ? 'next' : 'prev');
+          wheelAccumX = 0;
+        }, 60);
+      }
+    }, { passive: false });
+  }
+
+  // ── Touch swipe ───────────────────────────────────────────
+  function bindTouch() {
+    const container = document.getElementById('portfolio-container');
+    container.addEventListener('touchstart', e => {
+      touchStartX    = e.touches[0].clientX;
+      touchStartY    = e.touches[0].clientY;
+      touchStartTime = Date.now();
+    }, { passive: true });
+    container.addEventListener('touchend', e => {
+      const dx = touchStartX - e.changedTouches[0].clientX;
+      const dy = touchStartY - e.changedTouches[0].clientY;
+      if (Math.abs(dx) > Math.abs(dy) * 1.5 && Math.abs(dx) > 44 && Date.now() - touchStartTime < 500)
+        navigate(dx > 0 ? 'next' : 'prev');
+    }, { passive: true });
+  }
 }
 
-function closeVideoModal() {
-    const videoModal = document.getElementById('video-modal');
-    const videoPlayer = document.getElementById('video-modal-player');
+/* ============================================================
+   PIECE DETAIL PAGE
+   ============================================================ */
+if (isPiece) {
+  const params     = new URLSearchParams(window.location.search);
+  const catIndex   = parseInt(params.get('cat')   ?? '0', 10);
+  const pieceIndex = parseInt(params.get('piece') ?? '0', 10);
+  const subParam   = params.get('sub');
 
-    if (videoModal) {
-        videoPlayer.pause();
-        videoModal.classList.remove('active');
-        document.body.style.overflow = '';
+  const categories = getCategories();
+  const category   = categories[catIndex];
+
+  // ── Subcategory gallery view ──────────────────────────────
+  if (subParam !== null) {
+    const sub = category?.subcategories?.[parseInt(subParam, 10)];
+    if (!sub) {
+      document.getElementById('piece-title').textContent = 'Not found.';
+    } else {
+      document.title = `${sub.title} — Bianca Banu`;
+      document.body.classList.add('page-subcategory');
+
+      const backLink = document.getElementById('piece-back');
+      if (backLink) backLink.href = `portfolio.html?cat=${catIndex}`;
+      const backLabel = document.getElementById('piece-back-label');
+      if (backLabel) backLabel.textContent = category.title;
+
+      document.getElementById('piece-title').textContent = sub.title;
+      document.getElementById('piece-year').textContent  = '';
+
+      const detailEl = document.getElementById('piece-detail-images');
+      (sub.pieces ?? []).forEach(src => {
+        const fig   = document.createElement('figure');
+        const img   = document.createElement('img');
+        img.src     = src;
+        img.alt     = '';
+        img.loading = 'eager';
+        fig.appendChild(img);
+        detailEl.appendChild(fig);
+      });
     }
+
+  // ── Regular piece view ────────────────────────────────────
+  } else {
+  const piece = category?.pieces[pieceIndex];
+
+  if (!piece) {
+    document.getElementById('piece-title').textContent = 'Piece not found.';
+  } else {
+    // Page title
+    document.title = `${piece.title} — Bianca Banu`;
+
+    // Back label
+    const backLabel = document.getElementById('piece-back-label');
+    if (backLabel) backLabel.textContent = category.title;
+
+    // Sibling category label
+    const sibCat = document.getElementById('piece-sibling-category');
+    if (sibCat) sibCat.textContent = category.title;
+
+    // Back link carries cat param so portfolio re-opens at right category
+    const backLink = document.getElementById('piece-back');
+    if (backLink) backLink.href = `portfolio.html?cat=${catIndex}`;
+    const backGrid = document.getElementById('piece-back-grid');
+    if (backGrid) backGrid.href = `portfolio.html?cat=${catIndex}`;
+
+    // Hero image / video
+    if (piece.mainImage) {
+      const hero = document.getElementById('piece-hero');
+
+      if (isVideo(piece.mainImage)) {
+        // Hide the img elements, show a video instead
+        document.getElementById('piece-img-bg').style.display = 'none';
+        document.getElementById('piece-img').style.display    = 'none';
+        const vid       = document.createElement('video');
+        vid.src         = piece.mainImage;
+        vid.autoplay    = true;
+        vid.loop        = true;
+        vid.muted       = true;
+        vid.playsInline = true;
+        vid.id          = 'piece-video-hero';
+        hero.appendChild(vid);
+        hero.classList.add('hero-landscape'); // videos are typically landscape
+      } else {
+        const imgBg = document.getElementById('piece-img-bg');
+        const img   = document.getElementById('piece-img');
+        imgBg.src = piece.mainImage;
+        img.src   = piece.mainImage;
+        img.alt   = piece.title ?? '';
+        applyAspectClass(img, hero, 'hero-landscape');
+      }
+    }
+
+    // Header — title and year only
+    document.getElementById('piece-title').textContent = piece.title ?? '';
+    document.getElementById('piece-year').textContent  = piece.year  ?? '';
+
+    // Description
+    if (piece.description) {
+      document.getElementById('piece-description').textContent = piece.description;
+    }
+
+    // Detail media — images and videos in order (mp4s auto-detected by extension)
+    const detailEl = document.getElementById('piece-detail-images');
+    (piece.detailImages ?? []).forEach(item => {
+      const fig      = document.createElement('figure');
+      let   media;
+
+      if (isVideo(item.src)) {
+        media             = document.createElement('video');
+        media.src         = item.src;
+        media.controls    = true;
+        media.muted       = true;
+        media.playsInline = true;
+        media.className   = 'detail-video';
+      } else {
+        media         = document.createElement('img');
+        media.src     = item.src;
+        media.alt     = item.caption ?? '';
+        media.loading = 'eager';
+      }
+
+      fig.appendChild(media);
+      if (item.caption) {
+        const cap = document.createElement('figcaption');
+        cap.textContent = item.caption;
+        fig.appendChild(cap);
+      }
+      detailEl.appendChild(fig);
+    });
+
+    // Prev / next within category
+    const prevBtn = document.getElementById('piece-prev');
+    const nextBtn = document.getElementById('piece-next');
+
+    if (pieceIndex === 0) prevBtn.disabled = true;
+    else prevBtn.addEventListener('click', () => {
+      window.location.href = `piece.html?cat=${catIndex}&piece=${pieceIndex - 1}`;
+    });
+
+    if (pieceIndex >= category.pieces.length - 1) nextBtn.disabled = true;
+    else nextBtn.addEventListener('click', () => {
+      window.location.href = `piece.html?cat=${catIndex}&piece=${pieceIndex + 1}`;
+    });
+  }
+  } // end else (regular piece view)
 }
+
+// ── Utility ───────────────────────────────────────────────────
+function pad(n) { return String(n).padStart(2, '0'); }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work — Bianca Banu</title>
+
+  <meta name="description" content="Selected work by Bianca Banu — character design, illustration, and animation." />
+  <meta name="robots"      content="noindex" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body id="page-portfolio">
+
+  <!-- Top bar: logo left · category tabs center · counter right -->
+  <nav id="portfolio-nav">
+    <a href="index.html" id="nav-home">
+      <img id="nav-logo" src="logo.png" alt="" aria-hidden="true" />
+      Bianca Banu
+    </a>
+    <div id="nav-tabs" role="tablist" aria-label="Categories"></div>
+  </nav>
+
+  <!-- Side navigation -->
+  <button id="nav-prev" class="side-nav" aria-label="Previous category" disabled>
+    <svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M10 3 5.5 8 10 13" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <button id="nav-next" class="side-nav" aria-label="Next category">
+    <svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M6 3l4.5 5L6 13" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <!-- Carousel -->
+  <div id="portfolio-container">
+    <div id="slides-track"></div>
+  </div>
+
+  <!-- Empty state -->
+  <div id="empty-state" hidden>
+    <p>Work coming soon.</p>
+  </div>
+
+  <script src="data/artworks.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

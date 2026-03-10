@@ -6,7 +6,8 @@
       "Bash(pkill:*)",
       "Bash(find:*)",
       "Bash(sips:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
