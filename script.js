@@ -135,7 +135,8 @@ if (isPortfolio) {
     updateUI();
     bindKeyboard();
     bindWheel();
-    bindTouch();
+    // Only bind touch swipe on non-touch devices — mobile uses chevron buttons
+    if (!window.matchMedia('(hover: none)').matches) bindTouch();
   })();
 
   // ── Build subcategory slide ("Other Fun Stuff") ───────────
@@ -196,8 +197,8 @@ if (isPortfolio) {
     slide.className     = 'slide';
     slide.dataset.index = catIndex;
 
-    // Animation category with a featured hero video
-    if (cat.featuredVideo) {
+    // Animation: hero+toggle on desktop only — mobile uses standard vertical scroll
+    if (cat.featuredVideo && !window.matchMedia('(hover: none)').matches) {
       slide.classList.add('slide-animation');
 
       // Hero layer — full-screen looping video (pieces[0] is the hero piece)
@@ -210,12 +211,24 @@ if (isPortfolio) {
       heroVid.muted       = true;
       heroVid.playsInline = true;
       hero.appendChild(heroVid);
-      // Make hero clickable to its detail page (pieces[0])
+      // Link hero to detail page — eye icon on touch, full click on desktop
       if (cat.pieces?.[0]) {
-        hero.style.cursor = 'pointer';
-        hero.addEventListener('click', () => {
-          window.location.href = `piece.html?cat=${catIndex}&piece=0`;
-        });
+        const isTouch = window.matchMedia('(hover: none)').matches;
+        if (!isTouch) {
+          hero.style.cursor = 'pointer';
+          hero.addEventListener('click', () => {
+            window.location.href = `piece.html?cat=${catIndex}&piece=0`;
+          });
+        } else {
+          const enterBtn     = document.createElement('button');
+          enterBtn.className = 'piece-enter-btn';
+          enterBtn.setAttribute('aria-label', 'View details');
+          enterBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+          enterBtn.addEventListener('click', () => {
+            window.location.href = `piece.html?cat=${catIndex}&piece=0`;
+          });
+          hero.appendChild(enterBtn);
+        }
       }
       slide.appendChild(hero);
 
@@ -298,11 +311,15 @@ if (isPortfolio) {
       if (isVideo(piece.mainImage)) {
         const vid        = document.createElement('video');
         vid.src          = piece.mainImage;
-        vid.autoplay     = false; /* playback managed by setupVideoGrid */
+        // On mobile each video is full-screen snap-scroll — autoplay first, others via setupVideoGrid
+        vid.autoplay     = false;
         vid.loop         = true;
         vid.muted        = true;
         vid.playsInline  = true;
         vid.className    = 'piece-card-media';
+        vid.addEventListener('loadedmetadata', () => {
+          if (vid.videoWidth / vid.videoHeight >= 1.4) card.classList.add('piece-card-landscape');
+        }, { once: true });
         card.appendChild(vid);
       } else {
         const img   = document.createElement('img');
@@ -311,6 +328,8 @@ if (isPortfolio) {
         img.loading = catIndex === 0 && pieceIndex === 0 ? 'eager' : 'lazy';
         img.className = 'piece-card-media';
         card.appendChild(img);
+        // Tag landscape cards so mobile CSS can show full width
+        applyAspectClass(img, card, 'piece-card-landscape');
       }
     }
 
@@ -322,9 +341,27 @@ if (isPortfolio) {
     overlay.appendChild(title);
     card.appendChild(overlay);
 
-    card.addEventListener('click', () => {
+    const navigateToPiece = () => {
       window.location.href = `piece.html?cat=${catIndex}&piece=${pieceIndex}`;
-    });
+    };
+
+    const isTouch = window.matchMedia('(hover: none)').matches;
+
+    if (!isTouch) {
+      // Desktop: whole card is clickable
+      card.addEventListener('click', navigateToPiece);
+    } else {
+      // Mobile: eye icon only — avoids accidental taps while scrolling
+      const enterBtn     = document.createElement('button');
+      enterBtn.className = 'piece-enter-btn';
+      enterBtn.setAttribute('aria-label', 'View details');
+      enterBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>`;
+      enterBtn.addEventListener('click', e => { e.stopPropagation(); navigateToPiece(); });
+      card.appendChild(enterBtn);
+    }
 
     return card;
   }
@@ -433,19 +470,72 @@ if (isPortfolio) {
     }, { passive: false });
   }
 
-  // ── Touch swipe ───────────────────────────────────────────
+  // ── Touch swipe — follows finger in real-time ─────────────
   function bindTouch() {
     const container = document.getElementById('portfolio-container');
+    const track     = document.getElementById('slides-track');
+    let dragAxis    = null; // 'x' | 'y' | null
+    let dragging    = false;
+
     container.addEventListener('touchstart', e => {
+      if (isTransition) return;
       touchStartX    = e.touches[0].clientX;
       touchStartY    = e.touches[0].clientY;
       touchStartTime = Date.now();
+      dragAxis       = null;
+      dragging       = false;
+      // Kill CSS transition — track follows finger instantly
+      track.style.transition = 'none';
     }, { passive: true });
+
+    container.addEventListener('touchmove', e => {
+      if (isTransition) return;
+
+      const dx = e.touches[0].clientX - touchStartX;
+      const dy = e.touches[0].clientY - touchStartY;
+
+      // Lock axis on first significant movement
+      if (!dragAxis && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+        dragAxis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      }
+
+      if (dragAxis === 'x') {
+        e.preventDefault(); // block native vertical scroll while swiping
+        dragging = true;
+
+        // Rubber-band resistance at edges
+        let drag = dx;
+        if ((currentIndex === 0 && dx > 0) || (currentIndex === categories.length - 1 && dx < 0)) {
+          drag = dx * 0.25;
+        }
+
+        track.style.transform = `translateX(calc(${currentIndex * -100}vw + ${drag}px))`;
+      }
+    }, { passive: false });
+
     container.addEventListener('touchend', e => {
-      const dx = touchStartX - e.changedTouches[0].clientX;
-      const dy = touchStartY - e.changedTouches[0].clientY;
-      if (Math.abs(dx) > Math.abs(dy) * 1.5 && Math.abs(dx) > 44 && Date.now() - touchStartTime < 500)
-        navigate(dx > 0 ? 'next' : 'prev');
+      // Restore CSS transition before any snap
+      track.style.transition = '';
+
+      if (!dragging || dragAxis !== 'x') {
+        dragAxis = null;
+        dragging = false;
+        return;
+      }
+
+      const dx       = e.changedTouches[0].clientX - touchStartX;
+      const dt       = Math.max(1, Date.now() - touchStartTime);
+      const velocity = Math.abs(dx) / dt; // px/ms
+
+      if (Math.abs(dx) > window.innerWidth * 0.18 || velocity > 0.3) {
+        navigate(dx < 0 ? 'next' : 'prev');
+      } else {
+        // Not enough — snap back
+        track.style.transform = `translateX(calc(${currentIndex * -100}vw))`;
+      }
+
+      dragAxis = null;
+      dragging = false;
     }, { passive: true });
   }
 }

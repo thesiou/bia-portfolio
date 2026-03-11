@@ -257,31 +257,31 @@ a {
   color: rgba(255, 255, 255, 0.65);
 }
 
-/* ── Side navigation arrows — minimal chevrons ───────────── */
+/* ── Side navigation arrows ──────────────────────────────── */
 .side-nav {
-  position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 100;
-  width: 44px;
-  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: rgba(255, 255, 255, 0.55);
   transition: color 0.2s ease, opacity 0.3s ease;
-  filter: drop-shadow(0 1px 4px rgba(0,0,0,1)) drop-shadow(0 0 16px rgba(0,0,0,0.8));
 }
 
-.side-nav:hover { color: rgba(255, 255, 255, 1); }
-
-.side-nav:disabled {
-  opacity: 0;
-  pointer-events: none;
+/* Desktop: fixed on screen edges */
+@media (min-width: 769px) {
+  .side-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    width: 44px;
+    height: 44px;
+    filter: drop-shadow(0 1px 4px rgba(0,0,0,1)) drop-shadow(0 0 16px rgba(0,0,0,0.8));
+  }
+  .side-nav:hover { color: rgba(255, 255, 255, 1); }
+  .side-nav:disabled { opacity: 0; pointer-events: none; }
+  #nav-prev { left: 12px; }
+  #nav-next { right: 12px; }
 }
-
-#nav-prev { left: 12px; }
-#nav-next { right: 12px; }
 
 /* ── Category tabs ───────────────────────────────────────── */
 #nav-tabs {
@@ -462,6 +462,7 @@ html::-webkit-scrollbar { display: none; }
 .anim-grid-wrap {
   opacity: 0;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .slide-animation.show-grid .anim-hero {
@@ -518,6 +519,28 @@ html::-webkit-scrollbar { display: none; }
 .slide-animation.show-grid .state-to-grid { opacity: 0; pointer-events: none; }
 .slide-animation.show-grid .state-to-full  { opacity: 1; pointer-events: auto; }
 
+/* ── Piece enter button (mobile eye icon) ────────────────── */
+.piece-enter-btn {
+  display: none; /* desktop: full card is clickable */
+}
+
+@media (max-width: 768px) {
+  .piece-enter-btn {
+    display: flex;
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    z-index: 20;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 50%;
+  }
+}
+
 /* ── Subcategory cards ───────────────────────────────────── */
 .subcat-preview {
   position: absolute;
@@ -542,14 +565,13 @@ html::-webkit-scrollbar { display: none; }
   left: 0;
   right: 0;
   z-index: 10;
-  padding: 28px 24px 18px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 100%);
+  padding: 16px 20px;
   font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.9);
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 1), 0 0 20px rgba(0, 0, 0, 0.9);
   pointer-events: none;
 }
 
@@ -1152,24 +1174,75 @@ body.piece-expanded #piece-img {
    ============================================================ */
 
 @media (max-width: 768px) {
+  /* Landing: info at top, CTA at bottom on mobile */
   #landing-footer {
+    top: 0;
+    bottom: 0;
     flex-direction: column;
-    align-items: flex-start;
-    padding: 36px 28px;
-    gap: 28px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px 24px 52px;
+    gap: 0;
+    background: none;
+    pointer-events: none;
+  }
+
+  #landing-info {
+    align-items: center;
+    text-align: center;
+  }
+
+  #landing-logo {
+    height: 80px;
+    margin-bottom: 12px;
   }
 
   #landing-name {
-    font-size: 2.75rem;
+    font-size: 2.25rem;
   }
 
+  /* Shift hero image slightly right to reveal character */
+  #landing-img {
+    object-position: 75% top;
+  }
+
+  /* Portfolio nav: compact pill at bottom center */
   #portfolio-nav {
-    padding: 20px 20px;
-    grid-template-columns: auto 1fr auto;
-    gap: 12px;
+    top: auto;
+    bottom: 20px;
+    left: 50%;
+    right: auto;
+    width: auto;
+    transform: translateX(-50%);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 24px;
   }
 
-  /* Collapse tabs to dots on mobile */
+  /* Hide Bianca Banu on mobile */
+  #nav-home { display: none; }
+
+  /* Arrows slot into the pill — generous hit area */
+  .side-nav {
+    position: static;
+    transform: none;
+    width: 44px;
+    height: 44px;
+    filter: none;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  #nav-prev { order: 1; }
+  #nav-tabs  { order: 2; }
+  #nav-next { order: 3; }
+
+  .side-nav:disabled { opacity: 0.2; }
+
+  /* Collapse inactive tabs to dots, active tab shows name */
   .nav-tab-sep { display: none; }
   .nav-tab span { display: none; }
   .nav-tab {
@@ -1177,10 +1250,19 @@ body.piece-expanded #piece-img {
     height: 5px;
     border-radius: 50%;
     padding: 0;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.25);
   }
   .nav-tab.active {
-    background: rgba(255, 255, 255, 0.85);
+    width: auto;
+    height: auto;
+    border-radius: 4px;
+    padding: 5px 12px;
+    background: none;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 500;
+  }
+  .nav-tab.active span {
+    display: inline;
   }
 
   .hero-info {
@@ -1210,6 +1292,114 @@ body.piece-expanded #piece-img {
     bottom: 18px;
     right: 20px;
   }
+
+  /* Snappier, gesture-physics easing on mobile */
+  :root {
+    --duration-slide: 380ms;
+    --ease-slide: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* CTA full opacity on mobile — no hover state available */
+  #landing-cta {
+    color: rgba(255, 255, 255, 0.95);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Piece nav: move to bottom on mobile */
+  #piece-nav {
+    top: auto;
+    bottom: 20px;
+    padding: 0 24px;
+    background: none;
+    justify-content: flex-start;
+  }
+
+  #piece-back {
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 20px;
+    padding: 10px 16px;
+  }
+
+  /* Landscape images/videos: contain on mobile in detail view */
+  #piece-hero.hero-landscape #piece-img {
+    object-fit: contain;
+    background: #000;
+  }
+
+  /* Anim toggle: bottom-right on mobile */
+  .anim-toggle-btn {
+    bottom: 90px;
+    left: auto;
+    right: 24px;
+  }
+
+  /* Tabs: reset absolute centering, flex handles it */
+  #nav-tabs {
+    position: static;
+    transform: none;
+  }
+
+  /* ── Portfolio grid → 1 column snap-scroll on mobile ─── */
+
+  /* Each slide scrolls vertically with snap */
+  .slide {
+    scroll-snap-type: y mandatory;
+  }
+
+  /* Grid collapses to single column */
+  .slide-grid {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto !important;
+    height: auto;
+  }
+
+  /* Every piece card = full viewport, snaps into place */
+  .piece-card {
+    height: 100dvh;
+    scroll-snap-align: start;
+  }
+
+  /* Reset portrait-hero explicit placements */
+  .slide-grid[data-layout="portrait-hero"] .piece-card:nth-child(1),
+  .slide-grid[data-layout="portrait-hero"] .piece-card:nth-child(2),
+  .slide-grid[data-layout="portrait-hero"] .piece-card:nth-child(3) {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  /* Subcategory cards: 1 column, full-width on mobile */
+  .slide-grid .subcat-card {
+    height: 60vw;
+    scroll-snap-align: start;
+  }
+
+  /* Landscape pieces: contain so full width is visible */
+  .piece-card-landscape .piece-card-media {
+    object-fit: contain;
+    object-position: center center;
+    background: #000;
+  }
+
+  /* Animation hero video: contain on mobile */
+  .anim-hero video {
+    object-fit: contain;
+    background: #000;
+  }
+
+  /* Animation toggle: icon only on mobile */
+  .anim-btn-hint { display: none; }
+
+  /* Hide expand button on mobile — not needed */
+  #piece-expand-btn { display: none !important; }
+
+  /* Anim toggle button — lower since no bottom nav */
+  .anim-toggle-btn { bottom: 24px; }
+
+  /* Piece detail: tighter padding */
+  #piece-content { padding: 80px 20px 60px; }
+
+  body.page-subcategory #piece-detail-images { columns: 1; }
 }
 
 @media (max-width: 480px) {
@@ -1220,4 +1410,12 @@ body.piece-expanded #piece-img {
   .slide-detail {
     padding: 40px 20px 64px;
   }
+}
+
+/* ── Disable hover effects on touch devices ─────────────── */
+@media (hover: none) {
+  .piece-card:hover .subcat-preview          { transform: none; }
+  .piece-card:hover .piece-card-overlay      { opacity: 0; }
+  .piece-card:not(:has(video)):hover .piece-card-media { transform: none; }
+  .piece-card:hover .subcat-label            { opacity: 1; }
 }
