@@ -522,10 +522,6 @@ html::-webkit-scrollbar { display: none; }
 .subcat-preview {
   position: absolute;
   inset: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 3px;
   transition: transform 0.55s ease;
 }
 
@@ -989,6 +985,52 @@ body.page-subcategory #piece-detail-images figure img {
   color: rgba(255, 255, 255, 0.55);
   max-width: 640px;
   margin-bottom: 72px;
+}
+
+/* ── Expand toggle button ────────────────────────────────── */
+#piece-expand-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 40px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  text-shadow: 0 1px 6px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.9);
+  transition: color 0.2s ease, opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+#piece-expand-btn:hover { color: rgba(255, 255, 255, 1); }
+
+/* Hide on landscape — already full width */
+#piece-hero.hero-landscape ~ #piece-expand-btn,
+body.piece-expanded #piece-hero.hero-landscape + * #piece-expand-btn { display: none; }
+
+.expand-compress { display: none; }
+.expand-expand   { display: flex; align-items: center; gap: 8px; }
+
+body.piece-expanded .expand-expand   { display: none; }
+body.piece-expanded .expand-compress { display: flex; align-items: center; gap: 8px; }
+
+/* ── Expanded image state ────────────────────────────────── */
+body.piece-expanded #piece-hero {
+  display: block;
+  min-height: auto;
+  height: auto;
+  overflow: visible;
+}
+
+body.piece-expanded #piece-img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: none;
 }
 
 /* ── Hero video (piece page) ─────────────────────────────── */

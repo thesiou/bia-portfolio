@@ -116,9 +116,15 @@ window.ARTWORKS = {
           title: "",
           year: "",
           software: ["Clip Studio Paint"],
-          mainImage: "images/illustration/1.jpeg",
+          mainImage: "images/illustration/3.jpeg",
           description: "",
-          detailImages: []
+          detailImages: [
+            { src: "images/illustration/3-detail/kitchencomp_sketch.jpeg",   caption: "Composition sketch" },
+            { src: "images/illustration/3-detail/kitchencomp_sketch_2.jpeg", caption: "" },
+            { src: "images/illustration/3-detail/kitchennochars.jpeg",       caption: "Background" },
+            { src: "images/illustration/3-detail/kitchennochars2.jpeg",      caption: "" },
+            { src: "images/illustration/3-detail/kitchen3.jpeg",             caption: "" }
+          ]
         },
         {
           title: "",
@@ -126,7 +132,12 @@ window.ARTWORKS = {
           software: ["Clip Studio Paint"],
           mainImage: "images/illustration/1.jpeg",
           description: "",
-          detailImages: []
+          detailImages: [
+            { src: "images/illustration/1-detail/11.02sk.jpeg",       caption: "Sketch" },
+            { src: "images/illustration/1-detail/11.02sklight2.jpeg", caption: "" },
+            { src: "images/illustration/1-detail/11.02sklight3.jpeg", caption: "" },
+            { src: "images/illustration/1-detail/13022026TL.mp4",     caption: "Timelapse" }
+          ]
         },
         {
           title: "",
@@ -145,12 +156,7 @@ window.ARTWORKS = {
         {
           id: "concepts",
           title: "Concepts",
-          preview: [
-            "images/otherfunstuff/concepts/concept1.png",
-            "images/otherfunstuff/concepts/shop1.jpg",
-            "images/otherfunstuff/concepts/shop2.jpg",
-            "images/otherfunstuff/concepts/shop3.jpg"
-          ],
+          preview: "images/otherfunstuff/concepts/concept1.png",
           pieces: [
             "images/otherfunstuff/concepts/concept1.png",
             "images/otherfunstuff/concepts/shop1.jpg",
@@ -159,24 +165,9 @@ window.ARTWORKS = {
           ]
         },
         {
-          id: "3d",
-          title: "3D",
-          externalLink: "https://www.artstation.com/artwork/v1dBWO",
-          preview: [
-            "images/otherfunstuff/3D/3d-1.jpg",
-            "images/otherfunstuff/3D/3d-2.jpg",
-            "images/otherfunstuff/3D/3d-3.jpg"
-          ]
-        },
-        {
           id: "storyboards-comics",
           title: "Storyboards & Comics",
-          preview: [
-            "images/otherfunstuff/storyboards:comics/storyboard1.jpeg",
-            "images/otherfunstuff/storyboards:comics/comics1.jpg",
-            "images/otherfunstuff/storyboards:comics/storyboard2.jpg",
-            "images/otherfunstuff/storyboards:comics/comics2.jpeg"
-          ],
+          preview: "images/otherfunstuff/storyboards:comics/comics1.jpg",
           pieces: [
             "images/otherfunstuff/storyboards:comics/storyboard1.jpeg",
             "images/otherfunstuff/storyboards:comics/storyboard2.jpg",
@@ -188,12 +179,7 @@ window.ARTWORKS = {
         {
           id: "sketchbook",
           title: "Sketchbook",
-          preview: [
-            "images/otherfunstuff/sketchbook/sketch-1.jpeg",
-            "images/otherfunstuff/sketchbook/sketch-2.jpeg",
-            "images/otherfunstuff/sketchbook/sketch-3.jpg",
-            "images/otherfunstuff/sketchbook/sketch-4.jpg"
-          ],
+          preview: "images/otherfunstuff/sketchbook/sketch-8.jpg",
           pieces: [
             "images/otherfunstuff/sketchbook/sketch-1.jpeg",
             "images/otherfunstuff/sketchbook/sketch-2.jpeg",
@@ -211,6 +197,12 @@ window.ARTWORKS = {
             "images/otherfunstuff/sketchbook/sketch-14.jpeg",
             "images/otherfunstuff/sketchbook/sketch-15.jpeg"
           ]
+        },
+        {
+          id: "3d",
+          title: "3D",
+          externalLink: "https://www.artstation.com/artwork/v1dBWO",
+          preview: "images/otherfunstuff/3D/3d-1.jpg"
         }
       ]
     }

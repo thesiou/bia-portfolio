@@ -153,16 +153,17 @@ if (isPortfolio) {
       const card      = document.createElement('div');
       card.className  = 'piece-card subcat-card' + (sub.externalLink ? ' external' : '');
 
-      // Mini 2×2 image preview
-      const preview   = document.createElement('div');
+      // Single cover image preview
+      const preview     = document.createElement('div');
       preview.className = 'subcat-preview';
-      (sub.preview ?? []).slice(0, 4).forEach(src => {
+      const previewSrc  = typeof sub.preview === 'string' ? sub.preview : (sub.preview ?? [])[0];
+      if (previewSrc) {
         const img   = document.createElement('img');
-        img.src     = src;
-        img.alt     = '';
+        img.src     = previewSrc;
+        img.alt     = sub.title;
         img.loading = 'lazy';
         preview.appendChild(img);
-      });
+      }
       card.appendChild(preview);
 
       // Label
@@ -514,6 +515,14 @@ if (isPiece) {
     const backGrid = document.getElementById('piece-back-grid');
     if (backGrid) backGrid.href = `portfolio.html?cat=${catIndex}`;
 
+    // Expand toggle — shown only for portrait/contained images
+    const expandBtn = document.getElementById('piece-expand-btn');
+    if (expandBtn) {
+      expandBtn.addEventListener('click', () => {
+        document.body.classList.toggle('piece-expanded');
+      });
+    }
+
     // Hero image / video
     if (piece.mainImage) {
       const hero = document.getElementById('piece-hero');
@@ -538,12 +547,22 @@ if (isPiece) {
         img.src   = piece.mainImage;
         img.alt   = piece.title ?? '';
         applyAspectClass(img, hero, 'hero-landscape');
+        // Show expand button only for portrait/contained pieces
+        const apply = () => {
+          if (!hero.classList.contains('hero-landscape') && expandBtn) {
+            expandBtn.hidden = false;
+          }
+        };
+        img.complete && img.naturalWidth > 0 ? apply() : img.addEventListener('load', apply, { once: true });
       }
     }
 
-    // Header — title and year only
+    // Header — hide entirely if no content
     document.getElementById('piece-title').textContent = piece.title ?? '';
     document.getElementById('piece-year').textContent  = piece.year  ?? '';
+    if (!piece.title && !piece.year) {
+      document.getElementById('piece-header').style.display = 'none';
+    }
 
     // Description
     if (piece.description) {
@@ -579,19 +598,6 @@ if (isPiece) {
       detailEl.appendChild(fig);
     });
 
-    // Prev / next within category
-    const prevBtn = document.getElementById('piece-prev');
-    const nextBtn = document.getElementById('piece-next');
-
-    if (pieceIndex === 0) prevBtn.disabled = true;
-    else prevBtn.addEventListener('click', () => {
-      window.location.href = `piece.html?cat=${catIndex}&piece=${pieceIndex - 1}`;
-    });
-
-    if (pieceIndex >= category.pieces.length - 1) nextBtn.disabled = true;
-    else nextBtn.addEventListener('click', () => {
-      window.location.href = `piece.html?cat=${catIndex}&piece=${pieceIndex + 1}`;
-    });
   }
   } // end else (regular piece view)
 }
