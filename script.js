@@ -577,8 +577,28 @@ if (isPiece) {
         img.alt     = '';
         img.loading = 'eager';
         fig.appendChild(img);
+        fig.addEventListener('click', () => openLightbox(src));
         detailEl.appendChild(fig);
       });
+
+      // Lightbox
+      const lightbox     = document.getElementById('lightbox');
+      const lightboxImg  = lightbox?.querySelector('img');
+      const lightboxClose = document.getElementById('lightbox-close');
+
+      function openLightbox(src) {
+        lightboxImg.src = src;
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeLightbox() {
+        lightbox.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      lightboxClose?.addEventListener('click', closeLightbox);
+      lightbox?.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
     }
 
   // ── Regular piece view ────────────────────────────────────

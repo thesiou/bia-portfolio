@@ -233,11 +233,6 @@ a {
   height: 34px;
   width: auto;
   opacity: 1;
-  transition: opacity 0.2s ease;
-}
-
-#nav-home:hover #nav-logo {
-  opacity: 0.9;
 }
 
 #nav-counter {
@@ -287,7 +282,7 @@ a {
 #nav-tabs {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
 }
 
 .nav-tab {
@@ -295,11 +290,10 @@ a {
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
-  padding: 6px 10px;
-  transition: color 0.2s ease;
+  color: rgba(255, 255, 255, 0.65);
+  padding: 6px 12px;
+  transition: color 0.2s ease, background 0.2s ease;
   white-space: nowrap;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 1), 0 0 20px rgba(0, 0, 0, 0.9);
 }
 
 .nav-tab:hover {
@@ -309,6 +303,26 @@ a {
 .nav-tab.active {
   color: rgba(255, 255, 255, 1);
   font-weight: 500;
+}
+
+/* Desktop: single pill wrapping all tabs */
+@media (min-width: 769px) {
+  #nav-tabs {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 999px;
+    padding: 4px;
+    gap: 0;
+  }
+  .nav-tab {
+    border-radius: 999px;
+  }
+  .nav-tab:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .nav-tab.active {
+    background: rgba(255, 255, 255, 0.15);
+  }
+  .nav-tab-sep { display: none; }
 }
 
 .nav-tab-sep {
@@ -600,6 +614,7 @@ body.page-subcategory #piece-detail-images figure {
   break-inside: avoid;
   margin-bottom: 10px;
   display: block;
+  cursor: zoom-in;
 }
 
 body.page-subcategory #piece-detail-images figure img {
@@ -609,9 +624,45 @@ body.page-subcategory #piece-detail-images figure img {
 }
 
 @media (max-width: 768px) {
-  body.page-subcategory #piece-detail-images {
-    columns: 1;
-  }
+  body.page-subcategory #piece-detail-images { columns: 1; }
+}
+
+/* ── Lightbox ─────────────────────────────────────────────── */
+#lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.92);
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
+#lightbox.open {
+  display: flex;
+}
+#lightbox img {
+  max-width: 92vw;
+  max-height: 92vh;
+  object-fit: contain;
+  cursor: default;
+  box-shadow: 0 8px 60px rgba(0, 0, 0, 0.8);
+}
+#lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 2rem;
+  line-height: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.15s ease;
+}
+#lightbox-close:hover {
+  color: #fff;
 }
 
 /* ── Hero section ────────────────────────────────────────── */
@@ -1398,8 +1449,6 @@ body.piece-expanded #piece-img {
 
   /* Piece detail: tighter padding */
   #piece-content { padding: 80px 20px 60px; }
-
-  body.page-subcategory #piece-detail-images { columns: 1; }
 }
 
 @media (max-width: 480px) {

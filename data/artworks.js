@@ -169,11 +169,11 @@ window.ARTWORKS = {
           title: "Storyboards & Comics",
           preview: "images/otherfunstuff/storyboards:comics/comics1.jpg",
           pieces: [
-            "images/otherfunstuff/storyboards:comics/storyboard1.jpeg",
-            "images/otherfunstuff/storyboards:comics/storyboard2.jpg",
             "images/otherfunstuff/storyboards:comics/comics1.jpg",
             "images/otherfunstuff/storyboards:comics/comics2.jpeg",
-            "images/otherfunstuff/storyboards:comics/comics3.jpeg"
+            "images/otherfunstuff/storyboards:comics/comics3.jpeg",
+            "images/otherfunstuff/storyboards:comics/storyboard1.jpeg",
+            "images/otherfunstuff/storyboards:comics/storyboard2.jpg"
           ]
         },
         {
