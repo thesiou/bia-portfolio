@@ -137,7 +137,53 @@ if (isPortfolio) {
     bindWheel();
     // Only bind touch swipe on non-touch devices — mobile uses chevron buttons
     if (!window.matchMedia('(hover: none)').matches) bindTouch();
+
+    if (window.matchMedia('(hover: none)').matches) {
+      initPieceDots();
+      bindSlideScrollDots();
+      showSwipeHint();
+    }
   })();
+
+  // ── Build links slide ─────────────────────────────────────
+  function buildLinksSlide(cat, catIndex) {
+    const slide = document.createElement('div');
+    slide.className = 'slide slide-links';
+    slide.dataset.index = catIndex;
+
+    const inner = document.createElement('div');
+    inner.className = 'links-inner';
+
+    const heading = document.createElement('p');
+    heading.className = 'links-heading';
+    heading.textContent = 'Find me';
+    inner.appendChild(heading);
+
+    (cat.links ?? []).forEach(link => {
+      if (!link.url) return; // skip empty placeholders
+      const a = document.createElement('a');
+      a.className = 'link-row';
+      a.href = link.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+
+      const title = document.createElement('span');
+      title.className = 'link-title';
+      title.textContent = link.title;
+
+      const arrow = document.createElement('span');
+      arrow.className = 'link-arrow';
+      arrow.setAttribute('aria-hidden', 'true');
+      arrow.innerHTML = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13L13 3M13 3H5M13 3v8"/></svg>`;
+
+      a.appendChild(title);
+      a.appendChild(arrow);
+      inner.appendChild(a);
+    });
+
+    slide.appendChild(inner);
+    return slide;
+  }
 
   // ── Build subcategory slide ("Other Fun Stuff") ───────────
   function buildSubcategorySlide(cat, catIndex) {
@@ -191,6 +237,7 @@ if (isPortfolio) {
 
   // ── Build a category slide ────────────────────────────────
   function buildCategorySlide(cat, catIndex) {
+    if (cat.links)         return buildLinksSlide(cat, catIndex);
     // Subcategory hub (e.g. "Other Fun Stuff")
     if (cat.subcategories) return buildSubcategorySlide(cat, catIndex);
     const slide         = document.createElement('div');
@@ -341,27 +388,9 @@ if (isPortfolio) {
     overlay.appendChild(title);
     card.appendChild(overlay);
 
-    const navigateToPiece = () => {
+    card.addEventListener('click', () => {
       window.location.href = `piece.html?cat=${catIndex}&piece=${pieceIndex}`;
-    };
-
-    const isTouch = window.matchMedia('(hover: none)').matches;
-
-    if (!isTouch) {
-      // Desktop: whole card is clickable
-      card.addEventListener('click', navigateToPiece);
-    } else {
-      // Mobile: eye icon only — avoids accidental taps while scrolling
-      const enterBtn     = document.createElement('button');
-      enterBtn.className = 'piece-enter-btn';
-      enterBtn.setAttribute('aria-label', 'View details');
-      enterBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-        <circle cx="12" cy="12" r="3"/>
-      </svg>`;
-      enterBtn.addEventListener('click', e => { e.stopPropagation(); navigateToPiece(); });
-      card.appendChild(enterBtn);
-    }
+    });
 
     return card;
   }
@@ -419,7 +448,7 @@ if (isPortfolio) {
   }
 
   // ── UI ────────────────────────────────────────────────────
-  function updateUI() { updateCounter(); updateTabs(); updateSideNav(); }
+  function updateUI() { updateCounter(); updateTabs(); updateSideNav(); refreshPieceDots(); }
 
   function updateCounter() {
     const el = document.getElementById('counter-current');
@@ -468,6 +497,58 @@ if (isPortfolio) {
         }, 60);
       }
     }, { passive: false });
+  }
+
+  // ── Piece scroll dots (mobile only) ──────────────────────
+  function initPieceDots() {
+    const container = document.createElement('div');
+    container.id = 'piece-dots';
+    document.body.appendChild(container);
+    refreshPieceDots();
+  }
+
+  function refreshPieceDots() {
+    const container = document.getElementById('piece-dots');
+    if (!container) return;
+    const cat = categories[currentIndex];
+    if (!cat) return;
+    const count = cat.subcategories
+      ? cat.subcategories.length
+      : Math.min((cat.pieces ?? []).length, 5);
+    container.innerHTML = '';
+    if (count <= 1) { container.hidden = true; return; }
+    container.hidden = false;
+    const slide = document.querySelector(`.slide[data-index="${currentIndex}"]`);
+    const activeIndex = slide ? Math.round(slide.scrollTop / window.innerHeight) : 0;
+    for (let i = 0; i < count; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'piece-dot' + (i === activeIndex ? ' active' : '');
+      container.appendChild(dot);
+    }
+  }
+
+  function bindSlideScrollDots() {
+    document.querySelectorAll('.slide').forEach((slide, catIndex) => {
+      slide.addEventListener('scroll', () => {
+        if (catIndex !== currentIndex) return;
+        const pieceIndex = Math.round(slide.scrollTop / window.innerHeight);
+        document.querySelectorAll('.piece-dot').forEach((dot, i) => {
+          dot.classList.toggle('active', i === pieceIndex);
+        });
+      }, { passive: true });
+    });
+  }
+
+  // ── One-time swipe hint (mobile only) ────────────────────
+  function showSwipeHint() {
+    if (sessionStorage.getItem('swipeHintSeen') || categories.length <= 1) return;
+    sessionStorage.setItem('swipeHintSeen', '1');
+    const hint = document.createElement('div');
+    hint.id = 'swipe-hint';
+    hint.textContent = '← swipe to browse →';
+    document.body.appendChild(hint);
+    setTimeout(() => hint.classList.add('fade-out'), 1800);
+    hint.addEventListener('transitionend', () => hint.remove(), { once: true });
   }
 
   // ── Touch swipe — follows finger in real-time ─────────────
