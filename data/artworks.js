@@ -150,17 +150,6 @@ window.ARTWORKS = {
       ]
     },
     {
-      id: "links",
-      title: "Links",
-      links: [
-        { title: "Instagram",  url: "https://www.instagram.com/luna_being_productive" },
-        { title: "ArtStation", url: "https://www.artstation.com/lunaazx" },
-        { title: "Behance",    url: "https://www.behance.net/lunaarts" },
-        { title: "LinkedIn",   url: "https://www.linkedin.com/in/bianca-elena-banu-b683591ba/" },
-        { title: "Linktree",   url: "https://linktr.ee/lunaarts" }
-      ]
-    },
-    {
       id: "other",
       title: "Other Fun Stuff",
       subcategories: [
@@ -215,6 +204,17 @@ window.ARTWORKS = {
           externalLink: "https://www.artstation.com/artwork/v1dBWO",
           preview: "images/otherfunstuff/3D/3d-1.jpg"
         }
+      ]
+    },
+    {
+      id: "links",
+      title: "Links",
+      links: [
+        { title: "Instagram",  url: "https://www.instagram.com/luna_being_productive" },
+        { title: "ArtStation", url: "https://www.artstation.com/lunaazx" },
+        { title: "Behance",    url: "https://www.behance.net/lunaarts" },
+        { title: "LinkedIn",   url: "https://www.linkedin.com/in/bianca-elena-banu-b683591ba/" },
+        { title: "Linktree",   url: "https://linktr.ee/lunaarts" }
       ]
     }
   ]

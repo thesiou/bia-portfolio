@@ -1150,6 +1150,110 @@ body.piece-expanded #piece-img {
   font-weight: 300;
 }
 
+/* ── Rotate button (mobile landscape) ───────────────────── */
+.rotate-btn,
+#hero-rotate-btn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .rotate-btn,
+  #hero-rotate-btn {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 50%;
+    z-index: 20;
+  }
+
+  /* Show only on landscape cards */
+  .piece-card-landscape .rotate-btn {
+    display: flex;
+    bottom: 16px;
+    right: 16px;
+  }
+
+  /* Show only on landscape hero */
+  .hero-landscape #hero-rotate-btn {
+    display: flex;
+    bottom: max(72px, calc(env(safe-area-inset-bottom) + 60px));
+    right: 20px;
+  }
+
+  /* Rotated landscape card — swap dimensions so image fills portrait screen */
+  .piece-card-landscape.rotated .piece-card-media {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100dvh;
+    height: 100vw;
+    max-width: none;
+    object-fit: contain;
+    transition: none;
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  /* Rotated landscape hero */
+  #piece-hero.hero-landscape.rotated #piece-img,
+  #piece-hero.hero-landscape.rotated #piece-video-hero {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100dvh;
+    height: 100vw;
+    max-width: none;
+    max-height: none;
+    object-fit: contain;
+    transition: none;
+    transform: translate(-50%, -50%) rotate(90deg);
+    z-index: 1;
+  }
+}
+
+/* ── Bottom back button (mobile only) ───────────────────── */
+#piece-back-bottom {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  #piece-back-bottom {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 48px;
+    padding: 12px 20px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  #piece-back-bottom:active {
+    color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* ── No detail empty state ───────────────────────────────── */
+.no-detail {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
 /* ── Sibling navigation ──────────────────────────────────── */
 #piece-sibling-nav {
   display: flex;
@@ -1346,7 +1450,9 @@ body.piece-expanded #piece-img {
     align-items: center;
     justify-content: center;
     gap: 14px;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: 24px;
   }
 

@@ -132,6 +132,16 @@ if (isPortfolio) {
       requestAnimationFrame(() => { track.style.transition = ''; });
     }
 
+    // Restore scroll position within a category when returning from a piece page
+    const returnScroll = JSON.parse(sessionStorage.getItem('returnScroll') ?? 'null');
+    sessionStorage.removeItem('returnScroll');
+    if (returnScroll?.piece > 0 && returnScroll.cat === currentIndex) {
+      const slide = document.querySelector(`.slide[data-index="${currentIndex}"]`);
+      if (slide) requestAnimationFrame(() => {
+        slide.scrollTop = returnScroll.piece * window.innerHeight;
+      });
+    }
+
     updateUI();
     bindKeyboard();
     bindWheel();
@@ -389,8 +399,21 @@ if (isPortfolio) {
     card.appendChild(overlay);
 
     card.addEventListener('click', () => {
+      sessionStorage.setItem('returnScroll', JSON.stringify({ cat: catIndex, piece: pieceIndex }));
       window.location.href = `piece.html?cat=${catIndex}&piece=${pieceIndex}`;
     });
+
+    if (window.matchMedia('(hover: none)').matches) {
+      const rotateBtn = document.createElement('button');
+      rotateBtn.className = 'rotate-btn';
+      rotateBtn.setAttribute('aria-label', 'Rotate image');
+      rotateBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>`;
+      rotateBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        card.classList.toggle('rotated');
+      });
+      card.appendChild(rotateBtn);
+    }
 
     return card;
   }
@@ -545,7 +568,7 @@ if (isPortfolio) {
     sessionStorage.setItem('swipeHintSeen', '1');
     const hint = document.createElement('div');
     hint.id = 'swipe-hint';
-    hint.textContent = '← swipe to browse →';
+    hint.textContent = 'tap arrows to browse';
     document.body.appendChild(hint);
     setTimeout(() => hint.classList.add('fade-out'), 1800);
     hint.addEventListener('transitionend', () => hint.remove(), { once: true });
@@ -703,6 +726,10 @@ if (isPiece) {
     // Back link carries cat param so portfolio re-opens at right category
     const backLink = document.getElementById('piece-back');
     if (backLink) backLink.href = `portfolio.html?cat=${catIndex}`;
+    const backBottom = document.getElementById('piece-back-bottom');
+    if (backBottom) backBottom.href = `portfolio.html?cat=${catIndex}`;
+    const backBottomLabel = document.getElementById('piece-back-bottom-label');
+    if (backBottomLabel) backBottomLabel.textContent = `Back to ${category.title}`;
     const backGrid = document.getElementById('piece-back-grid');
     if (backGrid) backGrid.href = `portfolio.html?cat=${catIndex}`;
 
@@ -748,6 +775,16 @@ if (isPiece) {
       }
     }
 
+    // Rotate button for mobile landscape pieces
+    if (window.matchMedia('(hover: none)').matches && piece.mainImage) {
+      const rotateBtn = document.createElement('button');
+      rotateBtn.id = 'hero-rotate-btn';
+      rotateBtn.setAttribute('aria-label', 'Rotate image');
+      rotateBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>`;
+      rotateBtn.addEventListener('click', () => hero.classList.toggle('rotated'));
+      hero.appendChild(rotateBtn);
+    }
+
     // Header — hide entirely if no content
     document.getElementById('piece-title').textContent = piece.title ?? '';
     document.getElementById('piece-year').textContent  = piece.year  ?? '';
@@ -762,6 +799,12 @@ if (isPiece) {
 
     // Detail media — images and videos in order (mp4s auto-detected by extension)
     const detailEl = document.getElementById('piece-detail-images');
+    if (!(piece.detailImages ?? []).length) {
+      const empty = document.createElement('p');
+      empty.className = 'no-detail';
+      empty.textContent = 'no detailed content added for this piece yet';
+      detailEl.appendChild(empty);
+    }
     (piece.detailImages ?? []).forEach(item => {
       const fig      = document.createElement('figure');
       let   media;
