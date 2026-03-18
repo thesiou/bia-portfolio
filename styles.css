@@ -1150,69 +1150,6 @@ body.piece-expanded #piece-img {
   font-weight: 300;
 }
 
-/* ── Rotate button (mobile landscape) ───────────────────── */
-.rotate-btn,
-#hero-rotate-btn {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  .rotate-btn,
-  #hero-rotate-btn {
-    position: absolute;
-    width: 44px;
-    height: 44px;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255, 255, 255, 0.9);
-    background: rgba(0, 0, 0, 0.45);
-    border-radius: 50%;
-    z-index: 20;
-  }
-
-  /* Show only on landscape cards */
-  .piece-card-landscape .rotate-btn {
-    display: flex;
-    bottom: 16px;
-    right: 16px;
-  }
-
-  /* Show only on landscape hero */
-  .hero-landscape #hero-rotate-btn {
-    display: flex;
-    bottom: max(72px, calc(env(safe-area-inset-bottom) + 60px));
-    right: 20px;
-  }
-
-  /* Rotated landscape card — swap dimensions so image fills portrait screen */
-  .piece-card-landscape.rotated .piece-card-media {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100dvh;
-    height: 100vw;
-    max-width: none;
-    object-fit: contain;
-    transition: none;
-    transform: translate(-50%, -50%) rotate(90deg);
-  }
-
-  /* Rotated landscape hero */
-  #piece-hero.hero-landscape.rotated #piece-img,
-  #piece-hero.hero-landscape.rotated #piece-video-hero {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100dvh;
-    height: 100vw;
-    max-width: none;
-    max-height: none;
-    object-fit: contain;
-    transition: none;
-    transform: translate(-50%, -50%) rotate(90deg);
-    z-index: 1;
-  }
-}
 
 /* ── Bottom back button (mobile only) ───────────────────── */
 #piece-back-bottom {
@@ -1247,7 +1184,7 @@ body.piece-expanded #piece-img {
   font-size: 0.75rem;
   font-weight: 400;
   letter-spacing: 0.12em;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.35);
   font-style: italic;
   padding: 48px 0;
   border-top: 1px solid var(--border);
@@ -1466,12 +1403,14 @@ body.piece-expanded #piece-img {
     width: 44px;
     height: 44px;
     filter: none;
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.95);
   }
 
   #nav-prev { order: 1; }
   #nav-tabs  { order: 2; }
   #nav-next { order: 3; }
+
+  .side-nav svg path { stroke-width: 2; }
 
   .side-nav:disabled { opacity: 0.2; }
 
@@ -1538,10 +1477,10 @@ body.piece-expanded #piece-img {
     border-color: rgba(255, 255, 255, 0.5);
   }
 
-  /* Piece nav: move to bottom on mobile */
+  /* Piece nav: top on mobile */
   #piece-nav {
-    top: auto;
-    bottom: max(20px, calc(env(safe-area-inset-bottom) + 8px));
+    top: max(12px, env(safe-area-inset-top));
+    bottom: auto;
     padding: 0 24px;
     background: none;
     justify-content: flex-start;

@@ -403,18 +403,6 @@ if (isPortfolio) {
       window.location.href = `piece.html?cat=${catIndex}&piece=${pieceIndex}`;
     });
 
-    if (window.matchMedia('(hover: none)').matches) {
-      const rotateBtn = document.createElement('button');
-      rotateBtn.className = 'rotate-btn';
-      rotateBtn.setAttribute('aria-label', 'Rotate image');
-      rotateBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>`;
-      rotateBtn.addEventListener('click', e => {
-        e.stopPropagation();
-        card.classList.toggle('rotated');
-      });
-      card.appendChild(rotateBtn);
-    }
-
     return card;
   }
 
@@ -773,16 +761,6 @@ if (isPiece) {
         };
         img.complete && img.naturalWidth > 0 ? apply() : img.addEventListener('load', apply, { once: true });
       }
-    }
-
-    // Rotate button for mobile landscape pieces
-    if (window.matchMedia('(hover: none)').matches && piece.mainImage) {
-      const rotateBtn = document.createElement('button');
-      rotateBtn.id = 'hero-rotate-btn';
-      rotateBtn.setAttribute('aria-label', 'Rotate image');
-      rotateBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>`;
-      rotateBtn.addEventListener('click', () => hero.classList.toggle('rotated'));
-      hero.appendChild(rotateBtn);
     }
 
     // Header — hide entirely if no content
