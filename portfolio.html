@@ -21,12 +21,41 @@
 </head>
 <body id="page-portfolio">
 
+  <!-- Intro overlay — shown on first visit, fades away to reveal portfolio -->
+  <div id="intro-overlay" aria-hidden="true">
+    <div class="intro-piece intro-piece-1">
+      <div class="intro-piece-inner">
+        <video autoplay loop muted playsinline src="images/animation/animation1.mp4"></video>
+      </div>
+    </div>
+    <div class="intro-piece intro-piece-2">
+      <div class="intro-piece-inner">
+        <img src="images/characters/1.jpeg" alt="" loading="eager" />
+      </div>
+    </div>
+    <div class="intro-piece intro-piece-3">
+      <div class="intro-piece-inner">
+        <img src="images/otherfunstuff/storyboards:comics/comics1.jpg" alt="" loading="eager" />
+      </div>
+    </div>
+    <div class="intro-piece intro-piece-4">
+      <div class="intro-piece-inner">
+        <img src="images/illustration/3.jpeg" alt="" loading="eager" />
+      </div>
+    </div>
+    <div class="intro-piece intro-piece-5">
+      <div class="intro-piece-inner">
+        <img src="images/characters/3.jpeg" alt="" loading="eager" />
+      </div>
+    </div>
+    <div id="intro-name">
+      <span id="intro-name-text">Bianca Banu</span>
+      <span id="intro-name-role">Character Design &amp; Illustration</span>
+    </div>
+  </div>
+
   <!-- Nav bar: logo left · tabs center · arrows flank tabs on mobile -->
   <nav id="portfolio-nav">
-    <a href="index.html" id="nav-home">
-      <img id="nav-logo" src="logo.png" alt="" aria-hidden="true" />
-      <span id="nav-home-text">Bianca Banu</span>
-    </a>
     <div id="nav-tabs" role="tablist" aria-label="Categories"></div>
     <button id="nav-prev" class="side-nav" aria-label="Previous category" disabled>
       <svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -50,6 +79,19 @@
   <!-- Empty state -->
   <div id="empty-state" hidden>
     <p>Work coming soon.</p>
+  </div>
+
+  <!-- Portfolio lightbox -->
+  <div id="portfolio-lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+    <button id="portfolio-lb-close" aria-label="Close">&#x2715;</button>
+    <div id="portfolio-lb-media"></div>
+    <a id="portfolio-lb-details" href="#" hidden>
+      Project Details
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+           stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 8h10M9 4l4 4-4 4"/>
+      </svg>
+    </a>
   </div>
 
   <script src="data/artworks.js"></script>

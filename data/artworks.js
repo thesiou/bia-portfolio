@@ -53,9 +53,7 @@ window.ARTWORKS = {
     {
       id: "animation",
       title: "Animation",
-      featuredVideo: "images/animation/animation1.mp4",
-      featuredDetailVideo: "images/animation/animation1-detail/bakugo_s_room_TL.mp4",
-      gridLayout: "2x2",
+      gridLayout: "fullscroll",
       pieces: [
         {
           title: "",
@@ -94,14 +92,6 @@ window.ARTWORKS = {
           year: "",
           software: ["Clip Studio Paint"],
           mainImage: "images/animation/animation4.gif",
-          description: "",
-          detailImages: []
-        },
-        {
-          title: "",
-          year: "",
-          software: ["Clip Studio Paint"],
-          mainImage: "images/animation/animation5.gif",
           description: "",
           detailImages: []
         }
@@ -150,71 +140,232 @@ window.ARTWORKS = {
       ]
     },
     {
-      id: "other",
-      title: "Other Fun Stuff",
-      subcategories: [
+      id: "comics-storyboards",
+      title: "Comics & Storyboards",
+      gridLayout: "compact",
+      pieces: [
         {
-          id: "concepts",
-          title: "Concepts",
-          preview: "images/otherfunstuff/concepts/concept1.png",
-          pieces: [
-            "images/otherfunstuff/concepts/concept1.png",
-            "images/otherfunstuff/concepts/shop1.jpg",
-            "images/otherfunstuff/concepts/shop2.jpg",
-            "images/otherfunstuff/concepts/shop3.jpg"
-          ]
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/storyboards:comics/comics1.jpg",
+          description: "",
+          detailImages: []
         },
         {
-          id: "storyboards-comics",
-          title: "Storyboards & Comics",
-          preview: "images/otherfunstuff/storyboards:comics/comics1.jpg",
-          pieces: [
-            "images/otherfunstuff/storyboards:comics/comics1.jpg",
-            "images/otherfunstuff/storyboards:comics/comics2.jpeg",
-            "images/otherfunstuff/storyboards:comics/comics3.jpeg",
-            "images/otherfunstuff/storyboards:comics/storyboard1.jpeg",
-            "images/otherfunstuff/storyboards:comics/storyboard2.jpg"
-          ]
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/storyboards:comics/comics2.jpeg",
+          description: "",
+          detailImages: []
         },
         {
-          id: "sketchbook",
-          title: "Sketchbook",
-          preview: "images/otherfunstuff/sketchbook/sketch-8.jpg",
-          pieces: [
-            "images/otherfunstuff/sketchbook/sketch-1.jpeg",
-            "images/otherfunstuff/sketchbook/sketch-2.jpeg",
-            "images/otherfunstuff/sketchbook/sketch-3.jpg",
-            "images/otherfunstuff/sketchbook/sketch-4.jpg",
-            "images/otherfunstuff/sketchbook/sketch-5.jpeg",
-            "images/otherfunstuff/sketchbook/sketch-6.jpg",
-            "images/otherfunstuff/sketchbook/sketch-7.jpg",
-            "images/otherfunstuff/sketchbook/sketch-8.jpg",
-            "images/otherfunstuff/sketchbook/sketch-9.jpg",
-            "images/otherfunstuff/sketchbook/sketch-10.jpg",
-            "images/otherfunstuff/sketchbook/sketch-11.jpg",
-            "images/otherfunstuff/sketchbook/sketch-12.jpeg",
-            "images/otherfunstuff/sketchbook/sketch-13.jpeg",
-            "images/otherfunstuff/sketchbook/sketch-14.jpeg",
-            "images/otherfunstuff/sketchbook/sketch-15.jpeg"
-          ]
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/storyboards:comics/comics3.jpeg",
+          description: "",
+          detailImages: []
         },
         {
-          id: "3d",
-          title: "3D",
-          externalLink: "https://www.artstation.com/artwork/v1dBWO",
-          preview: "images/otherfunstuff/3D/3d-1.jpg"
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/storyboards:comics/storyboard1.jpeg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/storyboards:comics/storyboard2.jpg",
+          description: "",
+          detailImages: []
         }
       ]
     },
     {
-      id: "links",
-      title: "Links",
-      links: [
-        { title: "Instagram",  url: "https://www.instagram.com/luna_being_productive" },
-        { title: "ArtStation", url: "https://www.artstation.com/lunaazx" },
-        { title: "Behance",    url: "https://www.behance.net/lunaarts" },
-        { title: "LinkedIn",   url: "https://www.linkedin.com/in/bianca-elena-banu-b683591ba/" },
-        { title: "Linktree",   url: "https://linktr.ee/lunaarts" }
+      id: "concepts",
+      title: "Concepts",
+      gridLayout: "compact",
+      pieces: [
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/concepts/concept1.png",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/concepts/shop1.jpg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/concepts/shop2.jpg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/concepts/shop3.jpg",
+          description: "",
+          detailImages: []
+        }
+      ]
+    },
+    {
+      id: "sketchbook",
+      title: "Sketchbook",
+      pieces: [
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-1.jpeg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-2.jpeg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-3.jpg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-4.jpg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-5.jpeg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-6.jpg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-7.jpg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-8.jpg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-9.jpg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-10.jpg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-11.jpg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-12.jpeg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-13.jpeg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-14.jpeg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/sketchbook/sketch-15.jpeg",
+          description: "",
+          detailImages: []
+        }
+      ]
+    },
+    {
+      id: "3d",
+      title: "3D",
+      gridLayout: "compact",
+      pieces: [
+        {
+          title: "",
+          year: "",
+          software: [],
+          mainImage: "images/otherfunstuff/3D/3d-1.jpg",
+          externalLink: "https://www.artstation.com/artwork/v1dBWO",
+          externalLabel: "ArtStation",
+          description: "",
+          detailImages: []
+        }
       ]
     }
   ]

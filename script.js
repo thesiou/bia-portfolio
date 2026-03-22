@@ -34,60 +34,6 @@ function applyAspectClass(img, el, landscapeClass) {
 }
 
 /* ============================================================
-   LANDING PAGE
-   ============================================================ */
-if (isLanding) {
-  const src = window.ARTWORKS?.featuredImage ?? getCategories()[0]?.pieces[0]?.mainImage;
-
-  if (src) {
-    if (isVideo(src)) {
-      // Swap the img for a video element
-      const bg  = document.getElementById('landing-bg');
-      const img = document.getElementById('landing-img');
-      const vid        = document.createElement('video');
-      vid.id           = 'landing-img';
-      vid.autoplay     = true;
-      vid.loop         = true;
-      vid.muted        = true;
-      vid.playsInline  = true;
-      vid.className    = img.className + ' loaded';
-      vid.src          = src;
-      bg.replaceChild(vid, img);
-    } else {
-      const img  = document.getElementById('landing-img');
-      img.onload = () => img.classList.add('loaded');
-      img.src    = src;
-    }
-  }
-
-  // Entrance fade-in for info + CTA
-  const parallaxEls = [
-    document.getElementById('landing-info'),
-    document.getElementById('landing-cta'),
-  ];
-  parallaxEls.forEach((el, i) => {
-    if (!el) return;
-    el.style.opacity    = '0';
-    el.style.transition = 'opacity 0.8s ease';
-    el.style.willChange = 'transform';
-    setTimeout(() => { el.style.opacity = '1'; }, 250 + i * 200);
-  });
-
-  // Parallax on scroll
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        const y = window.scrollY * 0.3;
-        parallaxEls.forEach(el => { if (el) el.style.transform = `translateY(${-y}px)`; });
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
-}
-
-/* ============================================================
    PORTFOLIO — CATEGORY GRID
    ============================================================ */
 if (isPortfolio) {
@@ -99,6 +45,106 @@ if (isPortfolio) {
   const savedScrollY = {};
   let wheelAccumX = 0, wheelTimer = null;
   let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+
+  // ── Portfolio lightbox ────────────────────────────────────
+  const lbEl      = document.getElementById('portfolio-lightbox');
+  const lbMedia   = document.getElementById('portfolio-lb-media');
+  const lbDetails = document.getElementById('portfolio-lb-details');
+  const lbClose   = document.getElementById('portfolio-lb-close');
+
+  function openPortfolioLightbox(src, detailsHref, catI, pieceI) {
+    if (!lbEl) return;
+    lbMedia.innerHTML = '';
+    if (isVideo(src)) {
+      const vid        = document.createElement('video');
+      vid.src          = src;
+      vid.autoplay     = true;
+      vid.loop         = true;
+      vid.muted        = true;
+      vid.playsInline  = true;
+      vid.className    = 'lb-video';
+      lbMedia.appendChild(vid);
+    } else {
+      const img     = document.createElement('img');
+      img.src       = src;
+      img.alt       = '';
+      img.className = 'lb-img';
+      lbMedia.appendChild(img);
+    }
+    if (detailsHref && lbDetails) {
+      lbDetails.href    = detailsHref;
+      lbDetails.hidden  = false;
+      lbDetails.onclick = () => {
+        sessionStorage.setItem('returnScroll', JSON.stringify({ cat: catI, piece: pieceI }));
+      };
+    } else if (lbDetails) {
+      lbDetails.hidden = true;
+    }
+    lbEl.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePortfolioLightbox() {
+    if (!lbEl) return;
+    lbEl.classList.remove('open');
+    document.body.style.overflow = '';
+    const vid = lbMedia?.querySelector('video');
+    if (vid) vid.pause();
+  }
+
+  lbClose?.addEventListener('click', closePortfolioLightbox);
+  lbEl?.addEventListener('click', e => { if (e.target === lbEl) closePortfolioLightbox(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && lbEl?.classList.contains('open')) closePortfolioLightbox();
+  });
+
+  // ── Intro overlay ─────────────────────────────────────────
+  (() => {
+    const overlay = document.getElementById('intro-overlay');
+    if (!overlay) return;
+    if (sessionStorage.getItem('introSeen')) {
+      overlay.style.display = 'none';
+      return;
+    }
+    sessionStorage.setItem('introSeen', '1');
+
+    const pieces = overlay.querySelectorAll('.intro-piece-inner');
+
+    // Pieces drift up and fade in, staggered
+    pieces.forEach((el, i) => {
+      setTimeout(() => {
+        el.style.opacity   = '1';
+        el.style.translate = '0 0';
+      }, 200 + i * 320);
+    });
+
+    // Auto-dismiss: wait for last piece to finish fading in, then hold
+    const lastPieceFinish = 200 + (pieces.length - 1) * 320 + 720;
+    const holdTime        = 800;
+
+    function dismissIntro() {
+      if (overlay.dataset.dismissed) return;
+      overlay.dataset.dismissed = '1';
+
+      // Stagger pieces out: drift up + fade
+      pieces.forEach((el, i) => {
+        setTimeout(() => {
+          el.style.opacity   = '0';
+          el.style.translate = '0 -20px';
+        }, i * 55);
+      });
+
+      // Once all pieces have started leaving, fade the overlay itself
+      const allStarted = (pieces.length - 1) * 55 + 180;
+      setTimeout(() => {
+        overlay.style.opacity = '0';
+        setTimeout(() => { overlay.style.display = 'none'; }, 500);
+      }, allStarted);
+    }
+
+    setTimeout(dismissIntro, lastPieceFinish + holdTime);
+    overlay.addEventListener('click', dismissIntro);
+  })();
 
   // ── Init ─────────────────────────────────────────────────
   (() => {
@@ -210,24 +256,37 @@ if (isPortfolio) {
       const card      = document.createElement('div');
       card.className  = 'piece-card subcat-card' + (sub.externalLink ? ' external' : '');
 
-      // Single cover image preview
-      const preview     = document.createElement('div');
-      preview.className = 'subcat-preview';
+      // Image area
+      const imgWrap     = document.createElement('div');
+      imgWrap.className = 'subcat-img-wrap';
       const previewSrc  = typeof sub.preview === 'string' ? sub.preview : (sub.preview ?? [])[0];
       if (previewSrc) {
         const img   = document.createElement('img');
         img.src     = previewSrc;
         img.alt     = sub.title;
         img.loading = 'lazy';
-        preview.appendChild(img);
+        imgWrap.appendChild(img);
       }
-      card.appendChild(preview);
+      card.appendChild(imgWrap);
 
-      // Label
-      const label       = document.createElement('div');
-      label.className   = 'subcat-label';
-      label.textContent = sub.title;
-      card.appendChild(label);
+      // Text panel
+      const panel       = document.createElement('div');
+      panel.className   = 'subcat-panel';
+
+      const titleEl     = document.createElement('span');
+      titleEl.className = 'subcat-panel-title';
+      titleEl.textContent = sub.title;
+
+      const arrowEl     = document.createElement('span');
+      arrowEl.className = 'subcat-panel-arrow';
+      arrowEl.setAttribute('aria-hidden', 'true');
+      arrowEl.innerHTML = sub.externalLink
+        ? `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13L13 3M13 3H5M13 3v8"/></svg>`
+        : `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>`;
+
+      panel.appendChild(titleEl);
+      panel.appendChild(arrowEl);
+      card.appendChild(panel);
 
       // Click
       card.addEventListener('click', () => {
@@ -245,117 +304,58 @@ if (isPortfolio) {
     return slide;
   }
 
+  // ── Build footer (injected into each slide) ──────────────
+  function buildFooter() {
+    const footer = document.createElement('footer');
+    footer.className = 'slide-footer';
+    footer.innerHTML =
+      `<a href="https://linktr.ee/lunaarts" target="_blank" rel="noopener noreferrer" class="footer-brand">` +
+        `<img src="logo.png" alt="" class="footer-brand-logo" aria-hidden="true" />` +
+        `<span class="footer-brand-name">Bianca Banu</span>` +
+      `</a>` +
+      `<div class="footer-icons">` +
+        `<a href="https://www.instagram.com/luna_being_productive" target="_blank" rel="noopener noreferrer" aria-label="Instagram">` +
+          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>` +
+        `</a>` +
+        `<a href="https://www.artstation.com/lunaazx" target="_blank" rel="noopener noreferrer" aria-label="ArtStation">` +
+          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20.5L12 3l10 17.5H2z"/><path d="M7 14h10"/></svg>` +
+        `</a>` +
+        `<a href="https://www.behance.net/lunaarts" target="_blank" rel="noopener noreferrer" aria-label="Behance">` +
+          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h6a3.5 3.5 0 0 1 0 7H5V4z"/><path d="M5 11h7a4 4 0 0 1 0 8H5V11z"/><line x1="14.5" y1="7" x2="20" y2="7"/></svg>` +
+        `</a>` +
+        `<a href="https://linktr.ee/lunaarts" target="_blank" rel="noopener noreferrer" aria-label="Linktree">` +
+          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>` +
+        `</a>` +
+      `</div>`;
+    return footer;
+  }
+
   // ── Build a category slide ────────────────────────────────
   function buildCategorySlide(cat, catIndex) {
     if (cat.links)         return buildLinksSlide(cat, catIndex);
-    // Subcategory hub (e.g. "Other Fun Stuff")
     if (cat.subcategories) return buildSubcategorySlide(cat, catIndex);
+
     const slide         = document.createElement('div');
     slide.className     = 'slide';
     slide.dataset.index = catIndex;
 
-    // Animation: hero+toggle on desktop only — mobile uses standard vertical scroll
-    if (cat.featuredVideo && !window.matchMedia('(hover: none)').matches) {
-      slide.classList.add('slide-animation');
-
-      // Hero layer — full-screen looping video (pieces[0] is the hero piece)
-      const hero = document.createElement('div');
-      hero.className = 'anim-hero';
-      const heroVid       = document.createElement('video');
-      heroVid.src         = cat.featuredVideo;
-      heroVid.autoplay    = true;
-      heroVid.loop        = true;
-      heroVid.muted       = true;
-      heroVid.playsInline = true;
-      hero.appendChild(heroVid);
-      // Link hero to detail page — eye icon on touch, full click on desktop
-      if (cat.pieces?.[0]) {
-        const isTouch = window.matchMedia('(hover: none)').matches;
-        if (!isTouch) {
-          hero.style.cursor = 'pointer';
-          hero.addEventListener('click', () => {
-            window.location.href = `piece.html?cat=${catIndex}&piece=0`;
-          });
-        } else {
-          const enterBtn     = document.createElement('button');
-          enterBtn.className = 'piece-enter-btn';
-          enterBtn.setAttribute('aria-label', 'View details');
-          enterBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
-          enterBtn.addEventListener('click', () => {
-            window.location.href = `piece.html?cat=${catIndex}&piece=0`;
-          });
-          hero.appendChild(enterBtn);
-        }
-      }
-      slide.appendChild(hero);
-
-      // Grid layer — hidden until toggle, uses pieces[1+]
-      const gridWrap = document.createElement('div');
-      gridWrap.className = 'anim-grid-wrap';
-      const grid = document.createElement('div');
-      grid.className = 'slide-grid';
-      const gridPieces = (cat.pieces ?? []).slice(1, 5); // skip pieces[0] (hero)
-      const count = Math.min(gridPieces.length, 4);
-      grid.dataset.pieces = count;
-      grid.dataset.layout = cat.gridLayout ?? '';
-      gridPieces.forEach((piece, i) => {
-        grid.appendChild(buildPieceCard(piece, catIndex, i + 1)); // offset index by 1
-      });
-      const gridCtrl = setupVideoGrid(grid, false); // don't autostart — hero is showing
-      gridWrap.appendChild(grid);
-      slide.appendChild(gridWrap);
-
-      // Toggle button
-      const btn = document.createElement('button');
-      btn.className = 'anim-toggle-btn';
-      btn.setAttribute('aria-label', 'Toggle animation view');
-      btn.innerHTML = `
-        <span class="anim-btn-state state-to-grid" aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 13 13" fill="currentColor">
-            <rect x="0"   y="0"   width="5.5" height="5.5" rx="0.5"/>
-            <rect x="7.5" y="0"   width="5.5" height="5.5" rx="0.5"/>
-            <rect x="0"   y="7.5" width="5.5" height="5.5" rx="0.5"/>
-            <rect x="7.5" y="7.5" width="5.5" height="5.5" rx="0.5"/>
-          </svg>
-          <span class="anim-btn-hint">More animations</span>
-        </span>
-        <span class="anim-btn-state state-to-full" aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
-            <path d="M1 4.5V1h3.5M8.5 1H12v3.5M12 8.5V12H8.5M4.5 12H1V8.5"/>
-          </svg>
-          <span class="anim-btn-hint">Main animation</span>
-        </span>
-      `;
-      btn.addEventListener('click', () => {
-        const isGrid = slide.classList.toggle('show-grid');
-        if (isGrid) {
-          heroVid.pause();
-          gridCtrl.start();
-        } else {
-          heroVid.play();
-          gridCtrl.pause();
-        }
-      });
-      slide.appendChild(btn);
-      return slide;
-    }
-
-    // Standard category slide
     const pieces = cat.pieces ?? [];
-    const count  = Math.min(pieces.length, 5);
+    const limit  = cat.gridLayout === 'compact' ? pieces.length : 5;
+    const count  = Math.min(pieces.length, limit);
 
     const grid = document.createElement('div');
     grid.className = 'slide-grid';
     grid.dataset.pieces = count;
     if (cat.gridLayout) grid.dataset.layout = cat.gridLayout;
 
-    pieces.slice(0, 5).forEach((piece, pieceIndex) => {
+    pieces.slice(0, limit).forEach((piece, pieceIndex) => {
       grid.appendChild(buildPieceCard(piece, catIndex, pieceIndex));
     });
 
     setupVideoGrid(grid);
 
     slide.appendChild(grid);
+    slide.appendChild(buildFooter());
     return slide;
   }
 
@@ -368,7 +368,6 @@ if (isPortfolio) {
       if (isVideo(piece.mainImage)) {
         const vid        = document.createElement('video');
         vid.src          = piece.mainImage;
-        // On mobile each video is full-screen snap-scroll — autoplay first, others via setupVideoGrid
         vid.autoplay     = false;
         vid.loop         = true;
         vid.muted        = true;
@@ -385,22 +384,47 @@ if (isPortfolio) {
         img.loading = catIndex === 0 && pieceIndex === 0 ? 'eager' : 'lazy';
         img.className = 'piece-card-media';
         card.appendChild(img);
-        // Tag landscape cards so mobile CSS can show full width
         applyAspectClass(img, card, 'piece-card-landscape');
       }
     }
 
-    const overlay   = document.createElement('div');
-    overlay.className = 'piece-card-overlay';
-    const title     = document.createElement('span');
-    title.className = 'piece-card-title';
-    title.textContent = piece.title ?? '';
-    overlay.appendChild(title);
-    card.appendChild(overlay);
+    if (piece.externalLink) {
+      card.classList.add('piece-card-external');
+      // External pieces: persistent bottom panel with platform name + arrow
+      const panel = document.createElement('div');
+      panel.className = 'piece-card-ext-panel';
 
+      const label = document.createElement('span');
+      label.className = 'piece-card-ext-label';
+      label.textContent = piece.externalLabel ?? 'View externally';
+
+      const arrow = document.createElement('span');
+      arrow.className = 'piece-card-ext-arrow';
+      arrow.setAttribute('aria-hidden', 'true');
+      arrow.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13L13 3M13 3H5M13 3v8"/></svg>`;
+
+      panel.appendChild(label);
+      panel.appendChild(arrow);
+      card.appendChild(panel);
+    } else {
+      const overlay = document.createElement('div');
+      overlay.className = 'piece-card-overlay';
+      const title = document.createElement('span');
+      title.className = 'piece-card-title';
+      title.textContent = piece.title ?? '';
+      overlay.appendChild(title);
+      card.appendChild(overlay);
+    }
+
+    // Click → external link OR lightbox
     card.addEventListener('click', () => {
-      sessionStorage.setItem('returnScroll', JSON.stringify({ cat: catIndex, piece: pieceIndex }));
-      window.location.href = `piece.html?cat=${catIndex}&piece=${pieceIndex}`;
+      if (piece.externalLink) {
+        window.open(piece.externalLink, '_blank', 'noopener,noreferrer');
+        return;
+      }
+      const hasDetails = (piece.detailImages ?? []).length > 0;
+      const href = hasDetails ? `piece.html?cat=${catIndex}&piece=${pieceIndex}` : null;
+      openPortfolioLightbox(piece.mainImage, href, catIndex, pieceIndex);
     });
 
     return card;
@@ -576,7 +600,6 @@ if (isPortfolio) {
       touchStartTime = Date.now();
       dragAxis       = null;
       dragging       = false;
-      // Kill CSS transition — track follows finger instantly
       track.style.transition = 'none';
     }, { passive: true });
 
@@ -586,16 +609,14 @@ if (isPortfolio) {
       const dx = e.touches[0].clientX - touchStartX;
       const dy = e.touches[0].clientY - touchStartY;
 
-      // Lock axis on first significant movement
       if (!dragAxis && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
         dragAxis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
       }
 
       if (dragAxis === 'x') {
-        e.preventDefault(); // block native vertical scroll while swiping
+        e.preventDefault();
         dragging = true;
 
-        // Rubber-band resistance at edges
         let drag = dx;
         if ((currentIndex === 0 && dx > 0) || (currentIndex === categories.length - 1 && dx < 0)) {
           drag = dx * 0.25;
@@ -606,7 +627,6 @@ if (isPortfolio) {
     }, { passive: false });
 
     container.addEventListener('touchend', e => {
-      // Restore CSS transition before any snap
       track.style.transition = '';
 
       if (!dragging || dragAxis !== 'x') {
@@ -617,12 +637,11 @@ if (isPortfolio) {
 
       const dx       = e.changedTouches[0].clientX - touchStartX;
       const dt       = Math.max(1, Date.now() - touchStartTime);
-      const velocity = Math.abs(dx) / dt; // px/ms
+      const velocity = Math.abs(dx) / dt;
 
       if (Math.abs(dx) > window.innerWidth * 0.18 || velocity > 0.3) {
         navigate(dx < 0 ? 'next' : 'prev');
       } else {
-        // Not enough — snap back
         track.style.transform = `translateX(calc(${currentIndex * -100}vw))`;
       }
 
@@ -643,6 +662,27 @@ if (isPiece) {
 
   const categories = getCategories();
   const category   = categories[catIndex];
+
+  // ── Shared lightbox ───────────────────────────────────────
+  const lightbox      = document.getElementById('lightbox');
+  const lightboxImg   = lightbox?.querySelector('img');
+  const lightboxClose = document.getElementById('lightbox-close');
+
+  function openLightbox(src) {
+    if (!lightbox || !lightboxImg) return;
+    lightboxImg.src = src;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    if (!lightbox) return;
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  lightboxClose?.addEventListener('click', closeLightbox);
+  lightbox?.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
   // ── Subcategory gallery view ──────────────────────────────
   if (subParam !== null) {
@@ -672,25 +712,6 @@ if (isPiece) {
         fig.addEventListener('click', () => openLightbox(src));
         detailEl.appendChild(fig);
       });
-
-      // Lightbox
-      const lightbox     = document.getElementById('lightbox');
-      const lightboxImg  = lightbox?.querySelector('img');
-      const lightboxClose = document.getElementById('lightbox-close');
-
-      function openLightbox(src) {
-        lightboxImg.src = src;
-        lightbox.classList.add('open');
-        document.body.style.overflow = 'hidden';
-      }
-      function closeLightbox() {
-        lightbox.classList.remove('open');
-        document.body.style.overflow = '';
-      }
-
-      lightboxClose?.addEventListener('click', closeLightbox);
-      lightbox?.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
     }
 
   // ── Regular piece view ────────────────────────────────────
@@ -700,18 +721,14 @@ if (isPiece) {
   if (!piece) {
     document.getElementById('piece-title').textContent = 'Piece not found.';
   } else {
-    // Page title
     document.title = `${piece.title} — Bianca Banu`;
 
-    // Back label
     const backLabel = document.getElementById('piece-back-label');
     if (backLabel) backLabel.textContent = category.title;
 
-    // Sibling category label
     const sibCat = document.getElementById('piece-sibling-category');
     if (sibCat) sibCat.textContent = category.title;
 
-    // Back link carries cat param so portfolio re-opens at right category
     const backLink = document.getElementById('piece-back');
     if (backLink) backLink.href = `portfolio.html?cat=${catIndex}`;
     const backBottom = document.getElementById('piece-back-bottom');
@@ -721,7 +738,7 @@ if (isPiece) {
     const backGrid = document.getElementById('piece-back-grid');
     if (backGrid) backGrid.href = `portfolio.html?cat=${catIndex}`;
 
-    // Expand toggle — shown only for portrait/contained images
+    // Expand toggle
     const expandBtn = document.getElementById('piece-expand-btn');
     if (expandBtn) {
       expandBtn.addEventListener('click', () => {
@@ -734,7 +751,6 @@ if (isPiece) {
       const hero = document.getElementById('piece-hero');
 
       if (isVideo(piece.mainImage)) {
-        // Hide the img elements, show a video instead
         document.getElementById('piece-img-bg').style.display = 'none';
         document.getElementById('piece-img').style.display    = 'none';
         const vid       = document.createElement('video');
@@ -745,7 +761,7 @@ if (isPiece) {
         vid.playsInline = true;
         vid.id          = 'piece-video-hero';
         hero.appendChild(vid);
-        hero.classList.add('hero-landscape'); // videos are typically landscape
+        hero.classList.add('hero-landscape');
       } else {
         const imgBg = document.getElementById('piece-img-bg');
         const img   = document.getElementById('piece-img');
@@ -753,17 +769,19 @@ if (isPiece) {
         img.src   = piece.mainImage;
         img.alt   = piece.title ?? '';
         applyAspectClass(img, hero, 'hero-landscape');
-        // Show expand button only for portrait/contained pieces
         const apply = () => {
           if (!hero.classList.contains('hero-landscape') && expandBtn) {
             expandBtn.hidden = false;
           }
         };
         img.complete && img.naturalWidth > 0 ? apply() : img.addEventListener('load', apply, { once: true });
+
+        // Click hero image to open fullscreen lightbox
+        img.addEventListener('click', () => openLightbox(img.src));
       }
     }
 
-    // Header — hide entirely if no content
+    // Header
     document.getElementById('piece-title').textContent = piece.title ?? '';
     document.getElementById('piece-year').textContent  = piece.year  ?? '';
     if (!piece.title && !piece.year) {
@@ -775,7 +793,7 @@ if (isPiece) {
       document.getElementById('piece-description').textContent = piece.description;
     }
 
-    // Detail media — images and videos in order (mp4s auto-detected by extension)
+    // Detail media
     const detailEl = document.getElementById('piece-detail-images');
     if (!(piece.detailImages ?? []).length) {
       const empty = document.createElement('p');
@@ -784,7 +802,7 @@ if (isPiece) {
       detailEl.appendChild(empty);
     }
     (piece.detailImages ?? []).forEach(item => {
-      const fig      = document.createElement('figure');
+      const fig  = document.createElement('figure');
       let   media;
 
       if (isVideo(item.src)) {
@@ -799,6 +817,9 @@ if (isPiece) {
         media.src     = item.src;
         media.alt     = item.caption ?? '';
         media.loading = 'eager';
+        // Lightbox on click for detail images
+        media.style.cursor = 'zoom-in';
+        media.addEventListener('click', () => openLightbox(media.src));
       }
 
       fig.appendChild(media);
