@@ -143,59 +143,76 @@ window.ARTWORKS = {
       id: "comics-storyboards",
       title: "Comics & Storyboards",
       gridLayout: "compact",
-      pieces: [
+      sections: [
         {
-          title: "",
-          year: "",
-          software: ["Clip Studio Paint"],
-          mainImage: "images/otherfunstuff/storyboards:comics/comics1.jpg",
-          description: "",
-          detailImages: []
+          title: "latest manga work 2026 (in progress)",
+          gridLayout: "pages",
+          pieces: [
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (1).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (2).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (3).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (4).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (5).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (6).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (7).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (8).jpg", description: "", detailImages: [] }
+          ]
+        },
+        {
+          title: "older work 2025 (finished)",
+          gridLayout: "pages",
+          pieces: [
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (1).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (2).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (3).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (4).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (5).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (6).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (7).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (8).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (9).jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (10).jpg", description: "", detailImages: [] }
+          ]
         },
         {
           title: "",
-          year: "",
-          software: ["Clip Studio Paint"],
-          mainImage: "images/otherfunstuff/storyboards:comics/comics2.jpeg",
-          description: "",
-          detailImages: []
-        },
-        {
-          title: "",
-          year: "",
-          software: ["Clip Studio Paint"],
-          mainImage: "images/otherfunstuff/storyboards:comics/comics3.jpeg",
-          description: "",
-          detailImages: []
-        },
-        {
-          title: "",
-          year: "",
-          software: ["Clip Studio Paint"],
-          mainImage: "images/otherfunstuff/storyboards:comics/storyboard1.jpeg",
-          description: "",
-          detailImages: []
-        },
-        {
-          title: "",
-          year: "",
-          software: ["Clip Studio Paint"],
-          mainImage: "images/otherfunstuff/storyboards:comics/storyboard2.jpg",
-          description: "",
-          detailImages: []
+          gridLayout: "comics-grid",
+          pieces: [
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/comics1.jpg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/comics2.jpeg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/comics3.jpeg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/storyboard1.jpeg", description: "", detailImages: [] },
+            { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/storyboard2.jpg", description: "", detailImages: [] }
+          ]
         }
       ]
     },
     {
       id: "concepts",
       title: "Concepts",
-      gridLayout: "compact",
+      gridLayout: "concept-hero",
       pieces: [
         {
           title: "",
           year: "",
           software: ["Clip Studio Paint"],
-          mainImage: "images/otherfunstuff/concepts/concept1.png",
+          mainImage: "images/otherfunstuff/concepts/concept1.jpeg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/concepts/concepts2.jpeg",
+          description: "",
+          detailImages: []
+        },
+        {
+          title: "",
+          year: "",
+          software: ["Clip Studio Paint"],
+          mainImage: "images/otherfunstuff/concepts/bgs.jpeg",
           description: "",
           detailImages: []
         },

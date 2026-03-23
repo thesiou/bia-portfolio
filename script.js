@@ -339,28 +339,52 @@ if (isPortfolio) {
     slide.className     = 'slide';
     slide.dataset.index = catIndex;
 
-    const pieces = cat.pieces ?? [];
-    const limit  = cat.gridLayout === 'compact' ? pieces.length : 5;
-    const count  = Math.min(pieces.length, limit);
+    if (cat.sections) {
+      cat.sections.forEach(section => {
+        const layout  = section.gridLayout ?? cat.gridLayout;
+        const useLazy = layout === 'pages';
 
-    const grid = document.createElement('div');
-    grid.className = 'slide-grid';
-    grid.dataset.pieces = count;
-    if (cat.gridLayout) grid.dataset.layout = cat.gridLayout;
+        if (section.title) {
+          const label = document.createElement('div');
+          label.className = 'slide-section-label';
+          label.textContent = section.title;
+          slide.appendChild(label);
+        }
+        const grid = document.createElement('div');
+        grid.className = 'slide-grid';
+        grid.dataset.pieces = section.pieces.length;
+        if (layout) grid.dataset.layout = layout;
+        section.pieces.forEach((piece, pieceIndex) => {
+          grid.appendChild(buildPieceCard(piece, catIndex, pieceIndex, { lazy: useLazy }));
+        });
+        setupVideoGrid(grid);
+        slide.appendChild(grid);
+      });
+      setupLazyLoading(slide);
+    } else {
+      const pieces = cat.pieces ?? [];
+      const limit  = cat.gridLayout === 'compact' ? pieces.length : 5;
+      const count  = Math.min(pieces.length, limit);
 
-    pieces.slice(0, limit).forEach((piece, pieceIndex) => {
-      grid.appendChild(buildPieceCard(piece, catIndex, pieceIndex));
-    });
+      const grid = document.createElement('div');
+      grid.className = 'slide-grid';
+      grid.dataset.pieces = count;
+      if (cat.gridLayout) grid.dataset.layout = cat.gridLayout;
 
-    setupVideoGrid(grid);
+      pieces.slice(0, limit).forEach((piece, pieceIndex) => {
+        grid.appendChild(buildPieceCard(piece, catIndex, pieceIndex));
+      });
 
-    slide.appendChild(grid);
+      setupVideoGrid(grid);
+      slide.appendChild(grid);
+    }
+
     slide.appendChild(buildFooter());
     return slide;
   }
 
   // ── Build a piece card ────────────────────────────────────
-  function buildPieceCard(piece, catIndex, pieceIndex) {
+  function buildPieceCard(piece, catIndex, pieceIndex, opts = {}) {
     const card     = document.createElement('div');
     card.className = 'piece-card';
 
@@ -378,13 +402,18 @@ if (isPortfolio) {
         }, { once: true });
         card.appendChild(vid);
       } else {
-        const img   = document.createElement('img');
-        img.src     = piece.mainImage;
-        img.alt     = piece.title ?? '';
-        img.loading = catIndex === 0 && pieceIndex === 0 ? 'eager' : 'lazy';
+        const img     = document.createElement('img');
+        img.alt       = piece.title ?? '';
         img.className = 'piece-card-media';
+        if (opts.lazy) {
+          img.dataset.src = piece.mainImage;
+          card.classList.add('piece-card-shimmer');
+        } else {
+          img.src     = piece.mainImage;
+          img.loading = catIndex === 0 && pieceIndex === 0 ? 'eager' : 'lazy';
+          applyAspectClass(img, card, 'piece-card-landscape');
+        }
         card.appendChild(img);
-        applyAspectClass(img, card, 'piece-card-landscape');
       }
     }
 
@@ -438,6 +467,34 @@ if (isPortfolio) {
       start: () => videos.forEach(v => v.play()),
       pause: () => videos.forEach(v => v.pause()),
     };
+  }
+
+  // ── Lazy load images via IntersectionObserver ─────────────
+  function setupLazyLoading(slide) {
+    const lazyImgs = Array.from(slide.querySelectorAll('img[data-src]'));
+    if (!lazyImgs.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const img = entry.target;
+        const src = img.dataset.src;
+        if (!src) return;
+        img.src = src;
+        img.removeAttribute('data-src');
+        img.addEventListener('load', () => {
+          img.classList.add('page-img-loaded');
+          img.closest('.piece-card')?.classList.remove('piece-card-shimmer');
+        }, { once: true });
+        observer.unobserve(img);
+      });
+    }, {
+      root: slide,
+      rootMargin: '0px 0px 500px 0px',
+      threshold: 0
+    });
+
+    lazyImgs.forEach(img => observer.observe(img));
   }
 
   // ── Navigation ────────────────────────────────────────────
@@ -549,7 +606,9 @@ if (isPortfolio) {
     if (!cat) return;
     const count = cat.subcategories
       ? cat.subcategories.length
-      : Math.min((cat.pieces ?? []).length, 5);
+      : cat.sections
+        ? 0
+        : Math.min((cat.pieces ?? []).length, 5);
     container.innerHTML = '';
     if (count <= 1) { container.hidden = true; return; }
     container.hidden = false;

@@ -577,6 +577,135 @@ html::-webkit-scrollbar { display: none; }
   background: #0d0d0d;
 }
 
+/* ── Concept-hero layout (Concepts tab) ─────────────────── */
+.slide-grid[data-layout="concept-hero"] {
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  height: auto;
+  padding-top: 72px;
+  background: var(--bg);
+}
+
+.slide-grid[data-layout="concept-hero"] .piece-card:first-child {
+  grid-column: 1 / -1;
+  height: calc(100dvh - 72px);
+}
+
+/* Secondary pieces: square cells, uncropped */
+.slide-grid[data-layout="concept-hero"] .piece-card:not(:first-child) {
+  aspect-ratio: 1 / 1;
+  height: auto;
+  background: var(--bg);
+}
+
+/* Hero: full-bleed cover */
+.slide-grid[data-layout="concept-hero"] .piece-card:first-child .piece-card-media {
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* Secondary: contain so full image is visible, empty areas blend into background */
+.slide-grid[data-layout="concept-hero"] .piece-card:not(:first-child) .piece-card-media {
+  object-fit: contain;
+  object-position: center;
+  background: var(--bg);
+}
+
+/* ── Pages layout (manga / comic pages) ─────────────────── */
+.slide-grid[data-layout="pages"] {
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  height: auto;
+  gap: 2px;
+}
+
+.slide-grid[data-layout="pages"] .piece-card {
+  aspect-ratio: 3 / 4;
+  height: auto;
+}
+
+.slide-grid[data-layout="pages"] .piece-card-media {
+  object-fit: contain;
+  object-position: center;
+  background: #111;
+  transition: opacity 0.3s ease, transform 0.55s ease;
+  opacity: 0;
+}
+
+.slide-grid[data-layout="pages"] .piece-card-media.page-img-loaded {
+  opacity: 1;
+}
+
+/* ── Shimmer loading animation ──────────────────────────── */
+@keyframes page-shimmer {
+  0%   { transform: translateX(-150%); }
+  100% { transform: translateX(250%); }
+}
+
+.piece-card-shimmer {
+  background: #141414;
+  overflow: hidden;
+}
+
+.piece-card-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 65%
+  );
+  animation: page-shimmer 1.7s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Comics-grid layout (remaining comics/storyboards) ─────── */
+.slide-grid[data-layout="comics-grid"] {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  height: auto;
+  gap: 2px;
+}
+
+.slide-grid[data-layout="comics-grid"] .piece-card {
+  aspect-ratio: 1 / 1;
+  height: auto;
+}
+
+/* Lone last card spans full row */
+.slide-grid[data-layout="comics-grid"] .piece-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  aspect-ratio: 2 / 1;
+}
+
+.slide-grid[data-layout="comics-grid"] .piece-card {
+  background: var(--bg);
+}
+
+.slide-grid[data-layout="comics-grid"] .piece-card-media {
+  object-fit: contain;
+  object-position: center;
+  background: var(--bg);
+}
+
+/* ── Section labels (Comics & Storyboards sectioned layout) ─ */
+.slide-section-label {
+  padding: 20px 24px 12px;
+  font-family: var(--font);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  text-align: left;
+}
+
+.slide-section-label:first-child {
+  padding-top: 84px;
+}
+
 /* ── Subcategory cards (card design) ─────────────────────── */
 .subcat-card {
   display: flex;
@@ -1718,9 +1847,12 @@ body.piece-expanded #piece-img {
     scroll-snap-type: y mandatory;
   }
 
-  /* Animation + compact slides: free scroll, no snap */
+  /* Animation + compact + pages + concept-hero + comics-grid: free scroll, no snap */
   .slide:has(.slide-grid[data-layout="fullscroll"]),
-  .slide:has(.slide-grid[data-layout="compact"]) {
+  .slide:has(.slide-grid[data-layout="compact"]),
+  .slide:has(.slide-grid[data-layout="pages"]),
+  .slide:has(.slide-grid[data-layout="concept-hero"]),
+  .slide:has(.slide-grid[data-layout="comics-grid"]) {
     scroll-snap-type: none;
   }
 
@@ -1752,6 +1884,54 @@ body.piece-expanded #piece-img {
   .slide-grid[data-layout="compact"] {
     grid-template-columns: 1fr !important;
     padding-top: 56px;
+  }
+
+  /* On mobile nav is at bottom — no extra top padding needed for section labels */
+  .slide-section-label:first-child {
+    padding-top: 20px;
+  }
+
+  /* Concept-hero: 2 columns on mobile, no top padding (nav at bottom) */
+  .slide-grid[data-layout="concept-hero"] {
+    grid-template-columns: 1fr 1fr !important;
+    padding-top: 0;
+  }
+
+  .slide-grid[data-layout="concept-hero"] .piece-card:first-child {
+    height: 100dvh;
+  }
+
+  /* Secondary pieces keep their square ratio, auto height */
+  .slide-grid[data-layout="concept-hero"] .piece-card:not(:first-child) {
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  /* Pages: 1 column on mobile — full-width pages */
+  .slide-grid[data-layout="pages"] {
+    grid-template-columns: 1fr !important;
+    gap: 2px;
+  }
+
+  .slide-grid[data-layout="pages"] .piece-card {
+    aspect-ratio: 3 / 4;
+  }
+
+  /* Comics-grid: 1 column on mobile */
+  .slide-grid[data-layout="comics-grid"] {
+    grid-template-columns: 1fr !important;
+    gap: 2px;
+  }
+
+  .slide-grid[data-layout="comics-grid"] .piece-card {
+    aspect-ratio: 1 / 1;
+    height: auto;
+    scroll-snap-align: none;
+  }
+
+  .slide-grid[data-layout="comics-grid"] .piece-card:last-child:nth-child(odd) {
+    grid-column: 1;
+    aspect-ratio: 1 / 1;
   }
 
   .slide-grid[data-layout="compact"] .piece-card {
