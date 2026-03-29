@@ -556,6 +556,15 @@
       "title": "Sketchbook",
       "pieces": [
         {
+          "active": true,
+          "title": "",
+          "year": "",
+          "software": [],
+          "mainImage": "images/uploads/2403plusultra.webp",
+          "description": "",
+          "detailImages": []
+        },
+        {
           "title": "",
           "year": "",
           "software": [
