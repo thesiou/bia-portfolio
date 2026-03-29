@@ -67,7 +67,7 @@ async function handleLogin(request, env) {
   authUrl.searchParams.set('scope', 'read:user');
   authUrl.searchParams.set('state', stateToken);
 
-  const response = Response.redirect(authUrl.toString(), 302);
+  const response = redirect(authUrl.toString());
   response.headers.append('Set-Cookie', makeCookie(OAUTH_STATE_COOKIE, stateToken, {
     maxAge: OAUTH_STATE_TTL_SECONDS,
     path: '/origami-api/auth',
@@ -143,7 +143,7 @@ async function handleCallback(request, env) {
     exp: epochNow() + SESSION_TTL_SECONDS
   }, env.COOKIE_SECRET);
 
-  const response = Response.redirect('/origami/', 302);
+  const response = redirect('/origami/');
   response.headers.append('Set-Cookie', makeCookie(SESSION_COOKIE, sessionToken, {
     maxAge: SESSION_TTL_SECONDS,
     path: '/origami-api',
@@ -534,6 +534,15 @@ function json(data, status = 200) {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'no-store'
+    }
+  });
+}
+
+function redirect(location, status = 302) {
+  return new Response(null, {
+    status,
+    headers: {
+      Location: location
     }
   });
 }
