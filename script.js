@@ -1009,6 +1009,7 @@ if (isPiece) {
         media             = document.createElement('video');
         media.src         = item.src;
         media.controls    = true;
+        media.loop        = true;
         media.muted       = true;
         media.playsInline = true;
         media.className   = 'detail-video';
