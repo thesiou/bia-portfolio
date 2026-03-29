@@ -359,7 +359,7 @@ if (isPortfolio) {
     slide.dataset.index = catIndex;
 
     if (cat.sections) {
-      cat.sections.forEach(section => {
+      cat.sections.forEach((section, sectionIndex) => {
         const layout  = section.gridLayout ?? cat.gridLayout;
         const useLazy = layout === 'pages';
         const sectionPieces = getRenderablePieces(section.pieces ?? []);
@@ -375,7 +375,10 @@ if (isPortfolio) {
         grid.dataset.pieces = sectionPieces.length;
         if (layout) grid.dataset.layout = layout;
         sectionPieces.forEach(({ piece, rawIndex }) => {
-          grid.appendChild(buildPieceCard(piece, catIndex, rawIndex, { lazy: useLazy }));
+          grid.appendChild(buildPieceCard(piece, catIndex, rawIndex, {
+            lazy: useLazy,
+            sectionIndex
+          }));
         });
         setupVideoGrid(grid);
         slide.appendChild(grid);
@@ -472,9 +475,11 @@ if (isPortfolio) {
         window.open(piece.externalLink, '_blank', 'noopener,noreferrer');
         return;
       }
-      const hasDetails = (piece.detailImages ?? []).length > 0;
-      const href = hasDetails ? `piece.html?cat=${catIndex}&piece=${pieceIndex}` : null;
-      openPortfolioLightbox(piece.mainImage, href, catIndex, pieceIndex);
+      if (Number.isInteger(opts.sectionIndex)) {
+        window.location.href = `piece.html?cat=${catIndex}&section=${opts.sectionIndex}&piece=${pieceIndex}`;
+        return;
+      }
+      window.location.href = `piece.html?cat=${catIndex}&piece=${pieceIndex}`;
     });
 
     return card;
@@ -739,9 +744,11 @@ if (isPiece) {
   const catIndex   = parseInt(params.get('cat')   ?? '0', 10);
   const pieceIndex = parseInt(params.get('piece') ?? '0', 10);
   const subParam   = params.get('sub');
+  const sectionParam = params.get('section');
 
   const categories = getCategories();
   const category   = categories[catIndex];
+  const sectionIndex = sectionParam === null ? null : parseInt(sectionParam, 10);
 
   // ── Shared lightbox ───────────────────────────────────────
   const lightbox      = document.getElementById('lightbox');
@@ -776,7 +783,7 @@ if (isPiece) {
       const backLink = document.getElementById('piece-back');
       if (backLink) backLink.href = `portfolio.html?cat=${catIndex}`;
       const backLabel = document.getElementById('piece-back-label');
-      if (backLabel) backLabel.textContent = category.title;
+      if (backLabel) backLabel.textContent = 'Back';
 
       document.getElementById('piece-title').textContent = sub.title;
       document.getElementById('piece-year').textContent  = '';
@@ -796,7 +803,8 @@ if (isPiece) {
 
   // ── Regular piece view ────────────────────────────────────
   } else {
-  const piece = category?.pieces?.[pieceIndex];
+  const sectionPieces = Number.isInteger(sectionIndex) ? category?.sections?.[sectionIndex]?.pieces : null;
+  const piece = (sectionPieces ?? category?.pieces)?.[pieceIndex];
 
   if (!piece || !isPieceActive(piece)) {
     document.getElementById('piece-title').textContent = 'Piece not found.';
@@ -804,7 +812,7 @@ if (isPiece) {
     document.title = `${piece.title} — Bianca Banu`;
 
     const backLabel = document.getElementById('piece-back-label');
-    if (backLabel) backLabel.textContent = category.title;
+    if (backLabel) backLabel.textContent = 'Back';
 
     const sibCat = document.getElementById('piece-sibling-category');
     if (sibCat) sibCat.textContent = category.title;
