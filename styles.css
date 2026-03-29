@@ -611,6 +611,24 @@ html::-webkit-scrollbar { display: none; }
   background: #0d0d0d;
 }
 
+/* ── Five-flow layout (5 columns max, extra rows scroll) ─── */
+.slide-grid[data-layout="five-flow"] {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-rows: auto;
+  height: auto;
+  padding-top: 72px;
+  background: var(--bg);
+}
+
+.slide-grid[data-layout="five-flow"] .piece-card {
+  aspect-ratio: 3 / 4;
+  height: auto;
+}
+
+.slide-grid.slide-grid-followup {
+  padding-top: 2px;
+}
+
 /* ── Concept-hero layout (Concepts tab) ─────────────────── */
 .slide-grid[data-layout="concept-hero"] {
   grid-template-columns: 1fr 1fr 1fr;
@@ -1907,6 +1925,7 @@ body.piece-expanded #piece-img {
   /* Animation + compact + pages + concept-hero + comics-grid: free scroll, no snap */
   .slide:has(.slide-grid[data-layout="fullscroll"]),
   .slide:has(.slide-grid[data-layout="compact"]),
+  .slide:has(.slide-grid[data-layout="five-flow"]),
   .slide:has(.slide-grid[data-layout="pages"]),
   .slide:has(.slide-grid[data-layout="concept-hero"]),
   .slide:has(.slide-grid[data-layout="comics-grid"]) {
@@ -1941,6 +1960,12 @@ body.piece-expanded #piece-img {
   .slide-grid[data-layout="compact"] {
     grid-template-columns: 1fr !important;
     padding-top: 56px;
+  }
+
+  .slide-grid[data-layout="five-flow"] {
+    grid-template-columns: 1fr 1fr !important;
+    padding-top: 56px;
+    gap: 2px;
   }
 
   /* On mobile nav is at bottom — no extra top padding needed for section labels */
@@ -1994,6 +2019,16 @@ body.piece-expanded #piece-img {
   .slide-grid[data-layout="compact"] .piece-card {
     height: 62dvh;
     scroll-snap-align: none;
+  }
+
+  .slide-grid[data-layout="five-flow"] .piece-card {
+    height: auto;
+    aspect-ratio: 3 / 4;
+    scroll-snap-align: none;
+  }
+
+  .slide-grid.slide-grid-followup {
+    padding-top: 2px !important;
   }
 
   .slide-grid[data-layout="compact"] .piece-card:last-child:nth-child(odd) {

@@ -31,6 +31,34 @@ function getRenderablePieces(pieces) {
     .filter(({ piece }) => isPieceActive(piece));
 }
 
+function getPieceStableKey(piece) {
+  const explicitId = typeof piece?.id === 'string' ? piece.id.trim() : '';
+  if (explicitId) return `id:${explicitId}`;
+
+  const mainImage = typeof piece?.mainImage === 'string' ? piece.mainImage.trim() : '';
+  if (mainImage) return `img:${mainImage}`;
+
+  return '';
+}
+
+function buildPieceHref(catIndex, pieceIndex, piece, opts = {}) {
+  const params = new URLSearchParams();
+  params.set('cat', String(catIndex));
+
+  if (Number.isInteger(opts.sectionIndex)) {
+    params.set('section', String(opts.sectionIndex));
+  }
+
+  const key = getPieceStableKey(piece);
+  if (key) {
+    params.set('pid', key);
+  } else {
+    params.set('piece', String(pieceIndex));
+  }
+
+  return `piece.html?${params.toString()}`;
+}
+
 // ── Escape HTML ───────────────────────────────────────────────
 function esc(str) {
   return String(str ?? '')
@@ -197,15 +225,26 @@ if (isPortfolio) {
       requestAnimationFrame(() => { track.style.transition = ''; });
     }
 
-    // Restore scroll position within a category when returning from a piece page
-    const returnScroll = JSON.parse(sessionStorage.getItem('returnScroll') ?? 'null');
-    sessionStorage.removeItem('returnScroll');
-    if (returnScroll?.piece > 0 && returnScroll.cat === currentIndex) {
-      const slide = document.querySelector(`.slide[data-index="${currentIndex}"]`);
-      if (slide) requestAnimationFrame(() => {
+  // Restore scroll position within a category when returning from a piece page
+  const returnScroll = JSON.parse(sessionStorage.getItem('returnScroll') ?? 'null');
+  sessionStorage.removeItem('returnScroll');
+  if (returnScroll?.cat === currentIndex) {
+    const slide = document.querySelector(`.slide[data-index="${currentIndex}"]`);
+    if (slide) requestAnimationFrame(() => {
+      const returnKey = typeof returnScroll.key === 'string' ? returnScroll.key : '';
+      if (returnKey) {
+        const target = Array.from(slide.querySelectorAll('.piece-card')).find(card => card.dataset.pieceKey === returnKey);
+        if (target) {
+          slide.scrollTop = Math.max(0, target.offsetTop - 20);
+          return;
+        }
+      }
+
+      if (Number.isFinite(returnScroll.piece) && returnScroll.piece > 0) {
         slide.scrollTop = returnScroll.piece * window.innerHeight;
-      });
-    }
+      }
+    });
+  }
 
     updateUI();
     bindKeyboard();
@@ -363,6 +402,7 @@ if (isPortfolio) {
         const layout  = section.gridLayout ?? cat.gridLayout;
         const useLazy = layout === 'pages';
         const sectionPieces = getRenderablePieces(section.pieces ?? []);
+        if (!sectionPieces.length) return;
 
         if (section.title) {
           const label = document.createElement('div');
@@ -386,21 +426,35 @@ if (isPortfolio) {
       setupLazyLoading(slide);
     } else {
       const pieces = getRenderablePieces(cat.pieces ?? []);
-      const limit  = cat.gridLayout === 'compact' ? pieces.length : 5;
-      const visiblePieces = pieces.slice(0, limit);
-      const count  = visiblePieces.length;
+      const layout = cat.gridLayout || '';
 
-      const grid = document.createElement('div');
-      grid.className = 'slide-grid';
-      grid.dataset.pieces = count;
-      if (cat.gridLayout) grid.dataset.layout = cat.gridLayout;
+      const buildGrid = (list, gridLayout, options = {}) => {
+        if (!list.length) return;
 
-      visiblePieces.forEach(({ piece, rawIndex }) => {
-        grid.appendChild(buildPieceCard(piece, catIndex, rawIndex));
-      });
+        const grid = document.createElement('div');
+        grid.className = 'slide-grid';
+        if (options.followup) {
+          grid.classList.add('slide-grid-followup');
+        }
+        grid.dataset.pieces = list.length;
+        if (gridLayout) grid.dataset.layout = gridLayout;
+        list.forEach(({ piece, rawIndex }) => {
+          grid.appendChild(buildPieceCard(piece, catIndex, rawIndex, {
+            sectionIndex: options.sectionIndex
+          }));
+        });
+        setupVideoGrid(grid);
+        slide.appendChild(grid);
+      };
 
-      setupVideoGrid(grid);
-      slide.appendChild(grid);
+      if (layout === 'portrait-hero' && pieces.length > 3) {
+        buildGrid(pieces.slice(0, 3), 'portrait-hero');
+        buildGrid(pieces.slice(3), 'five-flow', { followup: true });
+      } else if (!layout && pieces.length > 5) {
+        buildGrid(pieces, 'five-flow');
+      } else {
+        buildGrid(pieces, layout || null);
+      }
     }
 
     slide.appendChild(buildFooter());
@@ -411,6 +465,10 @@ if (isPortfolio) {
   function buildPieceCard(piece, catIndex, pieceIndex, opts = {}) {
     const card     = document.createElement('div');
     card.className = 'piece-card';
+    const pieceKey = getPieceStableKey(piece);
+    if (pieceKey) {
+      card.dataset.pieceKey = pieceKey;
+    }
 
     if (piece.mainImage) {
       if (isVideo(piece.mainImage)) {
@@ -475,11 +533,16 @@ if (isPortfolio) {
         window.open(piece.externalLink, '_blank', 'noopener,noreferrer');
         return;
       }
-      if (Number.isInteger(opts.sectionIndex)) {
-        window.location.href = `piece.html?cat=${catIndex}&section=${opts.sectionIndex}&piece=${pieceIndex}`;
-        return;
+
+      if (!Number.isInteger(opts.sectionIndex)) {
+        sessionStorage.setItem('returnScroll', JSON.stringify({
+          cat: catIndex,
+          piece: pieceIndex,
+          key: pieceKey
+        }));
       }
-      window.location.href = `piece.html?cat=${catIndex}&piece=${pieceIndex}`;
+
+      window.location.href = buildPieceHref(catIndex, pieceIndex, piece, opts);
     });
 
     return card;
@@ -629,17 +692,20 @@ if (isPortfolio) {
     const container = document.getElementById('piece-dots');
     if (!container) return;
     const cat = categories[currentIndex];
-    if (!cat) return;
-    const count = cat.subcategories
-      ? cat.subcategories.length
-      : cat.sections
-        ? 0
-        : Math.min(getRenderablePieces(cat.pieces ?? []).length, 5);
+    if (!cat || cat.gridLayout !== 'fullscroll') {
+      container.innerHTML = '';
+      container.hidden = true;
+      return;
+    }
+
+    const count = getRenderablePieces(cat.pieces ?? []).length;
     container.innerHTML = '';
     if (count <= 1) { container.hidden = true; return; }
     container.hidden = false;
     const slide = document.querySelector(`.slide[data-index="${currentIndex}"]`);
-    const activeIndex = slide ? Math.round(slide.scrollTop / window.innerHeight) : 0;
+    const firstCard = slide?.querySelector('.piece-card');
+    const step = firstCard?.offsetHeight || window.innerHeight;
+    const activeIndex = slide ? Math.round(slide.scrollTop / Math.max(step, 1)) : 0;
     for (let i = 0; i < count; i++) {
       const dot = document.createElement('div');
       dot.className = 'piece-dot' + (i === activeIndex ? ' active' : '');
@@ -651,7 +717,11 @@ if (isPortfolio) {
     document.querySelectorAll('.slide').forEach((slide, catIndex) => {
       slide.addEventListener('scroll', () => {
         if (catIndex !== currentIndex) return;
-        const pieceIndex = Math.round(slide.scrollTop / window.innerHeight);
+        const cat = categories[catIndex];
+        if (!cat || cat.gridLayout !== 'fullscroll') return;
+        const firstCard = slide.querySelector('.piece-card');
+        const step = firstCard?.offsetHeight || window.innerHeight;
+        const pieceIndex = Math.round(slide.scrollTop / Math.max(step, 1));
         document.querySelectorAll('.piece-dot').forEach((dot, i) => {
           dot.classList.toggle('active', i === pieceIndex);
         });
@@ -745,10 +815,50 @@ if (isPiece) {
   const pieceIndex = parseInt(params.get('piece') ?? '0', 10);
   const subParam   = params.get('sub');
   const sectionParam = params.get('section');
+  const pieceKey = params.get('pid');
 
   const categories = getCategories();
   const category   = categories[catIndex];
   const sectionIndex = sectionParam === null ? null : parseInt(sectionParam, 10);
+
+  function findPieceInCategoryByKey(targetCategory, key, preferredSectionIndex = null) {
+    if (!targetCategory || !key) return null;
+    const matches = candidate => getPieceStableKey(candidate) === key;
+
+    if (Number.isInteger(preferredSectionIndex)) {
+      const preferred = targetCategory.sections?.[preferredSectionIndex]?.pieces;
+      if (Array.isArray(preferred)) {
+        for (let i = 0; i < preferred.length; i += 1) {
+          if (matches(preferred[i])) {
+            return { piece: preferred[i], sectionIndex: preferredSectionIndex, pieceIndex: i };
+          }
+        }
+      }
+    }
+
+    if (Array.isArray(targetCategory.pieces)) {
+      for (let i = 0; i < targetCategory.pieces.length; i += 1) {
+        if (matches(targetCategory.pieces[i])) {
+          return { piece: targetCategory.pieces[i], sectionIndex: null, pieceIndex: i };
+        }
+      }
+    }
+
+    if (Array.isArray(targetCategory.sections)) {
+      for (let s = 0; s < targetCategory.sections.length; s += 1) {
+        if (s === preferredSectionIndex) continue;
+        const pieces = targetCategory.sections[s]?.pieces;
+        if (!Array.isArray(pieces)) continue;
+        for (let i = 0; i < pieces.length; i += 1) {
+          if (matches(pieces[i])) {
+            return { piece: pieces[i], sectionIndex: s, pieceIndex: i };
+          }
+        }
+      }
+    }
+
+    return null;
+  }
 
   // ── Shared lightbox ───────────────────────────────────────
   const lightbox      = document.getElementById('lightbox');
@@ -803,8 +913,10 @@ if (isPiece) {
 
   // ── Regular piece view ────────────────────────────────────
   } else {
+  const byKey = pieceKey ? findPieceInCategoryByKey(category, pieceKey, sectionIndex) : null;
   const sectionPieces = Number.isInteger(sectionIndex) ? category?.sections?.[sectionIndex]?.pieces : null;
-  const piece = (sectionPieces ?? category?.pieces)?.[pieceIndex];
+  const fallbackPiece = (sectionPieces ?? category?.pieces)?.[pieceIndex];
+  const piece = byKey?.piece ?? fallbackPiece;
 
   if (!piece || !isPieceActive(piece)) {
     document.getElementById('piece-title').textContent = 'Piece not found.';
