@@ -423,12 +423,11 @@
           "gridLayout": "comics-grid",
           "pieces": [
             {
+              "active": true,
               "title": "",
               "year": "",
-              "software": [
-                "Clip Studio Paint"
-              ],
-              "mainImage": "images/otherfunstuff/storyboards:comics/comics1.jpg",
+              "software": [],
+              "mainImage": "images/uploads/shortwip2.webp",
               "description": "",
               "detailImages": []
             },
@@ -477,7 +476,7 @@
               "title": "",
               "year": "",
               "software": [],
-              "mainImage": "images/uploads/shortwip2.webp",
+              "mainImage": "images/uploads/illustration3.webp",
               "description": "",
               "detailImages": []
             }
