@@ -6,7 +6,7 @@
       "title": "Characters",
       "pieces": [
         {
-          "title": "",
+          "title": "Haruka",
           "year": "",
           "software": [
             "Clip Studio Paint"
@@ -36,22 +36,20 @@
           "detailImages": []
         },
         {
-          "title": "",
+          "active": true,
+          "title": "Kilo",
           "year": "",
-          "software": [
-            "Clip Studio Paint"
-          ],
-          "mainImage": "images/characters/4.jpeg",
+          "software": [],
+          "mainImage": "images/uploads/demonsterart.webp",
           "description": "",
           "detailImages": []
         },
         {
+          "active": true,
           "title": "",
           "year": "",
-          "software": [
-            "Clip Studio Paint"
-          ],
-          "mainImage": "images/characters/5.jpeg",
+          "software": [],
+          "mainImage": "images/uploads/kilo.webp",
           "description": "",
           "detailImages": []
         }
