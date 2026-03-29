@@ -38,7 +38,6 @@ const ui = {
   mediaModalMaxSide: document.getElementById('media-modal-max-side'),
   mediaModalQuality: document.getElementById('media-modal-quality'),
   mediaModalStatus: document.getElementById('media-modal-status'),
-  mediaModalUploadBtn: document.getElementById('media-modal-upload-btn'),
   mediaModalConfirmBtn: document.getElementById('media-modal-confirm-btn')
 };
 
@@ -277,12 +276,12 @@ function openMediaModal(mode, targetPiece = null) {
 
   if (mode === 'piece') {
     ui.mediaModalTitle.textContent = 'Add New Piece';
-    ui.mediaModalContext.textContent = 'Upload or choose the main media for the new piece.';
+    ui.mediaModalContext.textContent = 'Pick a file, then click Add piece. You can also paste an existing media path.';
     ui.mediaModalCaptionWrap.hidden = true;
     ui.mediaModalConfirmBtn.textContent = 'Add piece';
   } else {
     ui.mediaModalTitle.textContent = 'Add Detail Media';
-    ui.mediaModalContext.textContent = 'Upload or choose media for this piece detail view.';
+    ui.mediaModalContext.textContent = 'Pick a file, then click Add detail media. You can also paste an existing media path.';
     ui.mediaModalCaptionWrap.hidden = false;
     ui.mediaModalConfirmBtn.textContent = 'Add detail media';
   }
@@ -667,40 +666,36 @@ async function uploadMedia(event) {
   }
 }
 
-async function uploadFromModal() {
+async function confirmModalSelection() {
+  setModalStatus('');
+  let path = ui.mediaModalPath.value.trim();
   const sourceFile = ui.mediaModalFile.files?.[0];
-  if (!sourceFile) {
-    setModalStatus('Select a file first.', true);
-    return;
+
+  if (sourceFile) {
+    setModalStatus('Uploading...');
+    try {
+      const result = await uploadWithOptions({
+        sourceFile,
+        folder: ui.mediaModalFolder.value,
+        optimize: ui.mediaModalOptimize.checked,
+        maxSide: ui.mediaModalMaxSide.value,
+        quality: ui.mediaModalQuality.value,
+        messagePrefix: state.modal.mode === 'piece' ? 'upload piece' : 'upload detail media'
+      });
+
+      path = result.path;
+      ui.mediaModalPath.value = path;
+      ui.mediaModalFile.value = '';
+      cleanupModalPreviewUrl();
+      renderModalPreviewFromCurrentInput();
+    } catch (error) {
+      setModalStatus(error.message, true);
+      return;
+    }
   }
 
-  setModalStatus('Uploading...');
-  try {
-    const result = await uploadWithOptions({
-      sourceFile,
-      folder: ui.mediaModalFolder.value,
-      optimize: ui.mediaModalOptimize.checked,
-      maxSide: ui.mediaModalMaxSide.value,
-      quality: ui.mediaModalQuality.value,
-      messagePrefix: state.modal.mode === 'piece' ? 'upload piece' : 'upload detail media'
-    });
-
-    ui.mediaModalPath.value = result.path;
-    ui.mediaModalFile.value = '';
-    cleanupModalPreviewUrl();
-    renderModalPreviewFromCurrentInput();
-
-    const optimizedTag = result.optimized ? ' (optimized)' : '';
-    setModalStatus(`Upload complete${optimizedTag}.`);
-  } catch (error) {
-    setModalStatus(error.message, true);
-  }
-}
-
-function confirmModalSelection() {
-  const path = ui.mediaModalPath.value.trim();
   if (!path) {
-    setModalStatus('Provide a media path or upload a file first.', true);
+    setModalStatus('Select a file or provide an existing media path.', true);
     return;
   }
 
@@ -717,7 +712,7 @@ function confirmModalSelection() {
     renderPieces();
     updateChangeIndicator();
     closeMediaModal();
-    setEditorStatus('New piece added.');
+    setEditorStatus(sourceFile ? 'New piece uploaded and added.' : 'New piece added.');
     return;
   }
 
@@ -735,7 +730,7 @@ function confirmModalSelection() {
     renderPieces();
     updateChangeIndicator();
     closeMediaModal();
-    setEditorStatus('Detail media added.');
+    setEditorStatus(sourceFile ? 'Detail media uploaded and added.' : 'Detail media added.');
   }
 }
 
@@ -801,8 +796,9 @@ function bindEvents() {
   });
 
   ui.mediaModalClose.addEventListener('click', closeMediaModal);
-  ui.mediaModalUploadBtn.addEventListener('click', uploadFromModal);
-  ui.mediaModalConfirmBtn.addEventListener('click', confirmModalSelection);
+  ui.mediaModalConfirmBtn.addEventListener('click', () => {
+    confirmModalSelection();
+  });
   ui.mediaModalPath.addEventListener('input', renderModalPreviewFromCurrentInput);
   ui.mediaModalFile.addEventListener('change', renderModalPreviewFromCurrentInput);
 

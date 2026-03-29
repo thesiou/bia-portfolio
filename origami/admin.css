@@ -295,6 +295,27 @@ select {
   margin-top: 0.2rem;
 }
 
+.advanced-box {
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  padding: 0.55rem;
+  background: #fbfaf7;
+}
+
+.advanced-box > summary {
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #4f4f4f;
+}
+
+.advanced-grid {
+  margin-top: 0.55rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  gap: 0.55rem;
+}
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -359,6 +380,10 @@ select {
   }
 
   .modal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .advanced-grid {
     grid-template-columns: 1fr;
   }
 }
