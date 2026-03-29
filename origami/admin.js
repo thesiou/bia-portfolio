@@ -121,8 +121,17 @@ function isVideoPath(path) {
   return /\.(mp4|mov|webm|m4v)$/i.test(path || '');
 }
 
-function createMediaPreview(path) {
+function toPreviewSrc(path) {
   const src = String(path || '').trim();
+  if (!src) return '';
+  if (/^(https?:)?\/\//i.test(src)) return src;
+  if (src.startsWith('/')) return src;
+  if (src.startsWith('data:') || src.startsWith('blob:')) return src;
+  return `/${src}`;
+}
+
+function createMediaPreview(path) {
+  const src = toPreviewSrc(path);
   if (!src) {
     const empty = document.createElement('span');
     empty.className = 'preview-empty';
