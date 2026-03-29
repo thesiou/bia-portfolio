@@ -482,18 +482,25 @@ async function uploadMedia(event) {
 }
 
 async function refreshSessionAndBoot() {
+  let session;
   try {
-    const session = await api('/session');
-    if (!session.authenticated) {
-      showLoggedOut();
-      return;
-    }
-
-    showAuthenticated(session.username);
-    await loadContent();
+    session = await api('/session');
   } catch (error) {
     showLoggedOut();
-    setEditorStatus(error.message, true);
+    setEditorStatus(`Session check failed: ${error.message}`, true);
+    return;
+  }
+
+  if (!session.authenticated) {
+    showLoggedOut();
+    return;
+  }
+
+  showAuthenticated(session.username);
+  try {
+    await loadContent();
+  } catch (error) {
+    setEditorStatus(`Signed in, but content could not load: ${error.message}`, true);
   }
 }
 
