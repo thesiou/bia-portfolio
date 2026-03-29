@@ -420,7 +420,6 @@ html::-webkit-scrollbar { display: none; }
   object-fit: cover;
   object-position: center top;
   display: block;
-  transition: transform 0.55s ease;
   image-rendering: high-quality;
   -webkit-image-rendering: -webkit-optimize-contrast;
 }
@@ -432,10 +431,6 @@ html::-webkit-scrollbar { display: none; }
   overflow: hidden;
   cursor: pointer;
   background: #0f0f0f;
-}
-
-.piece-card:not(:has(video)):hover .piece-card-media {
-  transform: scale(1.04);
 }
 
 .piece-card-overlay {
@@ -2102,7 +2097,6 @@ body.piece-expanded #piece-img {
 /* ── Disable hover effects on touch devices ─────────────── */
 @media (hover: none) {
   .piece-card-overlay                         { opacity: 1; transform: translateY(0); }
-  .piece-card:not(:has(video)):hover .piece-card-media { transform: none; }
   .subcat-card:hover .subcat-img-wrap img    { transform: none; }
   /* Title is always visible — no hover to trigger the reset */
   .piece-card-title                          { transform: translateY(0); }
