@@ -196,10 +196,21 @@ select {
   border: 1px solid var(--line);
   border-radius: 10px;
   background: #f1f0ea;
-  min-height: 120px;
   overflow: hidden;
   display: grid;
   place-items: center;
+  min-height: 0;
+  justify-self: start;
+}
+
+.piece-preview {
+  width: 160px;
+  aspect-ratio: 4 / 3;
+}
+
+.detail-preview {
+  width: 110px;
+  aspect-ratio: 4 / 3;
 }
 
 .piece-main-fields {
@@ -220,7 +231,6 @@ select {
 .preview-media {
   width: 100%;
   height: 100%;
-  min-height: 120px;
   object-fit: cover;
   display: block;
 }
