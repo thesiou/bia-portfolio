@@ -461,7 +461,7 @@ if (isPortfolio) {
       overlay.className = 'piece-card-overlay';
       const title = document.createElement('span');
       title.className = 'piece-card-title';
-      title.textContent = piece.title ?? '';
+      title.textContent = (piece.title ?? '').trim() || 'Open piece';
       overlay.appendChild(title);
       card.appendChild(overlay);
     }

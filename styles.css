@@ -440,25 +440,52 @@ html::-webkit-scrollbar { display: none; }
 
 .piece-card-overlay {
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
-  align-items: flex-end;
-  padding: 24px 20px;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
+  padding: 14px 16px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.55) 52%,
+    rgba(0, 0, 0, 0.86) 100%
+  );
   pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.26s ease, transform 0.26s ease;
 }
 
 .piece-card-title {
-  font-size: 0.85rem;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.95);
-  letter-spacing: 0.03em;
-  transform: translateY(6px);
-  transition: transform 0.3s ease;
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
+  width: 100%;
+  text-align: center;
+  font-size: 0.76rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.96);
+  letter-spacing: 0.18em;
+  text-shadow:
+    0 0 8px rgba(255, 255, 255, 0.2),
+    0 1px 14px rgba(0, 0, 0, 0.9);
+  transform: translateY(4px);
+  transition: transform 0.26s ease, text-shadow 0.26s ease, color 0.26s ease;
+}
+
+.piece-card:hover .piece-card-overlay {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .piece-card:hover .piece-card-title {
   transform: translateY(0);
+  color: rgba(255, 255, 255, 1);
+  text-shadow:
+    0 0 12px rgba(255, 255, 255, 0.33),
+    0 1px 14px rgba(0, 0, 0, 0.92);
 }
 
 /* External cards: cover so panel width matches image edge-to-edge */
@@ -2039,7 +2066,7 @@ body.piece-expanded #piece-img {
 
 /* ── Disable hover effects on touch devices ─────────────── */
 @media (hover: none) {
-  .piece-card:hover .piece-card-overlay      { opacity: 0; }
+  .piece-card-overlay                         { opacity: 1; transform: translateY(0); }
   .piece-card:not(:has(video)):hover .piece-card-media { transform: none; }
   .subcat-card:hover .subcat-img-wrap img    { transform: none; }
   /* Title is always visible — no hover to trigger the reset */

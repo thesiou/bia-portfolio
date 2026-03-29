@@ -488,8 +488,16 @@ function sanitizeFilename(name) {
   return `${safeBase || 'file'}${ext.toLowerCase()}`;
 }
 
+function isGifFile(file) {
+  const mime = String(file?.type || '').toLowerCase();
+  const name = String(file?.name || '');
+  return mime === 'image/gif' || /\.gif$/i.test(name);
+}
+
 function isOptimizableImage(file) {
-  return Boolean(file?.type) && file.type.startsWith('image/');
+  if (!file) return false;
+  if (isGifFile(file)) return false;
+  return Boolean(file.type) && file.type.startsWith('image/');
 }
 
 async function optimizeImageFile(file, maxSide, quality) {
