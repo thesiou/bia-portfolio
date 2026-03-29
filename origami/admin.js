@@ -38,6 +38,7 @@ const ui = {
   mediaModalMaxSide: document.getElementById('media-modal-max-side'),
   mediaModalQuality: document.getElementById('media-modal-quality'),
   mediaModalStatus: document.getElementById('media-modal-status'),
+  mediaModalCancelBtn: document.getElementById('media-modal-cancel-btn'),
   mediaModalConfirmBtn: document.getElementById('media-modal-confirm-btn')
 };
 
@@ -295,6 +296,12 @@ function closeMediaModal() {
   ui.mediaModal.hidden = true;
   state.modal.mode = null;
   state.modal.targetPiece = null;
+}
+
+function handleModalCloseTrigger(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  closeMediaModal();
 }
 
 function renderCollectionSelect() {
@@ -795,7 +802,10 @@ function bindEvents() {
     }
   });
 
-  ui.mediaModalClose.addEventListener('click', closeMediaModal);
+  ui.mediaModalClose.addEventListener('click', handleModalCloseTrigger);
+  ui.mediaModalClose.addEventListener('pointerup', handleModalCloseTrigger);
+  ui.mediaModalCancelBtn.addEventListener('click', handleModalCloseTrigger);
+  ui.mediaModalCancelBtn.addEventListener('pointerup', handleModalCloseTrigger);
   ui.mediaModalConfirmBtn.addEventListener('click', () => {
     confirmModalSelection();
   });
