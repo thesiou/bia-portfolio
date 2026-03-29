@@ -1,3 +1,5 @@
+// Legacy data file retained for reference only.
+// Active source of truth is data/artworks.json.
 // Portfolio data — edit this file to manage categories and pieces.
 // First piece in each category's pieces[] is the HERO (large left panel).
 // Remaining pieces fill the supporting grid (up to 3).
