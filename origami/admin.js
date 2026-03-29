@@ -24,22 +24,8 @@ const ui = {
   copyUploadPathBtn: document.getElementById('copy-upload-path'),
   pieceTemplate: document.getElementById('piece-card-template'),
   detailItemTemplate: document.getElementById('detail-item-template'),
-  mediaModal: document.getElementById('media-modal'),
-  mediaModalTitle: document.getElementById('media-modal-title'),
-  mediaModalClose: document.getElementById('media-modal-close'),
-  mediaModalContext: document.getElementById('media-modal-context'),
-  mediaModalPreview: document.getElementById('media-modal-preview'),
-  mediaModalPath: document.getElementById('media-modal-path'),
-  mediaModalCaptionWrap: document.getElementById('media-modal-caption-wrap'),
-  mediaModalCaption: document.getElementById('media-modal-caption'),
-  mediaModalFolder: document.getElementById('media-modal-folder'),
-  mediaModalFile: document.getElementById('media-modal-file'),
-  mediaModalOptimize: document.getElementById('media-modal-optimize'),
-  mediaModalMaxSide: document.getElementById('media-modal-max-side'),
-  mediaModalQuality: document.getElementById('media-modal-quality'),
-  mediaModalStatus: document.getElementById('media-modal-status'),
-  mediaModalCancelBtn: document.getElementById('media-modal-cancel-btn'),
-  mediaModalConfirmBtn: document.getElementById('media-modal-confirm-btn')
+  addPieceFileInput: document.getElementById('add-piece-file-input'),
+  addDetailFileInput: document.getElementById('add-detail-file-input')
 };
 
 const state = {
@@ -48,11 +34,8 @@ const state = {
   lastSavedContent: null,
   collections: [],
   activeCollectionId: null,
-  modal: {
-    mode: null,
-    targetPiece: null,
-    localPreviewUrl: null
-  }
+  pendingDetailPiece: null,
+  uploadBusy: false
 };
 
 function setEditorStatus(message, isError = false) {
@@ -63,11 +46,6 @@ function setEditorStatus(message, isError = false) {
 function setUploadStatus(message, isError = false) {
   ui.uploadStatus.textContent = message;
   ui.uploadStatus.style.color = isError ? '#8e1f1f' : '#666';
-}
-
-function setModalStatus(message, isError = false) {
-  ui.mediaModalStatus.textContent = message;
-  ui.mediaModalStatus.style.color = isError ? '#8e1f1f' : '#666';
 }
 
 function deepClone(value) {
@@ -242,66 +220,18 @@ function createMediaPreview(path) {
   return img;
 }
 
-function cleanupModalPreviewUrl() {
-  if (state.modal.localPreviewUrl) {
-    URL.revokeObjectURL(state.modal.localPreviewUrl);
-    state.modal.localPreviewUrl = null;
-  }
+function getMainUploadOptions() {
+  return {
+    folder: ui.uploadFolder.value,
+    optimize: ui.uploadOptimize.checked,
+    maxSide: ui.uploadMaxSide.value,
+    quality: ui.uploadQuality.value
+  };
 }
 
-function renderModalPreviewFromCurrentInput() {
-  const file = ui.mediaModalFile.files?.[0];
-  cleanupModalPreviewUrl();
-  if (file) {
-    state.modal.localPreviewUrl = URL.createObjectURL(file);
-    ui.mediaModalPreview.replaceChildren(createMediaPreview(state.modal.localPreviewUrl));
-    return;
-  }
-
-  ui.mediaModalPreview.replaceChildren(createMediaPreview(ui.mediaModalPath.value.trim()));
-}
-
-function openMediaModal(mode, targetPiece = null) {
-  state.modal.mode = mode;
-  state.modal.targetPiece = targetPiece;
-  cleanupModalPreviewUrl();
-
-  ui.mediaModalPath.value = '';
-  ui.mediaModalCaption.value = '';
-  ui.mediaModalFile.value = '';
-  ui.mediaModalStatus.textContent = '';
-  ui.mediaModalFolder.value = ui.uploadFolder.value || 'images/uploads';
-  ui.mediaModalOptimize.checked = ui.uploadOptimize.checked;
-  ui.mediaModalMaxSide.value = ui.uploadMaxSide.value || '2560';
-  ui.mediaModalQuality.value = ui.uploadQuality.value || '0.88';
-
-  if (mode === 'piece') {
-    ui.mediaModalTitle.textContent = 'Add New Piece';
-    ui.mediaModalContext.textContent = 'Pick a file, then click Add piece. You can also paste an existing media path.';
-    ui.mediaModalCaptionWrap.hidden = true;
-    ui.mediaModalConfirmBtn.textContent = 'Add piece';
-  } else {
-    ui.mediaModalTitle.textContent = 'Add Detail Media';
-    ui.mediaModalContext.textContent = 'Pick a file, then click Add detail media. You can also paste an existing media path.';
-    ui.mediaModalCaptionWrap.hidden = false;
-    ui.mediaModalConfirmBtn.textContent = 'Add detail media';
-  }
-
-  ui.mediaModalPreview.replaceChildren(createMediaPreview(''));
-  ui.mediaModal.hidden = false;
-}
-
-function closeMediaModal() {
-  cleanupModalPreviewUrl();
-  ui.mediaModal.hidden = true;
-  state.modal.mode = null;
-  state.modal.targetPiece = null;
-}
-
-function handleModalCloseTrigger(event) {
-  event.preventDefault();
-  event.stopPropagation();
-  closeMediaModal();
+function setUploadBusy(isBusy) {
+  state.uploadBusy = isBusy;
+  ui.addPieceBtn.disabled = isBusy;
 }
 
 function renderCollectionSelect() {
@@ -465,7 +395,17 @@ function renderPieces() {
     });
 
     node.querySelector('.add-detail-item').addEventListener('click', () => {
-      openMediaModal('detail', piece);
+      if (state.uploadBusy) return;
+      state.pendingDetailPiece = piece;
+      ui.addDetailFileInput.value = '';
+      ui.addDetailFileInput.click();
+    });
+
+    node.querySelector('.add-detail-empty').addEventListener('click', () => {
+      piece.detailImages.push({ src: '', caption: '' });
+      renderPieces();
+      updateChangeIndicator();
+      setEditorStatus('Added an empty detail row.');
     });
 
     renderDetailItems(detailsListEl, piece);
@@ -673,71 +613,64 @@ async function uploadMedia(event) {
   }
 }
 
-async function confirmModalSelection() {
-  setModalStatus('');
-  let path = ui.mediaModalPath.value.trim();
-  const sourceFile = ui.mediaModalFile.files?.[0];
-
-  if (sourceFile) {
-    setModalStatus('Uploading...');
-    try {
-      const result = await uploadWithOptions({
-        sourceFile,
-        folder: ui.mediaModalFolder.value,
-        optimize: ui.mediaModalOptimize.checked,
-        maxSide: ui.mediaModalMaxSide.value,
-        quality: ui.mediaModalQuality.value,
-        messagePrefix: state.modal.mode === 'piece' ? 'upload piece' : 'upload detail media'
-      });
-
-      path = result.path;
-      ui.mediaModalPath.value = path;
-      ui.mediaModalFile.value = '';
-      cleanupModalPreviewUrl();
-      renderModalPreviewFromCurrentInput();
-    } catch (error) {
-      setModalStatus(error.message, true);
-      return;
-    }
-  }
-
-  if (!path) {
-    setModalStatus('Select a file or provide an existing media path.', true);
+async function addNewPieceFromUpload(sourceFile) {
+  const pieces = getActivePiecesArray();
+  if (!Array.isArray(pieces)) {
+    setEditorStatus('Cannot add piece to this collection.', true);
     return;
   }
 
-  if (state.modal.mode === 'piece') {
-    const pieces = getActivePiecesArray();
-    if (!Array.isArray(pieces)) {
-      setModalStatus('Cannot add piece to this collection.', true);
-      return;
-    }
+  setUploadBusy(true);
+  setEditorStatus(`Uploading "${sourceFile.name}"...`);
+  try {
+    const result = await uploadWithOptions({
+      sourceFile,
+      ...getMainUploadOptions(),
+      messagePrefix: 'upload piece'
+    });
 
     const newPiece = newPieceTemplate();
-    newPiece.mainImage = path;
+    newPiece.mainImage = result.path;
     pieces.push(newPiece);
     renderPieces();
     updateChangeIndicator();
-    closeMediaModal();
-    setEditorStatus(sourceFile ? 'New piece uploaded and added.' : 'New piece added.');
+    setEditorStatus(`New piece uploaded and added: ${result.path}`);
+  } catch (error) {
+    setEditorStatus(error.message, true);
+  } finally {
+    setUploadBusy(false);
+    ui.addPieceFileInput.value = '';
+  }
+}
+
+async function addDetailMediaFromUpload(sourceFile, targetPiece) {
+  if (!targetPiece) {
+    setEditorStatus('Could not find target piece.', true);
     return;
   }
 
-  if (state.modal.mode === 'detail') {
-    if (!state.modal.targetPiece) {
-      setModalStatus('Could not find target piece.', true);
-      return;
-    }
-
-    state.modal.targetPiece.detailImages.push({
-      src: path,
-      caption: ui.mediaModalCaption.value.trim()
+  setUploadBusy(true);
+  setEditorStatus(`Uploading detail media "${sourceFile.name}"...`);
+  try {
+    const result = await uploadWithOptions({
+      sourceFile,
+      ...getMainUploadOptions(),
+      messagePrefix: 'upload detail media'
     });
 
+    targetPiece.detailImages.push({
+      src: result.path,
+      caption: ''
+    });
     renderPieces();
     updateChangeIndicator();
-    closeMediaModal();
-    setEditorStatus(sourceFile ? 'Detail media uploaded and added.' : 'Detail media added.');
+    setEditorStatus(`Detail media uploaded and added: ${result.path}`);
+  } catch (error) {
+    setEditorStatus(error.message, true);
+  } finally {
+    state.pendingDetailPiece = null;
+    setUploadBusy(false);
+    ui.addDetailFileInput.value = '';
   }
 }
 
@@ -780,7 +713,21 @@ function bindEvents() {
   });
 
   ui.addPieceBtn.addEventListener('click', () => {
-    openMediaModal('piece');
+    if (state.uploadBusy) return;
+    ui.addPieceFileInput.value = '';
+    ui.addPieceFileInput.click();
+  });
+
+  ui.addPieceFileInput.addEventListener('change', () => {
+    const file = ui.addPieceFileInput.files?.[0];
+    if (!file) return;
+    addNewPieceFromUpload(file);
+  });
+
+  ui.addDetailFileInput.addEventListener('change', () => {
+    const file = ui.addDetailFileInput.files?.[0];
+    if (!file) return;
+    addDetailMediaFromUpload(file, state.pendingDetailPiece);
   });
 
   ui.saveBtn.addEventListener('click', () => {
@@ -799,28 +746,6 @@ function bindEvents() {
       setUploadStatus('Path copied.');
     } catch {
       setUploadStatus('Could not copy path automatically. Please copy manually.', true);
-    }
-  });
-
-  ui.mediaModalClose.addEventListener('click', handleModalCloseTrigger);
-  ui.mediaModalClose.addEventListener('pointerup', handleModalCloseTrigger);
-  ui.mediaModalCancelBtn.addEventListener('click', handleModalCloseTrigger);
-  ui.mediaModalCancelBtn.addEventListener('pointerup', handleModalCloseTrigger);
-  ui.mediaModalConfirmBtn.addEventListener('click', () => {
-    confirmModalSelection();
-  });
-  ui.mediaModalPath.addEventListener('input', renderModalPreviewFromCurrentInput);
-  ui.mediaModalFile.addEventListener('change', renderModalPreviewFromCurrentInput);
-
-  ui.mediaModal.addEventListener('click', event => {
-    if (event.target === ui.mediaModal) {
-      closeMediaModal();
-    }
-  });
-
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && !ui.mediaModal.hidden) {
-      closeMediaModal();
     }
   });
 }

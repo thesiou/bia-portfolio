@@ -33,7 +33,7 @@
           Collection
           <select id="collection-select"></select>
         </label>
-        <button id="add-piece-btn" class="btn" type="button">Add piece</button>
+        <button id="add-piece-btn" class="btn" type="button">Upload new piece</button>
         <button id="save-btn" class="btn primary" type="button">Save changes</button>
       </div>
 
@@ -51,7 +51,7 @@
     <section id="upload-panel" class="panel" hidden>
       <details class="advanced-box">
         <summary>Advanced: standalone upload tool</summary>
-        <p class="muted">Most artists can ignore this. Main upload flow is inside Add Piece / Add Detail modal.</p>
+        <p class="muted">Most artists can ignore this. Main upload flow is via Upload new piece / Upload detail media buttons.</p>
         <form id="upload-form" class="upload-grid">
           <label>
             Folder path
@@ -116,7 +116,10 @@
       <section class="detail-editor">
         <div class="detail-head">
           <strong>Detail page media</strong>
-          <button class="btn tiny add-detail-item" type="button">Add detail media</button>
+          <div class="detail-head-actions">
+            <button class="btn tiny add-detail-item" type="button">Upload detail media</button>
+            <button class="btn tiny ghost add-detail-empty" type="button">Add empty row</button>
+          </div>
         </div>
         <div class="details-list"></div>
       </section>
@@ -143,65 +146,9 @@
       </div>
     </div>
   </template>
+  <input id="add-piece-file-input" type="file" hidden />
+  <input id="add-detail-file-input" type="file" hidden />
 
-  <div id="media-modal" class="modal-backdrop" hidden>
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="media-modal-title">
-      <div class="modal-head">
-        <h2 id="media-modal-title">Add media</h2>
-        <button id="media-modal-close" class="btn tiny ghost" type="button" aria-label="Close">Close</button>
-      </div>
-
-      <p id="media-modal-context" class="muted"></p>
-
-      <div class="modal-grid">
-        <div class="modal-preview-wrap">
-          <div id="media-modal-preview" class="piece-preview"></div>
-        </div>
-        <div class="modal-fields">
-          <label>
-            Or use existing media path (optional)
-            <input id="media-modal-path" type="text" placeholder="images/..." />
-          </label>
-          <label id="media-modal-caption-wrap" hidden>
-            Caption (optional)
-            <input id="media-modal-caption" type="text" />
-          </label>
-          <label>
-            Select file (recommended)
-            <input id="media-modal-file" type="file" />
-          </label>
-          <details class="advanced-box">
-            <summary>Advanced upload options</summary>
-            <div class="advanced-grid">
-              <label>
-                Folder path
-                <input id="media-modal-folder" type="text" value="images/uploads" />
-              </label>
-              <label class="check-line">
-                <input id="media-modal-optimize" type="checkbox" checked />
-                <span>Optimize image upload (WebP, high quality)</span>
-              </label>
-              <label>
-                Max side (px)
-                <input id="media-modal-max-side" type="number" min="800" max="5000" step="100" value="2560" />
-              </label>
-              <label>
-                Quality (0.6-1)
-                <input id="media-modal-quality" type="number" min="0.6" max="1" step="0.01" value="0.88" />
-              </label>
-            </div>
-          </details>
-          <p id="media-modal-status" class="status" role="status"></p>
-        </div>
-      </div>
-
-      <div class="modal-actions">
-        <button id="media-modal-cancel-btn" class="btn ghost" type="button">Cancel</button>
-        <button id="media-modal-confirm-btn" class="btn primary" type="button">Add</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="admin.js?v=20260330-5"></script>
+  <script src="admin.js?v=20260330-6"></script>
 </body>
 </html>
