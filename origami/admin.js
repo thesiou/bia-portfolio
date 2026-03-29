@@ -15,9 +15,14 @@ const ui = {
   uploadForm: document.getElementById('upload-form'),
   uploadFolder: document.getElementById('upload-folder'),
   uploadFile: document.getElementById('upload-file'),
+  uploadOptimize: document.getElementById('upload-optimize'),
+  uploadMaxSide: document.getElementById('upload-max-side'),
+  uploadQuality: document.getElementById('upload-quality'),
   uploadStatus: document.getElementById('upload-status'),
   uploadResult: document.getElementById('upload-result'),
-  pieceTemplate: document.getElementById('piece-card-template')
+  copyUploadPathBtn: document.getElementById('copy-upload-path'),
+  pieceTemplate: document.getElementById('piece-card-template'),
+  detailItemTemplate: document.getElementById('detail-item-template')
 };
 
 const state = {
@@ -81,13 +86,23 @@ function collectPieceCollections(content) {
   return result;
 }
 
+function normalizeDetailItem(item) {
+  if (typeof item === 'string') return { src: item, caption: '' };
+  if (!item || typeof item !== 'object') return { src: '', caption: '' };
+  return {
+    src: typeof item.src === 'string' ? item.src : '',
+    caption: typeof item.caption === 'string' ? item.caption : ''
+  };
+}
+
 function ensurePieceDefaults(piece) {
-  if (!Array.isArray(piece.software)) piece.software = [];
-  if (!Array.isArray(piece.detailImages)) piece.detailImages = [];
   if (typeof piece.title !== 'string') piece.title = '';
-  if (typeof piece.year !== 'string') piece.year = '';
   if (typeof piece.mainImage !== 'string') piece.mainImage = '';
-  if (typeof piece.description !== 'string') piece.description = '';
+
+  if (!Array.isArray(piece.detailImages)) {
+    piece.detailImages = [];
+  }
+  piece.detailImages = piece.detailImages.map(normalizeDetailItem);
 }
 
 function newPieceTemplate() {
@@ -95,11 +110,43 @@ function newPieceTemplate() {
     active: true,
     title: '',
     year: '',
-    software: ['Clip Studio Paint'],
+    software: [],
     mainImage: '',
     description: '',
     detailImages: []
   };
+}
+
+function isVideoPath(path) {
+  return /\.(mp4|mov|webm|m4v)$/i.test(path || '');
+}
+
+function createMediaPreview(path) {
+  const src = String(path || '').trim();
+  if (!src) {
+    const empty = document.createElement('span');
+    empty.className = 'preview-empty';
+    empty.textContent = 'No preview';
+    return empty;
+  }
+
+  if (isVideoPath(src)) {
+    const video = document.createElement('video');
+    video.className = 'preview-media';
+    video.src = src;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.autoplay = true;
+    return video;
+  }
+
+  const img = document.createElement('img');
+  img.className = 'preview-media';
+  img.src = src;
+  img.alt = '';
+  img.loading = 'lazy';
+  return img;
 }
 
 function renderCollectionSelect() {
@@ -128,10 +175,62 @@ function getActivePiecesArray() {
   return getByPath(state.content, collection.path);
 }
 
-function swapPieces(pieces, fromIndex, toIndex) {
-  const temp = pieces[fromIndex];
-  pieces[fromIndex] = pieces[toIndex];
-  pieces[toIndex] = temp;
+function swapItems(items, fromIndex, toIndex) {
+  const tmp = items[fromIndex];
+  items[fromIndex] = items[toIndex];
+  items[toIndex] = tmp;
+}
+
+function renderDetailItems(detailsContainer, piece) {
+  detailsContainer.innerHTML = '';
+
+  if (!piece.detailImages.length) {
+    const empty = document.createElement('p');
+    empty.className = 'muted';
+    empty.textContent = 'No detail media yet.';
+    detailsContainer.appendChild(empty);
+    return;
+  }
+
+  piece.detailImages.forEach((detail, detailIndex) => {
+    const node = ui.detailItemTemplate.content.firstElementChild.cloneNode(true);
+
+    const previewEl = node.querySelector('.detail-preview');
+    const srcEl = node.querySelector('.detail-src');
+    const captionEl = node.querySelector('.detail-caption');
+
+    previewEl.replaceChildren(createMediaPreview(detail.src));
+    srcEl.value = detail.src;
+    captionEl.value = detail.caption;
+
+    srcEl.addEventListener('input', () => {
+      detail.src = srcEl.value;
+      previewEl.replaceChildren(createMediaPreview(detail.src));
+    });
+
+    captionEl.addEventListener('input', () => {
+      detail.caption = captionEl.value;
+    });
+
+    node.querySelector('.detail-up').addEventListener('click', () => {
+      if (detailIndex === 0) return;
+      swapItems(piece.detailImages, detailIndex, detailIndex - 1);
+      renderPieces();
+    });
+
+    node.querySelector('.detail-down').addEventListener('click', () => {
+      if (detailIndex >= piece.detailImages.length - 1) return;
+      swapItems(piece.detailImages, detailIndex, detailIndex + 1);
+      renderPieces();
+    });
+
+    node.querySelector('.detail-remove').addEventListener('click', () => {
+      piece.detailImages.splice(detailIndex, 1);
+      renderPieces();
+    });
+
+    detailsContainer.appendChild(node);
+  });
 }
 
 function renderPieces() {
@@ -159,18 +258,15 @@ function renderPieces() {
     const indexEl = node.querySelector('.piece-index');
     const activeEl = node.querySelector('.piece-active');
     const titleEl = node.querySelector('.piece-title');
-    const yearEl = node.querySelector('.piece-year');
     const mainImageEl = node.querySelector('.piece-main-image');
-    const softwareEl = node.querySelector('.piece-software');
-    const descriptionEl = node.querySelector('.piece-description');
+    const piecePreviewEl = node.querySelector('.piece-preview');
+    const detailsListEl = node.querySelector('.details-list');
 
     indexEl.textContent = `Piece ${index + 1}`;
     activeEl.checked = piece.active !== false;
     titleEl.value = piece.title;
-    yearEl.value = piece.year;
     mainImageEl.value = piece.mainImage;
-    softwareEl.value = piece.software.join(', ');
-    descriptionEl.value = piece.description;
+    piecePreviewEl.replaceChildren(createMediaPreview(piece.mainImage));
 
     activeEl.addEventListener('change', () => {
       piece.active = activeEl.checked;
@@ -180,34 +276,20 @@ function renderPieces() {
       piece.title = titleEl.value;
     });
 
-    yearEl.addEventListener('input', () => {
-      piece.year = yearEl.value;
-    });
-
     mainImageEl.addEventListener('input', () => {
       piece.mainImage = mainImageEl.value;
-    });
-
-    softwareEl.addEventListener('input', () => {
-      piece.software = softwareEl.value
-        .split(',')
-        .map(item => item.trim())
-        .filter(Boolean);
-    });
-
-    descriptionEl.addEventListener('input', () => {
-      piece.description = descriptionEl.value;
+      piecePreviewEl.replaceChildren(createMediaPreview(piece.mainImage));
     });
 
     node.querySelector('.move-up').addEventListener('click', () => {
       if (index === 0) return;
-      swapPieces(pieces, index, index - 1);
+      swapItems(pieces, index, index - 1);
       renderPieces();
     });
 
     node.querySelector('.move-down').addEventListener('click', () => {
       if (index >= pieces.length - 1) return;
-      swapPieces(pieces, index, index + 1);
+      swapItems(pieces, index, index + 1);
       renderPieces();
     });
 
@@ -216,6 +298,12 @@ function renderPieces() {
       renderPieces();
     });
 
+    node.querySelector('.add-detail-item').addEventListener('click', () => {
+      piece.detailImages.push({ src: '', caption: '' });
+      renderPieces();
+    });
+
+    renderDetailItems(detailsListEl, piece);
     ui.piecesList.appendChild(node);
   });
 }
@@ -291,11 +379,51 @@ function sanitizeFilename(name) {
   return `${safeBase || 'file'}${ext.toLowerCase()}`;
 }
 
+function isOptimizableImage(file) {
+  return Boolean(file?.type) && file.type.startsWith('image/');
+}
+
+async function optimizeImageFile(file, maxSide, quality) {
+  const bitmap = await createImageBitmap(file);
+  let width = bitmap.width;
+  let height = bitmap.height;
+
+  const longestSide = Math.max(width, height);
+  if (longestSide > maxSide) {
+    const scale = maxSide / longestSide;
+    width = Math.max(1, Math.round(width * scale));
+    height = Math.max(1, Math.round(height * scale));
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    throw new Error('Could not create canvas context for optimization.');
+  }
+
+  ctx.drawImage(bitmap, 0, 0, width, height);
+  if (typeof bitmap.close === 'function') bitmap.close();
+
+  const blob = await new Promise(resolve => {
+    canvas.toBlob(resolve, 'image/webp', quality);
+  });
+
+  if (!blob) {
+    throw new Error('Image optimization failed.');
+  }
+
+  const base = sanitizeFilename(file.name).replace(/\.[^.]+$/, '');
+  return new File([blob], `${base}.webp`, { type: 'image/webp' });
+}
+
 async function uploadMedia(event) {
   event.preventDefault();
 
-  const file = ui.uploadFile.files?.[0];
-  if (!file) {
+  const sourceFile = ui.uploadFile.files?.[0];
+  if (!sourceFile) {
     setUploadStatus('Select a file first.', true);
     return;
   }
@@ -306,15 +434,31 @@ async function uploadMedia(event) {
     return;
   }
 
-  const path = `${folder}/${sanitizeFilename(file.name)}`.replace(/\/{2,}/g, '/');
+  let fileToUpload = sourceFile;
+  const optimize = ui.uploadOptimize.checked;
+  const maxSide = Math.max(800, Number(ui.uploadMaxSide.value || 2560));
+  const quality = Math.min(1, Math.max(0.6, Number(ui.uploadQuality.value || 0.88)));
+
+  if (optimize && isOptimizableImage(sourceFile)) {
+    try {
+      setUploadStatus('Optimizing image...');
+      fileToUpload = await optimizeImageFile(sourceFile, maxSide, quality);
+    } catch (error) {
+      fileToUpload = sourceFile;
+      setUploadStatus(`Optimization skipped: ${error.message}`);
+    }
+  }
+
+  const path = `${folder}/${sanitizeFilename(fileToUpload.name)}`.replace(/\/{2,}/g, '/');
 
   const formData = new FormData();
   formData.append('path', path);
-  formData.append('file', file);
+  formData.append('file', fileToUpload);
   formData.append('message', `chore(admin): upload ${path}`);
 
   setUploadStatus('Uploading...');
   ui.uploadResult.textContent = '';
+  ui.copyUploadPathBtn.hidden = true;
 
   try {
     const response = await fetch(`${API_BASE}/upload`, {
@@ -328,8 +472,10 @@ async function uploadMedia(event) {
       throw new Error(payload?.error || `Upload failed (${response.status})`);
     }
 
-    setUploadStatus('Upload complete.');
+    const optimizedTag = fileToUpload !== sourceFile ? ' (optimized)' : '';
+    setUploadStatus(`Upload complete${optimizedTag}.`);
     ui.uploadResult.textContent = payload.path;
+    ui.copyUploadPathBtn.hidden = false;
   } catch (error) {
     setUploadStatus(error.message, true);
   }
@@ -383,6 +529,18 @@ function bindEvents() {
 
   ui.uploadForm.addEventListener('submit', uploadMedia);
   ui.logoutBtn.addEventListener('click', logout);
+
+  ui.copyUploadPathBtn.addEventListener('click', async () => {
+    const value = ui.uploadResult.textContent.trim();
+    if (!value) return;
+
+    try {
+      await navigator.clipboard.writeText(value);
+      setUploadStatus('Path copied.');
+    } catch {
+      setUploadStatus('Could not copy path automatically. Please copy manually.', true);
+    }
+  });
 }
 
 bindEvents();

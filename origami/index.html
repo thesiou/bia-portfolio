@@ -49,7 +49,7 @@
 
     <section id="upload-panel" class="panel" hidden>
       <h2>Upload media</h2>
-      <p class="muted">Upload a file to the repo and use the returned path in a piece.</p>
+      <p class="muted">Upload a file and reuse the returned `images/...` path in either main piece media or detail media.</p>
       <form id="upload-form" class="upload-grid">
         <label>
           Folder path
@@ -59,10 +59,25 @@
           File
           <input id="upload-file" type="file" required />
         </label>
+        <label class="check-line">
+          <input id="upload-optimize" type="checkbox" checked />
+          <span>Optimize image upload (WebP, high quality)</span>
+        </label>
+        <label>
+          Max side (px)
+          <input id="upload-max-side" type="number" min="800" max="5000" step="100" value="2560" />
+        </label>
+        <label>
+          Quality (0.6-1)
+          <input id="upload-quality" type="number" min="0.6" max="1" step="0.01" value="0.88" />
+        </label>
         <button class="btn" type="submit">Upload file</button>
       </form>
       <p id="upload-status" class="status" role="status"></p>
-      <code id="upload-result" class="upload-result"></code>
+      <div class="upload-result-row">
+        <code id="upload-result" class="upload-result"></code>
+        <button id="copy-upload-path" class="btn tiny" type="button" hidden>Copy path</button>
+      </div>
     </section>
   </main>
 
@@ -77,34 +92,53 @@
         </div>
       </div>
 
-      <div class="field-grid">
-        <label>
-          Active
-          <input class="piece-active" type="checkbox" checked />
-        </label>
-        <label>
-          Title
-          <input class="piece-title" type="text" />
-        </label>
-        <label>
-          Year
-          <input class="piece-year" type="text" />
-        </label>
-        <label>
-          Main image/video path
-          <input class="piece-main-image" type="text" placeholder="images/..." />
-        </label>
-        <label>
-          Software (comma separated)
-          <input class="piece-software" type="text" placeholder="Clip Studio Paint, Blender" />
-        </label>
+      <div class="piece-body">
+        <div class="piece-preview"></div>
+        <div class="piece-main-fields">
+          <label class="check-line">
+            <input class="piece-active" type="checkbox" checked />
+            <span>Active (visible on site)</span>
+          </label>
+          <label>
+            Title (optional)
+            <input class="piece-title" type="text" />
+          </label>
+          <label>
+            Main image/video path
+            <input class="piece-main-image" type="text" placeholder="images/..." />
+          </label>
+        </div>
       </div>
 
-      <label>
-        Description
-        <textarea class="piece-description" rows="3"></textarea>
-      </label>
+      <section class="detail-editor">
+        <div class="detail-head">
+          <strong>Detail page media</strong>
+          <button class="btn tiny add-detail-item" type="button">Add detail media</button>
+        </div>
+        <div class="details-list"></div>
+      </section>
     </article>
+  </template>
+
+  <template id="detail-item-template">
+    <div class="detail-item">
+      <div class="detail-preview"></div>
+      <div class="detail-fields">
+        <label>
+          Media path
+          <input class="detail-src" type="text" placeholder="images/..." />
+        </label>
+        <label>
+          Caption (optional)
+          <input class="detail-caption" type="text" />
+        </label>
+      </div>
+      <div class="detail-actions">
+        <button class="btn tiny detail-up" type="button">Up</button>
+        <button class="btn tiny detail-down" type="button">Down</button>
+        <button class="btn tiny danger detail-remove" type="button">Remove</button>
+      </div>
+    </div>
   </template>
 
   <script src="admin.js"></script>
