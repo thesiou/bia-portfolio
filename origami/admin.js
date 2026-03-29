@@ -22,14 +22,35 @@ const ui = {
   uploadResult: document.getElementById('upload-result'),
   copyUploadPathBtn: document.getElementById('copy-upload-path'),
   pieceTemplate: document.getElementById('piece-card-template'),
-  detailItemTemplate: document.getElementById('detail-item-template')
+  detailItemTemplate: document.getElementById('detail-item-template'),
+  mediaModal: document.getElementById('media-modal'),
+  mediaModalTitle: document.getElementById('media-modal-title'),
+  mediaModalClose: document.getElementById('media-modal-close'),
+  mediaModalContext: document.getElementById('media-modal-context'),
+  mediaModalPreview: document.getElementById('media-modal-preview'),
+  mediaModalPath: document.getElementById('media-modal-path'),
+  mediaModalCaptionWrap: document.getElementById('media-modal-caption-wrap'),
+  mediaModalCaption: document.getElementById('media-modal-caption'),
+  mediaModalFolder: document.getElementById('media-modal-folder'),
+  mediaModalFile: document.getElementById('media-modal-file'),
+  mediaModalOptimize: document.getElementById('media-modal-optimize'),
+  mediaModalMaxSide: document.getElementById('media-modal-max-side'),
+  mediaModalQuality: document.getElementById('media-modal-quality'),
+  mediaModalStatus: document.getElementById('media-modal-status'),
+  mediaModalUploadBtn: document.getElementById('media-modal-upload-btn'),
+  mediaModalConfirmBtn: document.getElementById('media-modal-confirm-btn')
 };
 
 const state = {
   content: null,
   sha: null,
   collections: [],
-  activeCollectionId: null
+  activeCollectionId: null,
+  modal: {
+    mode: null,
+    targetPiece: null,
+    localPreviewUrl: null
+  }
 };
 
 function setEditorStatus(message, isError = false) {
@@ -40,6 +61,11 @@ function setEditorStatus(message, isError = false) {
 function setUploadStatus(message, isError = false) {
   ui.uploadStatus.textContent = message;
   ui.uploadStatus.style.color = isError ? '#8e1f1f' : '#666';
+}
+
+function setModalStatus(message, isError = false) {
+  ui.mediaModalStatus.textContent = message;
+  ui.mediaModalStatus.style.color = isError ? '#8e1f1f' : '#666';
 }
 
 function showAuthenticated(username) {
@@ -156,6 +182,62 @@ function createMediaPreview(path) {
   img.alt = '';
   img.loading = 'lazy';
   return img;
+}
+
+function cleanupModalPreviewUrl() {
+  if (state.modal.localPreviewUrl) {
+    URL.revokeObjectURL(state.modal.localPreviewUrl);
+    state.modal.localPreviewUrl = null;
+  }
+}
+
+function renderModalPreviewFromCurrentInput() {
+  const file = ui.mediaModalFile.files?.[0];
+  cleanupModalPreviewUrl();
+  if (file) {
+    state.modal.localPreviewUrl = URL.createObjectURL(file);
+    ui.mediaModalPreview.replaceChildren(createMediaPreview(state.modal.localPreviewUrl));
+    return;
+  }
+
+  ui.mediaModalPreview.replaceChildren(createMediaPreview(ui.mediaModalPath.value.trim()));
+}
+
+function openMediaModal(mode, targetPiece = null) {
+  state.modal.mode = mode;
+  state.modal.targetPiece = targetPiece;
+  cleanupModalPreviewUrl();
+
+  ui.mediaModalPath.value = '';
+  ui.mediaModalCaption.value = '';
+  ui.mediaModalFile.value = '';
+  ui.mediaModalStatus.textContent = '';
+  ui.mediaModalFolder.value = ui.uploadFolder.value || 'images/uploads';
+  ui.mediaModalOptimize.checked = ui.uploadOptimize.checked;
+  ui.mediaModalMaxSide.value = ui.uploadMaxSide.value || '2560';
+  ui.mediaModalQuality.value = ui.uploadQuality.value || '0.88';
+
+  if (mode === 'piece') {
+    ui.mediaModalTitle.textContent = 'Add New Piece';
+    ui.mediaModalContext.textContent = 'Upload or choose the main media for the new piece.';
+    ui.mediaModalCaptionWrap.hidden = true;
+    ui.mediaModalConfirmBtn.textContent = 'Add piece';
+  } else {
+    ui.mediaModalTitle.textContent = 'Add Detail Media';
+    ui.mediaModalContext.textContent = 'Upload or choose media for this piece detail view.';
+    ui.mediaModalCaptionWrap.hidden = false;
+    ui.mediaModalConfirmBtn.textContent = 'Add detail media';
+  }
+
+  ui.mediaModalPreview.replaceChildren(createMediaPreview(''));
+  ui.mediaModal.hidden = false;
+}
+
+function closeMediaModal() {
+  cleanupModalPreviewUrl();
+  ui.mediaModal.hidden = true;
+  state.modal.mode = null;
+  state.modal.targetPiece = null;
 }
 
 function renderCollectionSelect() {
@@ -308,8 +390,7 @@ function renderPieces() {
     });
 
     node.querySelector('.add-detail-item').addEventListener('click', () => {
-      piece.detailImages.push({ src: '', caption: '' });
-      renderPieces();
+      openMediaModal('detail', piece);
     });
 
     renderDetailItems(detailsListEl, piece);
@@ -428,6 +509,59 @@ async function optimizeImageFile(file, maxSide, quality) {
   return new File([blob], `${base}.webp`, { type: 'image/webp' });
 }
 
+function getNormalizedUploadOptions({ folder, optimize, maxSide, quality }) {
+  const normalizedFolder = String(folder || '').trim().replace(/^\/+|\/+$/g, '');
+  if (!normalizedFolder.startsWith('images/')) {
+    throw new Error('Folder must start with images/.');
+  }
+
+  return {
+    folder: normalizedFolder,
+    optimize: Boolean(optimize),
+    maxSide: Math.max(800, Number(maxSide || 2560)),
+    quality: Math.min(1, Math.max(0.6, Number(quality || 0.88)))
+  };
+}
+
+async function uploadWithOptions({ sourceFile, folder, optimize, maxSide, quality, messagePrefix = 'upload' }) {
+  if (!sourceFile) {
+    throw new Error('Select a file first.');
+  }
+
+  const opts = getNormalizedUploadOptions({ folder, optimize, maxSide, quality });
+
+  let fileToUpload = sourceFile;
+  let optimized = false;
+
+  if (opts.optimize && isOptimizableImage(sourceFile)) {
+    fileToUpload = await optimizeImageFile(sourceFile, opts.maxSide, opts.quality);
+    optimized = true;
+  }
+
+  const path = `${opts.folder}/${sanitizeFilename(fileToUpload.name)}`.replace(/\/{2,}/g, '/');
+
+  const formData = new FormData();
+  formData.append('path', path);
+  formData.append('file', fileToUpload);
+  formData.append('message', `chore(admin): ${messagePrefix} ${path}`);
+
+  const response = await fetch(`${API_BASE}/upload`, {
+    method: 'POST',
+    credentials: 'include',
+    body: formData
+  });
+
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(payload?.error || `Upload failed (${response.status})`);
+  }
+
+  return {
+    path: payload.path,
+    optimized
+  };
+}
+
 async function uploadMedia(event) {
   event.preventDefault();
 
@@ -437,56 +571,96 @@ async function uploadMedia(event) {
     return;
   }
 
-  const folder = ui.uploadFolder.value.trim().replace(/^\/+|\/+$/g, '');
-  if (!folder.startsWith('images/')) {
-    setUploadStatus('Folder must start with images/.', true);
-    return;
-  }
-
-  let fileToUpload = sourceFile;
-  const optimize = ui.uploadOptimize.checked;
-  const maxSide = Math.max(800, Number(ui.uploadMaxSide.value || 2560));
-  const quality = Math.min(1, Math.max(0.6, Number(ui.uploadQuality.value || 0.88)));
-
-  if (optimize && isOptimizableImage(sourceFile)) {
-    try {
-      setUploadStatus('Optimizing image...');
-      fileToUpload = await optimizeImageFile(sourceFile, maxSide, quality);
-    } catch (error) {
-      fileToUpload = sourceFile;
-      setUploadStatus(`Optimization skipped: ${error.message}`);
-    }
-  }
-
-  const path = `${folder}/${sanitizeFilename(fileToUpload.name)}`.replace(/\/{2,}/g, '/');
-
-  const formData = new FormData();
-  formData.append('path', path);
-  formData.append('file', fileToUpload);
-  formData.append('message', `chore(admin): upload ${path}`);
-
   setUploadStatus('Uploading...');
   ui.uploadResult.textContent = '';
   ui.copyUploadPathBtn.hidden = true;
 
   try {
-    const response = await fetch(`${API_BASE}/upload`, {
-      method: 'POST',
-      credentials: 'include',
-      body: formData
+    const result = await uploadWithOptions({
+      sourceFile,
+      folder: ui.uploadFolder.value,
+      optimize: ui.uploadOptimize.checked,
+      maxSide: ui.uploadMaxSide.value,
+      quality: ui.uploadQuality.value,
+      messagePrefix: 'upload'
     });
 
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      throw new Error(payload?.error || `Upload failed (${response.status})`);
-    }
-
-    const optimizedTag = fileToUpload !== sourceFile ? ' (optimized)' : '';
+    const optimizedTag = result.optimized ? ' (optimized)' : '';
     setUploadStatus(`Upload complete${optimizedTag}.`);
-    ui.uploadResult.textContent = payload.path;
+    ui.uploadResult.textContent = result.path;
     ui.copyUploadPathBtn.hidden = false;
   } catch (error) {
     setUploadStatus(error.message, true);
+  }
+}
+
+async function uploadFromModal() {
+  const sourceFile = ui.mediaModalFile.files?.[0];
+  if (!sourceFile) {
+    setModalStatus('Select a file first.', true);
+    return;
+  }
+
+  setModalStatus('Uploading...');
+  try {
+    const result = await uploadWithOptions({
+      sourceFile,
+      folder: ui.mediaModalFolder.value,
+      optimize: ui.mediaModalOptimize.checked,
+      maxSide: ui.mediaModalMaxSide.value,
+      quality: ui.mediaModalQuality.value,
+      messagePrefix: state.modal.mode === 'piece' ? 'upload piece' : 'upload detail media'
+    });
+
+    ui.mediaModalPath.value = result.path;
+    ui.mediaModalFile.value = '';
+    cleanupModalPreviewUrl();
+    renderModalPreviewFromCurrentInput();
+
+    const optimizedTag = result.optimized ? ' (optimized)' : '';
+    setModalStatus(`Upload complete${optimizedTag}.`);
+  } catch (error) {
+    setModalStatus(error.message, true);
+  }
+}
+
+function confirmModalSelection() {
+  const path = ui.mediaModalPath.value.trim();
+  if (!path) {
+    setModalStatus('Provide a media path or upload a file first.', true);
+    return;
+  }
+
+  if (state.modal.mode === 'piece') {
+    const pieces = getActivePiecesArray();
+    if (!Array.isArray(pieces)) {
+      setModalStatus('Cannot add piece to this collection.', true);
+      return;
+    }
+
+    const newPiece = newPieceTemplate();
+    newPiece.mainImage = path;
+    pieces.push(newPiece);
+    renderPieces();
+    closeMediaModal();
+    setEditorStatus('New piece added.');
+    return;
+  }
+
+  if (state.modal.mode === 'detail') {
+    if (!state.modal.targetPiece) {
+      setModalStatus('Could not find target piece.', true);
+      return;
+    }
+
+    state.modal.targetPiece.detailImages.push({
+      src: path,
+      caption: ui.mediaModalCaption.value.trim()
+    });
+
+    renderPieces();
+    closeMediaModal();
+    setEditorStatus('Detail media added.');
   }
 }
 
@@ -529,14 +703,7 @@ function bindEvents() {
   });
 
   ui.addPieceBtn.addEventListener('click', () => {
-    const pieces = getActivePiecesArray();
-    if (!Array.isArray(pieces)) {
-      setEditorStatus('Cannot add piece to this collection.', true);
-      return;
-    }
-
-    pieces.push(newPieceTemplate());
-    renderPieces();
+    openMediaModal('piece');
   });
 
   ui.saveBtn.addEventListener('click', () => {
@@ -555,6 +722,24 @@ function bindEvents() {
       setUploadStatus('Path copied.');
     } catch {
       setUploadStatus('Could not copy path automatically. Please copy manually.', true);
+    }
+  });
+
+  ui.mediaModalClose.addEventListener('click', closeMediaModal);
+  ui.mediaModalUploadBtn.addEventListener('click', uploadFromModal);
+  ui.mediaModalConfirmBtn.addEventListener('click', confirmModalSelection);
+  ui.mediaModalPath.addEventListener('input', renderModalPreviewFromCurrentInput);
+  ui.mediaModalFile.addEventListener('change', renderModalPreviewFromCurrentInput);
+
+  ui.mediaModal.addEventListener('click', event => {
+    if (event.target === ui.mediaModal) {
+      closeMediaModal();
+    }
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !ui.mediaModal.hidden) {
+      closeMediaModal();
     }
   });
 }

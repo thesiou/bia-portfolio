@@ -141,6 +141,59 @@
     </div>
   </template>
 
-  <script src="admin.js?v=20260330-1"></script>
+  <div id="media-modal" class="modal-backdrop" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="media-modal-title">
+      <div class="modal-head">
+        <h2 id="media-modal-title">Add media</h2>
+        <button id="media-modal-close" class="btn tiny ghost" type="button" aria-label="Close">Close</button>
+      </div>
+
+      <p id="media-modal-context" class="muted"></p>
+
+      <div class="modal-grid">
+        <div class="modal-preview-wrap">
+          <div id="media-modal-preview" class="piece-preview"></div>
+        </div>
+        <div class="modal-fields">
+          <label>
+            Media path
+            <input id="media-modal-path" type="text" placeholder="images/..." />
+          </label>
+          <label id="media-modal-caption-wrap" hidden>
+            Caption (optional)
+            <input id="media-modal-caption" type="text" />
+          </label>
+          <label>
+            Folder path
+            <input id="media-modal-folder" type="text" value="images/uploads" />
+          </label>
+          <label>
+            Select file
+            <input id="media-modal-file" type="file" />
+          </label>
+          <label class="check-line">
+            <input id="media-modal-optimize" type="checkbox" checked />
+            <span>Optimize image upload (WebP, high quality)</span>
+          </label>
+          <label>
+            Max side (px)
+            <input id="media-modal-max-side" type="number" min="800" max="5000" step="100" value="2560" />
+          </label>
+          <label>
+            Quality (0.6-1)
+            <input id="media-modal-quality" type="number" min="0.6" max="1" step="0.01" value="0.88" />
+          </label>
+          <p id="media-modal-status" class="status" role="status"></p>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="media-modal-upload-btn" class="btn" type="button">Upload and use</button>
+        <button id="media-modal-confirm-btn" class="btn primary" type="button">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin.js?v=20260330-2"></script>
 </body>
 </html>
