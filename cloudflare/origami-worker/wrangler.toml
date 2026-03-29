@@ -1,0 +1,16 @@
+name = "origami-admin-api"
+main = "src/index.js"
+compatibility_date = "2026-03-29"
+workers_dev = true
+
+[vars]
+GH_OWNER = "thesiou"
+GH_REPO = "bia-portfolio"
+GH_BRANCH = "main"
+GH_DATA_PATH = "data/artworks.json"
+OAUTH_ALLOWED_USERS = "thesiou"
+
+# Production route example (enable after first deploy):
+# routes = [
+#   { pattern = "www.lunaart.net/origami-api/*", zone_name = "lunaart.net" }
+# ]

@@ -3,6 +3,15 @@
    Landing · Portfolio (category grid) · Piece detail page
    ============================================================ */
 
+(async () => {
+  try {
+    if (window.ARTWORKS_READY && typeof window.ARTWORKS_READY.then === 'function') {
+      await window.ARTWORKS_READY;
+    }
+  } catch (err) {
+    console.error('Failed to load artworks data.', err);
+  }
+
 const isLanding   = document.body.id === 'page-landing';
 const isPortfolio = document.body.id === 'page-portfolio';
 const isPiece     = document.body.id === 'page-piece';
@@ -10,6 +19,16 @@ const isPiece     = document.body.id === 'page-piece';
 // ── Data helpers ──────────────────────────────────────────────
 function getCategories() {
   return window.ARTWORKS?.categories ?? [];
+}
+
+function isPieceActive(piece) {
+  return piece?.active !== false;
+}
+
+function getRenderablePieces(pieces) {
+  return (pieces ?? [])
+    .map((piece, rawIndex) => ({ piece, rawIndex }))
+    .filter(({ piece }) => isPieceActive(piece));
 }
 
 // ── Escape HTML ───────────────────────────────────────────────
@@ -343,6 +362,7 @@ if (isPortfolio) {
       cat.sections.forEach(section => {
         const layout  = section.gridLayout ?? cat.gridLayout;
         const useLazy = layout === 'pages';
+        const sectionPieces = getRenderablePieces(section.pieces ?? []);
 
         if (section.title) {
           const label = document.createElement('div');
@@ -352,27 +372,28 @@ if (isPortfolio) {
         }
         const grid = document.createElement('div');
         grid.className = 'slide-grid';
-        grid.dataset.pieces = section.pieces.length;
+        grid.dataset.pieces = sectionPieces.length;
         if (layout) grid.dataset.layout = layout;
-        section.pieces.forEach((piece, pieceIndex) => {
-          grid.appendChild(buildPieceCard(piece, catIndex, pieceIndex, { lazy: useLazy }));
+        sectionPieces.forEach(({ piece, rawIndex }) => {
+          grid.appendChild(buildPieceCard(piece, catIndex, rawIndex, { lazy: useLazy }));
         });
         setupVideoGrid(grid);
         slide.appendChild(grid);
       });
       setupLazyLoading(slide);
     } else {
-      const pieces = cat.pieces ?? [];
+      const pieces = getRenderablePieces(cat.pieces ?? []);
       const limit  = cat.gridLayout === 'compact' ? pieces.length : 5;
-      const count  = Math.min(pieces.length, limit);
+      const visiblePieces = pieces.slice(0, limit);
+      const count  = visiblePieces.length;
 
       const grid = document.createElement('div');
       grid.className = 'slide-grid';
       grid.dataset.pieces = count;
       if (cat.gridLayout) grid.dataset.layout = cat.gridLayout;
 
-      pieces.slice(0, limit).forEach((piece, pieceIndex) => {
-        grid.appendChild(buildPieceCard(piece, catIndex, pieceIndex));
+      visiblePieces.forEach(({ piece, rawIndex }) => {
+        grid.appendChild(buildPieceCard(piece, catIndex, rawIndex));
       });
 
       setupVideoGrid(grid);
@@ -608,7 +629,7 @@ if (isPortfolio) {
       ? cat.subcategories.length
       : cat.sections
         ? 0
-        : Math.min((cat.pieces ?? []).length, 5);
+        : Math.min(getRenderablePieces(cat.pieces ?? []).length, 5);
     container.innerHTML = '';
     if (count <= 1) { container.hidden = true; return; }
     container.hidden = false;
@@ -775,9 +796,9 @@ if (isPiece) {
 
   // ── Regular piece view ────────────────────────────────────
   } else {
-  const piece = category?.pieces[pieceIndex];
+  const piece = category?.pieces?.[pieceIndex];
 
-  if (!piece) {
+  if (!piece || !isPieceActive(piece)) {
     document.getElementById('piece-title').textContent = 'Piece not found.';
   } else {
     document.title = `${piece.title} — Bianca Banu`;
@@ -896,3 +917,5 @@ if (isPiece) {
 
 // ── Utility ───────────────────────────────────────────────────
 function pad(n) { return String(n).padStart(2, '0'); }
+
+})();

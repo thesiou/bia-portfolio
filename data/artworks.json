@@ -1,88 +1,703 @@
 {
-  "pieces": [
+  "featuredImage": "images/loop_no_explo.mp4",
+  "categories": [
     {
-      "id": 1,
-      "title": "Hawks",
-      "category": "Illustration",
-      "featured": true,
-      "year": "2026",
-      "software": ["Clip Studio Paint"],
-      "mainImage": "old/images/illustrations/hawksfin3.png",
-      "fullDescription": "Character illustration featuring Hawks with dynamic pose and detailed rendering.",
-      "detailImages": [
-        { "src": "old/images/Linework/001.png",        "caption": "Initial sketch" },
-        { "src": "old/images/Linework/002.jpg",        "caption": "Linework" },
-        { "src": "old/images/illustrations/hinatafin3.png", "caption": "Color exploration" }
+      "id": "characters",
+      "title": "Characters",
+      "pieces": [
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/characters/1.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/characters/2.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/characters/3.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/characters/4.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/characters/5.jpeg",
+          "description": "",
+          "detailImages": []
+        }
       ]
     },
     {
-      "id": 2,
-      "title": "Cover 02",
-      "category": "Illustration",
-      "featured": false,
-      "year": "2026",
-      "software": ["Clip Studio Paint"],
-      "mainImage": "old/images/illustrations/cover02try1.png",
-      "fullDescription": "Character illustration with detailed composition and vibrant colors.",
-      "detailImages": [
-        { "src": "old/images/Linework/003.png",              "caption": "Sketch" },
-        { "src": "old/images/illustrations/kagehinarunning.png", "caption": "Color rough" }
+      "id": "animation",
+      "title": "Animation",
+      "gridLayout": "fullscroll",
+      "pieces": [
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/animation/animation1.mp4",
+          "description": "",
+          "detailImages": [
+            {
+              "src": "images/animation/animation1-detail/roomfinalsketch.jpeg",
+              "caption": ""
+            },
+            {
+              "src": "images/animation/animation1-detail/conceptdesign.jpeg",
+              "caption": "Concept Design"
+            },
+            {
+              "src": "images/animation/animation1-detail/storyboard.jpeg",
+              "caption": "Storyboard"
+            },
+            {
+              "src": "images/animation/animation1-detail/roomdetail.gif",
+              "caption": ""
+            },
+            {
+              "src": "images/animation/animation1-detail/timelapse.mp4",
+              "caption": "Timelapse"
+            }
+          ]
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/animation/animation2.mp4",
+          "description": "",
+          "detailImages": [
+            {
+              "src": "images/animation/animation2-detail.mp4",
+              "caption": ""
+            }
+          ]
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/animation/animation3.mp4",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/animation/animation4.gif",
+          "description": "",
+          "detailImages": []
+        }
       ]
     },
     {
-      "id": 3,
-      "title": "Animation Reel",
-      "category": "Animation",
-      "featured": false,
-      "year": "2026",
-      "software": ["Clip Studio Paint"],
-      "mainImage": "old/images/animations/thumbnails/animationreeljan-thumbnail.jpg",
-      "fullDescription": "A selection of animation work showcasing character movement, timing, and expression.",
-      "detailImages": [
-        { "src": "old/images/Linework/001.png", "caption": "Keyframe sketch" },
-        { "src": "old/images/Linework/002.jpg", "caption": "Rough animation pass" }
+      "id": "illustration",
+      "title": "Illustration",
+      "gridLayout": "portrait-hero",
+      "pieces": [
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/illustration/3.jpeg",
+          "description": "",
+          "detailImages": [
+            {
+              "src": "images/illustration/3-detail/kitchencomp_sketch.jpeg",
+              "caption": "Composition sketch"
+            },
+            {
+              "src": "images/illustration/3-detail/kitchencomp_sketch_2.jpeg",
+              "caption": ""
+            },
+            {
+              "src": "images/illustration/3-detail/kitchennochars.jpeg",
+              "caption": "Background"
+            },
+            {
+              "src": "images/illustration/3-detail/kitchennochars2.jpeg",
+              "caption": ""
+            },
+            {
+              "src": "images/illustration/3-detail/kitchen3.jpeg",
+              "caption": ""
+            }
+          ]
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/illustration/1.jpeg",
+          "description": "",
+          "detailImages": [
+            {
+              "src": "images/illustration/1-detail/11.02sk.jpeg",
+              "caption": "Sketch"
+            },
+            {
+              "src": "images/illustration/1-detail/11.02sklight2.jpeg",
+              "caption": ""
+            },
+            {
+              "src": "images/illustration/1-detail/11.02sklight3.jpeg",
+              "caption": ""
+            },
+            {
+              "src": "images/illustration/1-detail/13022026TL.mp4",
+              "caption": "Timelapse"
+            }
+          ]
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/illustration/2.jpeg",
+          "description": "",
+          "detailImages": []
+        }
       ]
     },
     {
-      "id": 4,
-      "title": "Haruka",
-      "category": "Character Design",
-      "featured": false,
-      "year": "2025",
-      "software": ["Clip Studio Paint"],
-      "mainImage": "old/images/environment-&-character-design/haruka.png",
-      "fullDescription": "Character design exploration with focus on silhouette, costume, and personality.",
-      "detailImages": [
-        { "src": "old/images/environment-&-character-design/pyo ch sheet.png", "caption": "Character sheet" },
-        { "src": "old/images/Linework/003.png",                                 "caption": "Sketch exploration" }
+      "id": "comics-storyboards",
+      "title": "Comics & Storyboards",
+      "gridLayout": "compact",
+      "sections": [
+        {
+          "title": "latest manga work 2026 (in progress)",
+          "gridLayout": "pages",
+          "pieces": [
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (1).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (2).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (3).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (4).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (5).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (6).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (7).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (8).jpg",
+              "description": "",
+              "detailImages": []
+            }
+          ]
+        },
+        {
+          "title": "older work 2025 (finished)",
+          "gridLayout": "pages",
+          "pieces": [
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (1).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (2).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (3).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (4).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (5).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (6).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (7).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (8).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (9).jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/older work 2025 (finished)/page (10).jpg",
+              "description": "",
+              "detailImages": []
+            }
+          ]
+        },
+        {
+          "title": "",
+          "gridLayout": "comics-grid",
+          "pieces": [
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/comics1.jpg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/comics2.jpeg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/comics3.jpeg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/storyboard1.jpeg",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/storyboard2.jpg",
+              "description": "",
+              "detailImages": []
+            }
+          ]
+        }
       ]
     },
     {
-      "id": 5,
-      "title": "Storyboards",
-      "category": "Storyboard",
-      "featured": false,
-      "year": "2025",
-      "software": ["Clip Studio Paint"],
-      "mainImage": "old/images/Storyboards/storyboards.jpg",
-      "fullDescription": "Storyboard sequence demonstrating visual storytelling, staging, and shot composition.",
-      "detailImages": [
-        { "src": "old/images/Storyboards/20028eaec7cad54ab5f87f8f88397ff0.png", "caption": "Sequence A" },
-        { "src": "old/images/Storyboards/30b2ca1b0f9d1122b29715cac78f3500.png", "caption": "Sequence B" }
+      "id": "concepts",
+      "title": "Concepts",
+      "gridLayout": "concept-hero",
+      "pieces": [
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/concepts/concept1.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/concepts/concepts2.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/concepts/bgs.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/concepts/shop1.jpg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/concepts/shop2.jpg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/concepts/shop3.jpg",
+          "description": "",
+          "detailImages": []
+        }
       ]
     },
     {
-      "id": 6,
-      "title": "Grozav Studio",
-      "category": "Graphic Design",
-      "featured": false,
-      "year": "2025",
-      "software": ["Illustrator"],
-      "mainImage": "old/images/graphic-design/Grozav Studio Logo/1.png",
-      "fullDescription": "Logo and brand identity design for Grozav Studio.",
-      "detailImages": [
-        { "src": "old/images/Linework/001.png", "caption": "Concept sketches" },
-        { "src": "old/images/illustrations/hinatafin3.png", "caption": "Colour palette exploration" }
+      "id": "sketchbook",
+      "title": "Sketchbook",
+      "pieces": [
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-1.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-2.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-3.jpg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-4.jpg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-5.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-6.jpg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-7.jpg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-8.jpg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-9.jpg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-10.jpg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-11.jpg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-12.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-13.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-14.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/sketchbook/sketch-15.jpeg",
+          "description": "",
+          "detailImages": []
+        }
+      ]
+    },
+    {
+      "id": "3d",
+      "title": "3D",
+      "gridLayout": "compact",
+      "pieces": [
+        {
+          "title": "",
+          "year": "",
+          "software": [],
+          "mainImage": "images/otherfunstuff/3D/3d-1.jpg",
+          "externalLink": "https://www.artstation.com/artwork/v1dBWO",
+          "externalLabel": "ArtStation",
+          "description": "",
+          "detailImages": []
+        }
       ]
     }
   ]

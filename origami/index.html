@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Origami Admin</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="icon" type="image/png" href="../favicon.png" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <main class="admin-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Lunaart Admin</p>
+        <h1>Origami</h1>
+      </div>
+      <div class="session-block">
+        <span id="session-label">Checking session...</span>
+        <button id="logout-btn" class="btn ghost" type="button" hidden>Log out</button>
+      </div>
+    </header>
+
+    <section id="auth-panel" class="panel" hidden>
+      <h2>Authentication required</h2>
+      <p>Sign in with GitHub to edit portfolio content.</p>
+      <a class="btn" href="/origami-api/auth/login">Sign in</a>
+    </section>
+
+    <section id="editor-panel" class="panel" hidden>
+      <div class="toolbar">
+        <label>
+          Collection
+          <select id="collection-select"></select>
+        </label>
+        <button id="add-piece-btn" class="btn" type="button">Add piece</button>
+        <button id="save-btn" class="btn primary" type="button">Save changes</button>
+      </div>
+
+      <label class="commit-wrap">
+        Commit message
+        <input id="commit-message" type="text" maxlength="120" placeholder="chore(admin): update portfolio content" />
+      </label>
+
+      <p id="editor-status" class="status" role="status"></p>
+
+      <div id="pieces-list" class="pieces-list"></div>
+    </section>
+
+    <section id="upload-panel" class="panel" hidden>
+      <h2>Upload media</h2>
+      <p class="muted">Upload a file to the repo and use the returned path in a piece.</p>
+      <form id="upload-form" class="upload-grid">
+        <label>
+          Folder path
+          <input id="upload-folder" type="text" value="images/uploads" required />
+        </label>
+        <label>
+          File
+          <input id="upload-file" type="file" required />
+        </label>
+        <button class="btn" type="submit">Upload file</button>
+      </form>
+      <p id="upload-status" class="status" role="status"></p>
+      <code id="upload-result" class="upload-result"></code>
+    </section>
+  </main>
+
+  <template id="piece-card-template">
+    <article class="piece-card">
+      <div class="piece-head">
+        <strong class="piece-index"></strong>
+        <div class="piece-actions">
+          <button class="btn tiny move-up" type="button">Up</button>
+          <button class="btn tiny move-down" type="button">Down</button>
+          <button class="btn tiny danger remove-piece" type="button">Remove</button>
+        </div>
+      </div>
+
+      <div class="field-grid">
+        <label>
+          Active
+          <input class="piece-active" type="checkbox" checked />
+        </label>
+        <label>
+          Title
+          <input class="piece-title" type="text" />
+        </label>
+        <label>
+          Year
+          <input class="piece-year" type="text" />
+        </label>
+        <label>
+          Main image/video path
+          <input class="piece-main-image" type="text" placeholder="images/..." />
+        </label>
+        <label>
+          Software (comma separated)
+          <input class="piece-software" type="text" placeholder="Clip Studio Paint, Blender" />
+        </label>
+      </div>
+
+      <label>
+        Description
+        <textarea class="piece-description" rows="3"></textarea>
+      </label>
+    </article>
+  </template>
+
+  <script src="admin.js"></script>
+</body>
+</html>
