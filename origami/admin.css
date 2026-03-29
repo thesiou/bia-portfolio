@@ -131,11 +131,30 @@ select {
   font-size: 0.8rem;
 }
 
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .status {
   margin-top: 0.65rem;
   min-height: 1.2em;
   font-size: 0.9rem;
   color: var(--muted);
+}
+
+.change-indicator {
+  margin-top: 0.65rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.change-indicator.up-to-date {
+  color: #2d7a4d;
+}
+
+.change-indicator.dirty {
+  color: #8a5a00;
 }
 
 .pieces-list {

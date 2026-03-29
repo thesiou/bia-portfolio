@@ -10,6 +10,7 @@ const ui = {
   addPieceBtn: document.getElementById('add-piece-btn'),
   saveBtn: document.getElementById('save-btn'),
   commitMessage: document.getElementById('commit-message'),
+  changeIndicator: document.getElementById('change-indicator'),
   editorStatus: document.getElementById('editor-status'),
   piecesList: document.getElementById('pieces-list'),
   uploadForm: document.getElementById('upload-form'),
@@ -44,6 +45,7 @@ const ui = {
 const state = {
   content: null,
   sha: null,
+  lastSavedContent: null,
   collections: [],
   activeCollectionId: null,
   modal: {
@@ -66,6 +68,62 @@ function setUploadStatus(message, isError = false) {
 function setModalStatus(message, isError = false) {
   ui.mediaModalStatus.textContent = message;
   ui.mediaModalStatus.style.color = isError ? '#8e1f1f' : '#666';
+}
+
+function deepClone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function countObjectDiffs(a, b) {
+  if (a === b) return 0;
+
+  const aIsArray = Array.isArray(a);
+  const bIsArray = Array.isArray(b);
+  if (aIsArray || bIsArray) {
+    if (!(aIsArray && bIsArray)) return 1;
+    let total = 0;
+    const minLen = Math.min(a.length, b.length);
+    for (let i = 0; i < minLen; i += 1) {
+      total += countObjectDiffs(a[i], b[i]);
+    }
+    total += Math.abs(a.length - b.length);
+    return total;
+  }
+
+  const aIsObject = a !== null && typeof a === 'object';
+  const bIsObject = b !== null && typeof b === 'object';
+  if (aIsObject || bIsObject) {
+    if (!(aIsObject && bIsObject)) return 1;
+    const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+    let total = 0;
+    for (const key of keys) {
+      if (!(key in a) || !(key in b)) {
+        total += 1;
+      } else {
+        total += countObjectDiffs(a[key], b[key]);
+      }
+    }
+    return total;
+  }
+
+  return 1;
+}
+
+function updateChangeIndicator() {
+  if (!ui.changeIndicator || !state.content || !state.lastSavedContent) return;
+
+  const changes = countObjectDiffs(state.lastSavedContent, state.content);
+  if (changes === 0) {
+    ui.changeIndicator.textContent = 'Up to date';
+    ui.changeIndicator.classList.add('up-to-date');
+    ui.changeIndicator.classList.remove('dirty');
+    if (ui.saveBtn) ui.saveBtn.disabled = true;
+  } else {
+    ui.changeIndicator.textContent = `${changes} unsaved change${changes === 1 ? '' : 's'}`;
+    ui.changeIndicator.classList.add('dirty');
+    ui.changeIndicator.classList.remove('up-to-date');
+    if (ui.saveBtn) ui.saveBtn.disabled = false;
+  }
 }
 
 function showAuthenticated(username) {
@@ -297,27 +355,32 @@ function renderDetailItems(detailsContainer, piece) {
     srcEl.addEventListener('input', () => {
       detail.src = srcEl.value;
       previewEl.replaceChildren(createMediaPreview(detail.src));
+      updateChangeIndicator();
     });
 
     captionEl.addEventListener('input', () => {
       detail.caption = captionEl.value;
+      updateChangeIndicator();
     });
 
     node.querySelector('.detail-up').addEventListener('click', () => {
       if (detailIndex === 0) return;
       swapItems(piece.detailImages, detailIndex, detailIndex - 1);
       renderPieces();
+      updateChangeIndicator();
     });
 
     node.querySelector('.detail-down').addEventListener('click', () => {
       if (detailIndex >= piece.detailImages.length - 1) return;
       swapItems(piece.detailImages, detailIndex, detailIndex + 1);
       renderPieces();
+      updateChangeIndicator();
     });
 
     node.querySelector('.detail-remove').addEventListener('click', () => {
       piece.detailImages.splice(detailIndex, 1);
       renderPieces();
+      updateChangeIndicator();
     });
 
     detailsContainer.appendChild(node);
@@ -361,32 +424,38 @@ function renderPieces() {
 
     activeEl.addEventListener('change', () => {
       piece.active = activeEl.checked;
+      updateChangeIndicator();
     });
 
     titleEl.addEventListener('input', () => {
       piece.title = titleEl.value;
+      updateChangeIndicator();
     });
 
     mainImageEl.addEventListener('input', () => {
       piece.mainImage = mainImageEl.value;
       piecePreviewEl.replaceChildren(createMediaPreview(piece.mainImage));
+      updateChangeIndicator();
     });
 
     node.querySelector('.move-up').addEventListener('click', () => {
       if (index === 0) return;
       swapItems(pieces, index, index - 1);
       renderPieces();
+      updateChangeIndicator();
     });
 
     node.querySelector('.move-down').addEventListener('click', () => {
       if (index >= pieces.length - 1) return;
       swapItems(pieces, index, index + 1);
       renderPieces();
+      updateChangeIndicator();
     });
 
     node.querySelector('.remove-piece').addEventListener('click', () => {
       pieces.splice(index, 1);
       renderPieces();
+      updateChangeIndicator();
     });
 
     node.querySelector('.add-detail-item').addEventListener('click', () => {
@@ -417,6 +486,7 @@ async function loadContent() {
   const data = await api('/content');
   state.content = data.content;
   state.sha = data.sha;
+  state.lastSavedContent = deepClone(data.content);
   state.collections = collectPieceCollections(state.content);
   state.activeCollectionId = state.collections[0]?.id || null;
 
@@ -427,6 +497,7 @@ async function loadContent() {
 
   renderCollectionSelect();
   renderPieces();
+  updateChangeIndicator();
   setEditorStatus('Loaded latest content from GitHub.');
 }
 
@@ -452,6 +523,8 @@ async function saveContent() {
     });
 
     state.sha = result.sha;
+    state.lastSavedContent = deepClone(state.content);
+    updateChangeIndicator();
     setEditorStatus(`Saved. Commit: ${result.commitSha}`);
   } catch (error) {
     setEditorStatus(error.message, true);
@@ -642,6 +715,7 @@ function confirmModalSelection() {
     newPiece.mainImage = path;
     pieces.push(newPiece);
     renderPieces();
+    updateChangeIndicator();
     closeMediaModal();
     setEditorStatus('New piece added.');
     return;
@@ -659,6 +733,7 @@ function confirmModalSelection() {
     });
 
     renderPieces();
+    updateChangeIndicator();
     closeMediaModal();
     setEditorStatus('Detail media added.');
   }
