@@ -335,7 +335,16 @@
               "software": [],
               "mainImage": "images/uploads/citylife_as_pros-(1).webp",
               "description": "",
-              "detailImages": []
+              "detailImages": [
+                {
+                  "src": "images/uploads/citylife_as_pros-(3).webp",
+                  "caption": ""
+                },
+                {
+                  "src": "images/uploads/bikezqq3.webp",
+                  "caption": ""
+                }
+              ]
             }
           ]
         },
