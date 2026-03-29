@@ -63,6 +63,24 @@
       "gridLayout": "fullscroll",
       "pieces": [
         {
+          "active": true,
+          "title": "",
+          "year": "",
+          "software": [],
+          "mainImage": "images/uploads/sleepydragonfinslowed.mp4",
+          "description": "",
+          "detailImages": [
+            {
+              "src": "images/uploads/sleepydragonsketch3.mp4",
+              "caption": ""
+            },
+            {
+              "src": "images/uploads/2403plusultra.webp",
+              "caption": ""
+            }
+          ]
+        },
+        {
           "title": "",
           "year": "",
           "software": [
