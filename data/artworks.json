@@ -218,6 +218,24 @@
           "mainImage": "images/illustration/2.jpeg",
           "description": "",
           "detailImages": []
+        },
+        {
+          "active": true,
+          "title": "",
+          "year": "",
+          "software": [],
+          "mainImage": "images/uploads/19.02fin.webp",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "active": true,
+          "title": "",
+          "year": "",
+          "software": [],
+          "mainImage": "images/uploads/hawksfin3.webp",
+          "description": "",
+          "detailImages": []
         }
       ]
     },
