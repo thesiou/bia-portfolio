@@ -249,6 +249,24 @@
           "gridLayout": "pages",
           "pieces": [
             {
+              "active": true,
+              "title": "",
+              "year": "",
+              "software": [],
+              "mainImage": "images/uploads/bkg-birthday_storyboards.webp",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "active": true,
+              "title": "",
+              "year": "",
+              "software": [],
+              "mainImage": "images/uploads/sketches.webp",
+              "description": "",
+              "detailImages": []
+            },
+            {
               "title": "",
               "year": "",
               "software": [
@@ -345,24 +363,6 @@
                   "caption": ""
                 }
               ]
-            },
-            {
-              "active": true,
-              "title": "",
-              "year": "",
-              "software": [],
-              "mainImage": "images/uploads/bkg-birthday_storyboards.webp",
-              "description": "",
-              "detailImages": []
-            },
-            {
-              "active": true,
-              "title": "",
-              "year": "",
-              "software": [],
-              "mainImage": "images/uploads/sketches.webp",
-              "description": "",
-              "detailImages": []
             }
           ]
         },
