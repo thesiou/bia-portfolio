@@ -926,6 +926,77 @@ if (isPiece) {
     const backGrid = document.getElementById('piece-back-grid');
     if (backGrid) backGrid.href = `portfolio.html?cat=${catIndex}`;
 
+    // ── Sibling navigation (prev / next within category) ──────
+    const prevBtn = document.getElementById('piece-prev');
+    const nextBtn = document.getElementById('piece-next');
+    if (prevBtn && nextBtn) {
+      // Build flat ordered list of all pieces in this category
+      const sibList = [];
+      if (category.sections) {
+        category.sections.forEach((sec, sI) => {
+          getRenderablePieces(sec.pieces ?? []).forEach(({ piece: p, rawIndex }) => {
+            sibList.push({ piece: p, rawIndex, sectionIndex: sI });
+          });
+        });
+      } else {
+        getRenderablePieces(category.pieces ?? []).forEach(({ piece: p, rawIndex }) => {
+          sibList.push({ piece: p, rawIndex, sectionIndex: null });
+        });
+      }
+
+      // Find current piece's position in the list
+      let pos = pieceKey
+        ? sibList.findIndex(({ piece: p }) => getPieceStableKey(p) === pieceKey)
+        : -1;
+      if (pos === -1) {
+        pos = sibList.findIndex(({ rawIndex: ri, sectionIndex: si }) =>
+          ri === pieceIndex && si === sectionIndex
+        );
+      }
+
+      if (pos !== -1 && sibList.length > 1) {
+        const prevItem = pos > 0                   ? sibList[pos - 1] : null;
+        const nextItem = pos < sibList.length - 1  ? sibList[pos + 1] : null;
+
+        const toHref = item =>
+          buildPieceHref(catIndex, item.rawIndex, item.piece,
+            Number.isInteger(item.sectionIndex) ? { sectionIndex: item.sectionIndex } : {});
+
+        const edgePrev = document.getElementById('piece-nav-prev');
+        const edgeNext = document.getElementById('piece-nav-next');
+
+        if (prevItem) {
+          prevBtn.href = toHref(prevItem);
+          const lbl = document.getElementById('piece-prev-label');
+          if (lbl) lbl.textContent = prevItem.piece.title || '';
+          if (edgePrev) edgePrev.href = toHref(prevItem);
+        } else {
+          prevBtn.style.visibility = 'hidden';
+          if (edgePrev) edgePrev.hidden = true;
+        }
+
+        if (nextItem) {
+          nextBtn.href = toHref(nextItem);
+          const lbl = document.getElementById('piece-next-label');
+          if (lbl) lbl.textContent = nextItem.piece.title || '';
+          if (edgeNext) edgeNext.href = toHref(nextItem);
+        } else {
+          nextBtn.style.visibility = 'hidden';
+          if (edgeNext) edgeNext.hidden = true;
+        }
+
+        // Keyboard arrow navigation (skip when image is expanded)
+        document.addEventListener('keydown', e => {
+          if (document.body.classList.contains('piece-expanded')) return;
+          if (e.key === 'ArrowLeft'  && prevItem) window.location.href = toHref(prevItem);
+          if (e.key === 'ArrowRight' && nextItem) window.location.href = toHref(nextItem);
+        });
+      } else {
+        const sibNav = document.getElementById('piece-sibling-nav');
+        if (sibNav) sibNav.hidden = true;
+      }
+    }
+
     // Hero image / video
     if (piece.mainImage) {
       const hero = document.getElementById('piece-hero');
