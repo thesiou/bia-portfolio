@@ -177,7 +177,7 @@ window.ARTWORKS = {
           ]
         },
         {
-          title: "",
+          title: "More",
           gridLayout: "comics-grid",
           pieces: [
             { title: "", year: "", software: ["Clip Studio Paint"], mainImage: "images/otherfunstuff/storyboards:comics/comics1.jpg", description: "", detailImages: [] },

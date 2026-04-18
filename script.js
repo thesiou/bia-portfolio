@@ -371,6 +371,7 @@ if (isPortfolio) {
         `<img src="logo.png" alt="" class="footer-brand-logo" aria-hidden="true" />` +
         `<span class="footer-brand-name">Bianca Banu</span>` +
       `</a>` +
+      `<a href="https://shop.lunaart.net" target="_blank" rel="noopener noreferrer" class="footer-shop-link">Shop →</a>` +
       `<div class="footer-icons">` +
         `<a href="https://www.instagram.com/luna_being_productive" target="_blank" rel="noopener noreferrer" aria-label="Instagram">` +
           `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>` +
@@ -522,7 +523,7 @@ if (isPortfolio) {
       overlay.className = 'piece-card-overlay';
       const title = document.createElement('span');
       title.className = 'piece-card-title';
-      title.textContent = (piece.title ?? '').trim() || 'Open piece';
+      title.textContent = (piece.title ?? '').trim() || 'View';
       overlay.appendChild(title);
       card.appendChild(overlay);
     }
@@ -860,26 +861,13 @@ if (isPiece) {
     return null;
   }
 
-  // ── Shared lightbox ───────────────────────────────────────
-  const lightbox      = document.getElementById('lightbox');
-  const lightboxImg   = lightbox?.querySelector('img');
-  const lightboxClose = document.getElementById('lightbox-close');
-
-  function openLightbox(src) {
-    if (!lightbox || !lightboxImg) return;
-    lightboxImg.src = src;
-    lightbox.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeLightbox() {
-    if (!lightbox) return;
-    lightbox.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  lightboxClose?.addEventListener('click', closeLightbox);
-  lightbox?.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.body.classList.contains('piece-expanded')) {
+      document.body.classList.remove('piece-expanded');
+      const img = document.getElementById('piece-img');
+      if (img) img.style.cursor = 'zoom-in';
+    }
+  });
 
   // ── Subcategory gallery view ──────────────────────────────
   if (subParam !== null) {
@@ -938,14 +926,6 @@ if (isPiece) {
     const backGrid = document.getElementById('piece-back-grid');
     if (backGrid) backGrid.href = `portfolio.html?cat=${catIndex}`;
 
-    // Expand toggle
-    const expandBtn = document.getElementById('piece-expand-btn');
-    if (expandBtn) {
-      expandBtn.addEventListener('click', () => {
-        document.body.classList.toggle('piece-expanded');
-      });
-    }
-
     // Hero image / video
     if (piece.mainImage) {
       const hero = document.getElementById('piece-hero');
@@ -969,15 +949,18 @@ if (isPiece) {
         img.src   = piece.mainImage;
         img.alt   = piece.title ?? '';
         applyAspectClass(img, hero, 'hero-landscape');
+
+        // Click to expand full width, click again to contain
         const apply = () => {
-          if (!hero.classList.contains('hero-landscape') && expandBtn) {
-            expandBtn.hidden = false;
+          if (!hero.classList.contains('hero-landscape')) {
+            img.style.cursor = 'zoom-in';
+            img.addEventListener('click', () => {
+              document.body.classList.toggle('piece-expanded');
+              img.style.cursor = document.body.classList.contains('piece-expanded') ? 'zoom-out' : 'zoom-in';
+            });
           }
         };
         img.complete && img.naturalWidth > 0 ? apply() : img.addEventListener('load', apply, { once: true });
-
-        // Click hero image to open fullscreen lightbox
-        img.addEventListener('click', () => openLightbox(img.src));
       }
     }
 
@@ -998,7 +981,7 @@ if (isPiece) {
     if (!(piece.detailImages ?? []).length) {
       const empty = document.createElement('p');
       empty.className = 'no-detail';
-      empty.textContent = 'no detailed content added for this piece yet';
+      empty.textContent = 'no detailed content added for this piece';
       detailEl.appendChild(empty);
     }
     (piece.detailImages ?? []).forEach(item => {
@@ -1020,7 +1003,10 @@ if (isPiece) {
         media.loading = 'eager';
         // Lightbox on click for detail images
         media.style.cursor = 'zoom-in';
-        media.addEventListener('click', () => openLightbox(media.src));
+        media.addEventListener('click', () => {
+          media.classList.toggle('img-zoomed');
+          media.style.cursor = media.classList.contains('img-zoomed') ? 'zoom-out' : 'zoom-in';
+        });
       }
 
       fig.appendChild(media);

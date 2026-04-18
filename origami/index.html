@@ -6,7 +6,7 @@
   <title>Origami Admin</title>
   <meta name="robots" content="noindex,nofollow" />
   <link rel="icon" type="image/png" href="../favicon.png" />
-  <link rel="stylesheet" href="admin.css?v=20260330-7" />
+  <link rel="stylesheet" href="admin.css?v=20260418-1" />
 </head>
 <body>
   <main class="admin-shell">
@@ -33,17 +33,19 @@
           Collection
           <select id="collection-select"></select>
         </label>
-        <button id="add-piece-btn" class="btn" type="button">Upload new piece</button>
+        <button id="add-piece-btn" class="btn" type="button">+ Add piece</button>
         <button id="save-btn" class="btn primary" type="button">Save changes</button>
       </div>
 
-      <label class="commit-wrap">
-        Commit message
-        <input id="commit-message" type="text" maxlength="120" placeholder="chore(admin): update portfolio content" />
-      </label>
-
       <p id="change-indicator" class="change-indicator up-to-date" role="status">Up to date</p>
       <p id="editor-status" class="status" role="status"></p>
+
+      <details class="advanced-box commit-box">
+        <summary>Advanced: commit message</summary>
+        <label class="commit-wrap">
+          <input id="commit-message" type="text" maxlength="120" placeholder="chore(admin): update portfolio content" />
+        </label>
+      </details>
 
       <div id="pieces-list" class="pieces-list"></div>
     </section>
@@ -51,7 +53,7 @@
     <section id="upload-panel" class="panel" hidden>
       <details class="advanced-box">
         <summary>Advanced: standalone upload tool</summary>
-        <p class="muted">Most artists can ignore this. Main upload flow is via Upload new piece / Upload detail media buttons.</p>
+        <p class="muted">Most artists can ignore this. Main upload flow is via the Add piece / Replace image buttons.</p>
         <form id="upload-form" class="upload-grid">
           <label>
             Folder path
@@ -87,38 +89,46 @@
   <template id="piece-card-template">
     <article class="piece-card">
       <div class="piece-head">
-        <strong class="piece-index"></strong>
+        <div class="piece-head-left">
+          <strong class="piece-index"></strong>
+          <label class="check-line piece-active-wrap">
+            <input class="piece-active" type="checkbox" checked />
+            <span>Visible on site</span>
+          </label>
+        </div>
         <div class="piece-actions">
-          <button class="btn tiny move-up" type="button">Up</button>
-          <button class="btn tiny move-down" type="button">Down</button>
+          <button class="btn tiny move-up" type="button">↑ Up</button>
+          <button class="btn tiny move-down" type="button">↓ Down</button>
           <button class="btn tiny danger remove-piece" type="button">Remove</button>
         </div>
       </div>
 
       <div class="piece-body">
-        <div class="piece-preview"></div>
+        <div class="piece-preview-wrap">
+          <div class="piece-preview"></div>
+          <button class="btn tiny replace-image-btn" type="button">Replace image</button>
+        </div>
         <div class="piece-main-fields">
-          <label class="check-line">
-            <input class="piece-active" type="checkbox" checked />
-            <span>Active (visible on site)</span>
+          <label>
+            Title <span class="field-hint">(optional)</span>
+            <input class="piece-title" type="text" placeholder="Leave blank to hide title" />
           </label>
           <label>
-            Title (optional)
-            <input class="piece-title" type="text" />
+            Year <span class="field-hint">(optional)</span>
+            <input class="piece-year" type="text" placeholder="e.g. 2025" />
           </label>
           <label>
-            Main image/video path
-            <input class="piece-main-image" type="text" placeholder="images/..." />
+            Description <span class="field-hint">(optional)</span>
+            <textarea class="piece-description" rows="3" placeholder="Add a short description for this piece…"></textarea>
           </label>
         </div>
       </div>
 
       <section class="detail-editor">
         <div class="detail-head">
-          <strong>Detail page media</strong>
+          <strong>Detail page images</strong>
           <div class="detail-head-actions">
-            <button class="btn tiny add-detail-item" type="button">Upload detail media</button>
-            <button class="btn tiny ghost add-detail-empty" type="button">Add empty row</button>
+            <button class="btn tiny add-detail-item" type="button">+ Add detail image</button>
           </div>
         </div>
         <div class="details-list"></div>
@@ -131,24 +141,22 @@
       <div class="detail-preview"></div>
       <div class="detail-fields">
         <label>
-          Media path
-          <input class="detail-src" type="text" placeholder="images/..." />
-        </label>
-        <label>
-          Caption (optional)
-          <input class="detail-caption" type="text" />
+          Caption <span class="field-hint">(optional)</span>
+          <input class="detail-caption" type="text" placeholder="Add a caption…" />
         </label>
       </div>
       <div class="detail-actions">
-        <button class="btn tiny detail-up" type="button">Up</button>
-        <button class="btn tiny detail-down" type="button">Down</button>
+        <button class="btn tiny detail-up" type="button">↑</button>
+        <button class="btn tiny detail-down" type="button">↓</button>
         <button class="btn tiny danger detail-remove" type="button">Remove</button>
       </div>
     </div>
   </template>
-  <input id="add-piece-file-input" type="file" hidden />
-  <input id="add-detail-file-input" type="file" hidden />
 
-  <script src="admin.js?v=20260330-6"></script>
+  <input id="add-piece-file-input" type="file" hidden accept="image/*,video/*" />
+  <input id="add-detail-file-input" type="file" hidden accept="image/*,video/*" />
+  <input id="replace-image-file-input" type="file" hidden accept="image/*,video/*" />
+
+  <script src="admin.js?v=20260418-1"></script>
 </body>
 </html>

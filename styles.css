@@ -620,6 +620,12 @@ html::-webkit-scrollbar { display: none; }
   background: var(--bg);
 }
 
+/* Fewer pieces = fewer columns = bigger cards */
+.slide-grid[data-layout="five-flow"][data-pieces="1"] { grid-template-columns: 1fr; }
+.slide-grid[data-layout="five-flow"][data-pieces="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.slide-grid[data-layout="five-flow"][data-pieces="3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.slide-grid[data-layout="five-flow"][data-pieces="4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
 .slide-grid[data-layout="five-flow"] .piece-card {
   aspect-ratio: 3 / 4;
   height: auto;
@@ -665,7 +671,7 @@ html::-webkit-scrollbar { display: none; }
 
 /* ── Pages layout (manga / comic pages) ─────────────────── */
 .slide-grid[data-layout="pages"] {
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(5, 1fr);
   grid-template-rows: auto;
   height: auto;
   gap: 2px;
@@ -716,28 +722,21 @@ html::-webkit-scrollbar { display: none; }
 
 /* ── Comics-grid layout (remaining comics/storyboards) ─────── */
 .slide-grid[data-layout="comics-grid"] {
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: auto;
   height: auto;
   gap: 2px;
 }
 
 .slide-grid[data-layout="comics-grid"] .piece-card {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   height: auto;
-}
-
-/* Lone last card spans full row */
-.slide-grid[data-layout="comics-grid"] .piece-card:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
-  aspect-ratio: 2 / 1;
-}
-
-.slide-grid[data-layout="comics-grid"] .piece-card {
   background: var(--bg);
 }
 
 .slide-grid[data-layout="comics-grid"] .piece-card-media {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   object-position: center;
   background: var(--bg);
@@ -881,7 +880,22 @@ body.page-subcategory #piece-detail-images figure img {
 }
 
 /* ── Lightboxes (portfolio + piece page) ─────────────────── */
-#lightbox,
+/* Inline image zoom (piece.html) */
+.img-zoomed {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  object-fit: contain;
+  background: rgba(0, 0, 0, 0.94);
+  z-index: 1000;
+  cursor: zoom-out;
+  margin: 0;
+  border-radius: 0;
+}
+
 #portfolio-lightbox {
   display: none;
   position: fixed;
@@ -893,18 +907,8 @@ body.page-subcategory #piece-detail-images figure img {
   cursor: zoom-out;
 }
 
-#lightbox.open,
 #portfolio-lightbox.open {
   display: flex;
-}
-
-/* piece.html lightbox — single img */
-#lightbox img {
-  max-width: 92vw;
-  max-height: 92vh;
-  object-fit: contain;
-  cursor: default;
-  box-shadow: 0 8px 60px rgba(0, 0, 0, 0.8);
 }
 
 /* portfolio lightbox — wraps img or video */
@@ -925,7 +929,6 @@ body.page-subcategory #piece-detail-images figure img {
 }
 
 /* close buttons */
-#lightbox-close,
 #portfolio-lb-close {
   position: absolute;
   top: 20px;
@@ -941,7 +944,6 @@ body.page-subcategory #piece-detail-images figure img {
   z-index: 10;
 }
 
-#lightbox-close:hover,
 #portfolio-lb-close:hover {
   color: #fff;
 }
@@ -1379,35 +1381,6 @@ body.page-subcategory #piece-detail-images figure img {
 }
 
 /* ── Expand toggle button ────────────────────────────────── */
-#piece-expand-btn {
-  position: fixed;
-  bottom: 24px;
-  right: 40px;
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
-  text-shadow: 0 1px 6px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.9);
-  transition: color 0.2s ease, opacity 0.3s ease;
-  white-space: nowrap;
-}
-
-#piece-expand-btn:hover { color: rgba(255, 255, 255, 1); }
-
-/* Hide on landscape — already full width */
-#piece-hero.hero-landscape ~ #piece-expand-btn,
-body.piece-expanded #piece-hero.hero-landscape + * #piece-expand-btn { display: none; }
-
-.expand-compress { display: none; }
-.expand-expand   { display: flex; align-items: center; gap: 8px; }
-
-body.piece-expanded .expand-expand   { display: none; }
-body.piece-expanded .expand-compress { display: flex; align-items: center; gap: 8px; }
 
 /* ── Expanded image state ────────────────────────────────── */
 body.piece-expanded #piece-hero {
@@ -1700,6 +1673,20 @@ body.piece-expanded #piece-img {
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+/* Shop link — center */
+.footer-shop-link {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.32);
+  transition: color 0.2s ease;
+}
+
+.footer-shop-link:hover {
+  color: rgba(255, 255, 255, 0.72);
 }
 
 /* Social icons on the right */
@@ -1999,10 +1986,14 @@ body.piece-expanded #piece-img {
     aspect-ratio: 3 / 4;
   }
 
-  /* Comics-grid: 1 column on mobile */
+  /* Comics-grid: 2 columns on mobile */
   .slide-grid[data-layout="comics-grid"] {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(2, 1fr) !important;
     gap: 2px;
+  }
+
+  .slide-grid[data-layout="comics-grid"] .piece-card-media {
+    height: auto;
   }
 
   .slide-grid[data-layout="comics-grid"] .piece-card {
@@ -2012,7 +2003,7 @@ body.piece-expanded #piece-img {
   }
 
   .slide-grid[data-layout="comics-grid"] .piece-card:last-child:nth-child(odd) {
-    grid-column: 1;
+    grid-column: unset;
     aspect-ratio: 1 / 1;
   }
 
@@ -2056,8 +2047,6 @@ body.piece-expanded #piece-img {
     background: #000;
   }
 
-  /* Hide expand button on mobile — not needed */
-  #piece-expand-btn { display: none !important; }
 
   /* Piece detail: tighter padding */
   #piece-content { padding: 80px 20px 60px; }
