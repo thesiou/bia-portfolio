@@ -1713,6 +1713,8 @@ body.piece-expanded #piece-img {
   #site-footer,
   .slide-footer {
     padding: 24px 20px;
+    /* snap-scroll slides: footer must be a snap stop so it's reachable */
+    scroll-snap-align: start;
   }
 }
 
@@ -1904,9 +1906,10 @@ body.piece-expanded #piece-img {
 
   /* ── Portfolio grid → 1 column snap-scroll on mobile ─── */
 
-  /* Each slide scrolls vertically with snap */
+  /* Each slide scrolls vertically with snap; padding-bottom clears the fixed navbar */
   .slide {
     scroll-snap-type: y mandatory;
+    padding-bottom: 90px;
   }
 
   /* Animation + compact + pages + concept-hero + comics-grid: free scroll, no snap */
@@ -2120,8 +2123,8 @@ body.piece-expanded #piece-img {
 
 /* ── Disable hover effects on touch devices ─────────────── */
 @media (hover: none) {
-  .piece-card-overlay                         { opacity: 1; transform: translateY(0); }
+  /* Hide title overlay — visuals are enough on mobile */
+  .piece-card-overlay                         { opacity: 0; }
   .subcat-card:hover .subcat-img-wrap img    { transform: none; }
-  /* Title is always visible — no hover to trigger the reset */
   .piece-card-title                          { transform: translateY(0); }
 }
