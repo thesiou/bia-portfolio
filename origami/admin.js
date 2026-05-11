@@ -107,8 +107,6 @@ function showAuthenticated(username) {
   ui.authPanel.hidden = true;
   ui.editorPanel.hidden = false;
   ui.uploadPanel.hidden = false;
-  const siteTextPanel = document.getElementById('site-text-panel');
-  if (siteTextPanel) siteTextPanel.hidden = false;
 }
 
 function showLoggedOut() {
@@ -117,8 +115,6 @@ function showLoggedOut() {
   ui.authPanel.hidden = false;
   ui.editorPanel.hidden = true;
   ui.uploadPanel.hidden = true;
-  const siteTextPanel = document.getElementById('site-text-panel');
-  if (siteTextPanel) siteTextPanel.hidden = true;
 }
 
 function getByPath(root, path) {
@@ -398,8 +394,14 @@ function renderPieces() {
       ui.addDetailFileInput.click();
     });
 
+    node.dataset.dragIndex = String(index);
     renderDetailItems(detailsListEl, piece);
     ui.piecesList.appendChild(node);
+  });
+
+  initDragReorder(ui.piecesList, pieces, () => {
+    renderPieces();
+    updateChangeIndicator();
   });
 }
 
@@ -641,6 +643,49 @@ async function logout() {
   showLoggedOut();
 }
 
+function initDragReorder(containerEl, items, afterReorder) {
+  let draggedIdx = null;
+  const cards = Array.from(containerEl.querySelectorAll('[data-drag-index]'));
+
+  cards.forEach(card => {
+    const cardIdx = parseInt(card.dataset.dragIndex, 10);
+    const handle  = card.querySelector('.drag-handle');
+    if (!handle) return;
+
+    handle.setAttribute('draggable', 'true');
+
+    handle.addEventListener('dragstart', e => {
+      draggedIdx = cardIdx;
+      e.dataTransfer.effectAllowed = 'move';
+      requestAnimationFrame(() => card.classList.add('dragging'));
+    });
+
+    handle.addEventListener('dragend', () => {
+      cards.forEach(c => c.classList.remove('dragging', 'drag-over'));
+      draggedIdx = null;
+    });
+
+    card.addEventListener('dragover', e => {
+      if (draggedIdx === null || draggedIdx === cardIdx) return;
+      e.preventDefault();
+      cards.forEach(c => c.classList.remove('drag-over'));
+      card.classList.add('drag-over');
+    });
+
+    card.addEventListener('drop', e => {
+      e.preventDefault();
+      cards.forEach(c => c.classList.remove('drag-over', 'dragging'));
+      if (draggedIdx === null || draggedIdx === cardIdx) return;
+      const from = draggedIdx;
+      const to   = cardIdx;
+      const [moved] = items.splice(from, 1);
+      items.splice(from < to ? to - 1 : to, 0, moved);
+      draggedIdx = null;
+      afterReorder();
+    });
+  });
+}
+
 function renderSiteTextPanel() {
   if (!state.content) return;
 
@@ -705,10 +750,22 @@ function renderSiteTextPanel() {
   categories.forEach((cat, catIndex) => {
     const catItem = document.createElement('div');
     catItem.className = 'st-cat-item';
+    catItem.dataset.dragIndex = String(catIndex);
+
+    const catHeader = document.createElement('div');
+    catHeader.className = 'st-cat-header';
+
+    const dragHandle = document.createElement('span');
+    dragHandle.className = 'drag-handle';
+    dragHandle.title = 'Drag to reorder';
+    dragHandle.textContent = '⠿';
 
     const catLabel = document.createElement('span');
     catLabel.className = 'st-cat-label';
-    catLabel.textContent = `Category ${catIndex + 1}`;
+    catLabel.textContent = cat.title || `Category ${catIndex + 1}`;
+
+    catHeader.appendChild(dragHandle);
+    catHeader.appendChild(catLabel);
 
     const catInput = document.createElement('input');
     catInput.type = 'text';
@@ -716,10 +773,11 @@ function renderSiteTextPanel() {
     catInput.placeholder = `Category ${catIndex + 1} name`;
     catInput.addEventListener('input', () => {
       state.content.categories[catIndex].title = catInput.value;
+      catLabel.textContent = catInput.value || `Category ${catIndex + 1}`;
       updateChangeIndicator();
     });
 
-    catItem.appendChild(catLabel);
+    catItem.appendChild(catHeader);
     catItem.appendChild(catInput);
 
     // Section titles (if any)
@@ -748,6 +806,15 @@ function renderSiteTextPanel() {
     }
 
     catsList.appendChild(catItem);
+  });
+
+  initDragReorder(catsList, state.content.categories, () => {
+    state.collections = collectPieceCollections(state.content);
+    state.activeCollectionId = state.collections[0]?.id || null;
+    renderCollectionSelect();
+    renderPieces();
+    renderSiteTextPanel();
+    updateChangeIndicator();
   });
 }
 

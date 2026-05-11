@@ -346,7 +346,24 @@ textarea {
   margin-top: 0.2rem;
 }
 
-/* Site text panel */
+/* Site text (inside editor panel as details) */
+.site-text-box {
+  border-color: var(--accent);
+  background: #f7f9f8;
+}
+
+.site-text-box > summary {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.site-text-inner {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+/* Site text fieldsets */
 .text-fieldset {
   border: 1px solid var(--line);
   border-radius: 12px;
@@ -366,12 +383,23 @@ textarea {
 .st-cat-item {
   display: grid;
   gap: 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.6rem 0.7rem;
+  background: #fff;
+  transition: box-shadow 0.15s;
+}
+
+.st-cat-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .st-cat-label {
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--muted);
+  color: var(--ink);
 }
 
 .st-section-item {
@@ -383,6 +411,33 @@ textarea {
 .st-section-label {
   font-size: 0.78rem;
   color: var(--muted);
+}
+
+/* Drag-to-reorder */
+.drag-handle {
+  cursor: grab;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0 0.15rem;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+[data-drag-index] {
+  transition: opacity 0.15s, box-shadow 0.15s;
+}
+
+[data-drag-index].dragging {
+  opacity: 0.35;
+}
+
+[data-drag-index].drag-over {
+  box-shadow: 0 -3px 0 var(--accent), 0 0 0 1px var(--line);
 }
 
 .advanced-box {

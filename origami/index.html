@@ -6,7 +6,7 @@
   <title>Origami Admin</title>
   <meta name="robots" content="noindex,nofollow" />
   <link rel="icon" type="image/png" href="../favicon.png" />
-  <link rel="stylesheet" href="admin.css?v=20260511-1" />
+  <link rel="stylesheet" href="admin.css?v=20260511-3" />
 </head>
 <body>
   <main class="admin-shell">
@@ -40,6 +40,61 @@
       <p id="change-indicator" class="change-indicator up-to-date" role="status">Up to date</p>
       <p id="editor-status" class="status" role="status"></p>
 
+      <details class="advanced-box site-text-box" id="site-text-panel">
+        <summary>Site text &amp; social links</summary>
+
+        <div class="site-text-inner">
+          <fieldset class="text-fieldset">
+            <legend>Identity</legend>
+            <label>
+              Name <span class="field-hint">(shown in intro overlay)</span>
+              <input id="st-name" type="text" placeholder="e.g. Bianca Banu" />
+            </label>
+            <label>
+              Role / tagline <span class="field-hint">(shown below name in intro)</span>
+              <input id="st-role" type="text" placeholder="e.g. Character Design &amp; Illustration" />
+            </label>
+            <label>
+              Page title <span class="field-hint">(browser tab / SEO)</span>
+              <input id="st-page-title" type="text" placeholder="e.g. Portfolio — Lunaart / Bianca Banu" />
+            </label>
+            <label>
+              Meta description <span class="field-hint">(SEO / link previews)</span>
+              <input id="st-meta-desc" type="text" placeholder="Short description of the site" />
+            </label>
+          </fieldset>
+
+          <fieldset class="text-fieldset">
+            <legend>Social links &amp; footer</legend>
+            <label>
+              Instagram URL
+              <input id="st-instagram" type="url" placeholder="https://instagram.com/…" />
+            </label>
+            <label>
+              ArtStation URL
+              <input id="st-artstation" type="url" placeholder="https://artstation.com/…" />
+            </label>
+            <label>
+              Behance URL
+              <input id="st-behance" type="url" placeholder="https://behance.net/…" />
+            </label>
+            <label>
+              Linktree URL <span class="field-hint">(footer brand link)</span>
+              <input id="st-linktree" type="url" placeholder="https://linktr.ee/…" />
+            </label>
+            <label>
+              Shop URL <span class="field-hint">("Shop →" in footer)</span>
+              <input id="st-shop" type="url" placeholder="https://shop.lunaart.net" />
+            </label>
+          </fieldset>
+
+          <fieldset class="text-fieldset" id="st-categories-fieldset">
+            <legend>Category &amp; section labels</legend>
+            <div id="st-categories-list"></div>
+          </fieldset>
+        </div>
+      </details>
+
       <details class="advanced-box commit-box">
         <summary>Advanced: commit message</summary>
         <label class="commit-wrap">
@@ -48,62 +103,6 @@
       </details>
 
       <div id="pieces-list" class="pieces-list"></div>
-    </section>
-
-    <section id="site-text-panel" class="panel" hidden>
-      <h2>Site Text</h2>
-      <p class="muted" style="margin-bottom:1.2rem;">Edit the text that appears across the portfolio site — name, tagline, and category labels.</p>
-
-      <fieldset class="text-fieldset">
-        <legend>Identity</legend>
-        <label>
-          Name <span class="field-hint">(shown in intro overlay)</span>
-          <input id="st-name" type="text" placeholder="e.g. Bianca Banu" />
-        </label>
-        <label>
-          Role / tagline <span class="field-hint">(shown below name in intro)</span>
-          <input id="st-role" type="text" placeholder="e.g. Character Design &amp; Illustration" />
-        </label>
-        <label>
-          Page title <span class="field-hint">(browser tab / SEO)</span>
-          <input id="st-page-title" type="text" placeholder="e.g. Lunaart — Bianca Banu" />
-        </label>
-        <label>
-          Meta description <span class="field-hint">(SEO / link previews)</span>
-          <input id="st-meta-desc" type="text" placeholder="Short description of the site" />
-        </label>
-      </fieldset>
-
-      <fieldset class="text-fieldset">
-        <legend>Social links &amp; footer</legend>
-        <label>
-          Instagram URL
-          <input id="st-instagram" type="url" placeholder="https://instagram.com/…" />
-        </label>
-        <label>
-          ArtStation URL
-          <input id="st-artstation" type="url" placeholder="https://artstation.com/…" />
-        </label>
-        <label>
-          Behance URL
-          <input id="st-behance" type="url" placeholder="https://behance.net/…" />
-        </label>
-        <label>
-          Linktree URL <span class="field-hint">(used as footer brand link)</span>
-          <input id="st-linktree" type="url" placeholder="https://linktr.ee/…" />
-        </label>
-        <label>
-          Shop URL <span class="field-hint">(shown as "Shop →" in footer)</span>
-          <input id="st-shop" type="url" placeholder="https://shop.lunaart.net" />
-        </label>
-      </fieldset>
-
-      <fieldset class="text-fieldset" id="st-categories-fieldset">
-        <legend>Category &amp; section labels</legend>
-        <div id="st-categories-list"></div>
-      </fieldset>
-
-      <p class="muted" style="margin-top:1rem;font-size:0.8rem;">Changes are saved together with artwork edits when you click <strong>Save changes</strong> above.</p>
     </section>
 
     <section id="upload-panel" class="panel" hidden>
@@ -146,6 +145,7 @@
     <article class="piece-card">
       <div class="piece-head">
         <div class="piece-head-left">
+          <span class="drag-handle" title="Drag to reorder">⠿</span>
           <strong class="piece-index"></strong>
           <label class="check-line piece-active-wrap">
             <input class="piece-active" type="checkbox" checked />
@@ -213,6 +213,6 @@
   <input id="add-detail-file-input" type="file" hidden accept="image/*,video/*" />
   <input id="replace-image-file-input" type="file" hidden accept="image/*,video/*" />
 
-  <script src="admin.js?v=20260511-1"></script>
+  <script src="admin.js?v=20260511-3"></script>
 </body>
 </html>
