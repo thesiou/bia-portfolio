@@ -78,6 +78,15 @@
           ]
         },
         {
+          "active": true,
+          "title": "FX Practice",
+          "year": "May 2026",
+          "software": [],
+          "mainImage": "images/uploads/export-fx.mp4",
+          "description": "",
+          "detailImages": []
+        },
+        {
           "title": "Bakugo Music Animation",
           "year": "",
           "software": [
