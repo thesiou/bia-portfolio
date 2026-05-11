@@ -277,10 +277,19 @@
           "pieces": [
             {
               "active": true,
-              "title": "",
-              "year": "",
+              "title": "BKG Birthday Storyboards",
+              "year": "apr2026",
               "software": [],
-              "mainImage": "images/uploads/bkg-birthday_storyboards.webp",
+              "mainImage": "images/uploads/bkg-birthdayfin_.webp",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "active": true,
+              "title": "WoW Work ",
+              "year": "Apr 2026",
+              "software": [],
+              "mainImage": "images/uploads/detailed-sbsbasecolor.webp",
               "description": "",
               "detailImages": []
             },
