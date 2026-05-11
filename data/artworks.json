@@ -210,6 +210,15 @@
           "detailImages": []
         },
         {
+          "active": true,
+          "title": "MHA Fan Art Illustration",
+          "year": "May2026",
+          "software": [],
+          "mainImage": "images/uploads/dark_deku.webp",
+          "description": "",
+          "detailImages": []
+        },
+        {
           "title": "Izuku Midoriya Fan Art Illustration",
           "year": "Jan2026",
           "software": [
