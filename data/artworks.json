@@ -584,6 +584,15 @@
               "detailImages": []
             },
             {
+              "active": true,
+              "title": "",
+              "year": "",
+              "software": [],
+              "mainImage": "images/uploads/shortfin_jp.webp",
+              "description": "",
+              "detailImages": []
+            },
+            {
               "title": "",
               "year": "",
               "software": [
@@ -600,15 +609,6 @@
                 "Clip Studio Paint"
               ],
               "mainImage": "images/otherfunstuff/storyboards:comics/comics3.webp",
-              "description": "",
-              "detailImages": []
-            },
-            {
-              "active": true,
-              "title": "",
-              "year": "",
-              "software": [],
-              "mainImage": "images/uploads/shortfin_jp.webp",
               "description": "",
               "detailImages": []
             }
