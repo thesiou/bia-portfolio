@@ -402,14 +402,32 @@ textarea {
   color: var(--ink);
 }
 
+.st-sections-list {
+  margin-left: 0.8rem;
+  display: grid;
+  gap: 0.4rem;
+  border-left: 2px solid var(--line);
+  padding-left: 0.7rem;
+}
+
 .st-section-item {
-  margin-left: 1rem;
   display: grid;
   gap: 0.3rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 8px;
+  background: #f9f8f5;
+  border: 1px solid var(--line);
+}
+
+.st-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
 }
 
 .st-section-label {
   font-size: 0.78rem;
+  font-weight: 600;
   color: var(--muted);
 }
 

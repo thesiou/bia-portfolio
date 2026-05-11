@@ -781,14 +781,29 @@ function renderSiteTextPanel() {
     catItem.appendChild(catInput);
 
     // Section titles (if any)
-    if (Array.isArray(cat.sections)) {
+    if (Array.isArray(cat.sections) && cat.sections.length) {
+      const sectionsList = document.createElement('div');
+      sectionsList.className = 'st-sections-list';
+
       cat.sections.forEach((section, secIndex) => {
         const secItem = document.createElement('div');
         secItem.className = 'st-section-item';
+        secItem.dataset.dragIndex = String(secIndex);
+
+        const secHeader = document.createElement('div');
+        secHeader.className = 'st-section-header';
+
+        const secHandle = document.createElement('span');
+        secHandle.className = 'drag-handle';
+        secHandle.title = 'Drag to reorder';
+        secHandle.textContent = '⠿';
 
         const secLabel = document.createElement('span');
         secLabel.className = 'st-section-label';
-        secLabel.textContent = `Section ${secIndex + 1}`;
+        secLabel.textContent = section.title || `Section ${secIndex + 1}`;
+
+        secHeader.appendChild(secHandle);
+        secHeader.appendChild(secLabel);
 
         const secInput = document.createElement('input');
         secInput.type = 'text';
@@ -796,12 +811,24 @@ function renderSiteTextPanel() {
         secInput.placeholder = `Section ${secIndex + 1} name`;
         secInput.addEventListener('input', () => {
           state.content.categories[catIndex].sections[secIndex].title = secInput.value;
+          secLabel.textContent = secInput.value || `Section ${secIndex + 1}`;
           updateChangeIndicator();
         });
 
-        secItem.appendChild(secLabel);
+        secItem.appendChild(secHeader);
         secItem.appendChild(secInput);
-        catItem.appendChild(secItem);
+        sectionsList.appendChild(secItem);
+      });
+
+      catItem.appendChild(sectionsList);
+
+      initDragReorder(sectionsList, cat.sections, () => {
+        state.collections = collectPieceCollections(state.content);
+        state.activeCollectionId = state.collections[0]?.id || null;
+        renderCollectionSelect();
+        renderPieces();
+        renderSiteTextPanel();
+        updateChangeIndicator();
       });
     }
 
