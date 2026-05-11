@@ -42,6 +42,15 @@
           "mainImage": "images/uploads/demonsterart.webp",
           "description": "",
           "detailImages": []
+        },
+        {
+          "active": true,
+          "title": "Zee",
+          "year": "2025",
+          "software": [],
+          "mainImage": "images/uploads/lumioncovervol01_02mark.webp",
+          "description": "from 'Z Axis' My Manga Work ",
+          "detailImages": []
         }
       ]
     },
