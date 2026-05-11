@@ -84,7 +84,12 @@
           "software": [],
           "mainImage": "images/uploads/export-fx.mp4",
           "description": "",
-          "detailImages": []
+          "detailImages": [
+            {
+              "src": "images/uploads/1005anitl.mp4",
+              "caption": "Timelapse"
+            }
+          ]
         },
         {
           "title": "Bakugo Music Animation",
