@@ -277,6 +277,15 @@
           "pieces": [
             {
               "active": true,
+              "title": "Dynamys Storyboards",
+              "year": "May2026",
+              "software": [],
+              "mainImage": "images/uploads/3526fin.webp",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "active": true,
               "title": "Illustration Manga",
               "year": "April 2026",
               "software": [],
@@ -308,6 +317,15 @@
               "year": "apr2026",
               "software": [],
               "mainImage": "images/uploads/bkg-birthdayfin_.webp",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "active": true,
+              "title": "Storyboards (color) for IG Shortcomic",
+              "year": "April 2026",
+              "software": [],
+              "mainImage": "images/uploads/2904fin.webp",
               "description": "",
               "detailImages": []
             },
