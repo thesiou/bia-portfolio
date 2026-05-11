@@ -107,6 +107,8 @@ function showAuthenticated(username) {
   ui.authPanel.hidden = true;
   ui.editorPanel.hidden = false;
   ui.uploadPanel.hidden = false;
+  const siteTextPanel = document.getElementById('site-text-panel');
+  if (siteTextPanel) siteTextPanel.hidden = false;
 }
 
 function showLoggedOut() {
@@ -115,6 +117,8 @@ function showLoggedOut() {
   ui.authPanel.hidden = false;
   ui.editorPanel.hidden = true;
   ui.uploadPanel.hidden = true;
+  const siteTextPanel = document.getElementById('site-text-panel');
+  if (siteTextPanel) siteTextPanel.hidden = true;
 }
 
 function getByPath(root, path) {
@@ -421,6 +425,7 @@ async function loadContent() {
 
   renderCollectionSelect();
   renderPieces();
+  renderSiteTextPanel();
   updateChangeIndicator();
   setEditorStatus('Loaded latest content from GitHub.');
 }
@@ -634,6 +639,116 @@ async function refreshSessionAndBoot() {
 async function logout() {
   try { await api('/auth/logout', { method: 'POST' }); } catch {}
   showLoggedOut();
+}
+
+function renderSiteTextPanel() {
+  if (!state.content) return;
+
+  const siteText = state.content.siteText || {};
+  const categories = state.content.categories || [];
+
+  // Ensure siteText exists on content
+  if (!state.content.siteText) state.content.siteText = {};
+
+  const social = siteText.social || {};
+  if (!state.content.siteText.social) state.content.siteText.social = {};
+
+  const nameEl      = document.getElementById('st-name');
+  const roleEl      = document.getElementById('st-role');
+  const titleEl     = document.getElementById('st-page-title');
+  const metaEl      = document.getElementById('st-meta-desc');
+  const igEl        = document.getElementById('st-instagram');
+  const asEl        = document.getElementById('st-artstation');
+  const beEl        = document.getElementById('st-behance');
+  const ltEl        = document.getElementById('st-linktree');
+  const shopEl      = document.getElementById('st-shop');
+  const catsList    = document.getElementById('st-categories-list');
+
+  if (nameEl)  nameEl.value  = siteText.name  || '';
+  if (roleEl)  roleEl.value  = siteText.role  || '';
+  if (titleEl) titleEl.value = siteText.pageTitle || '';
+  if (metaEl)  metaEl.value  = siteText.metaDescription || '';
+  if (igEl)    igEl.value    = social.instagram  || '';
+  if (asEl)    asEl.value    = social.artstation || '';
+  if (beEl)    beEl.value    = social.behance    || '';
+  if (ltEl)    ltEl.value    = social.linktree   || '';
+  if (shopEl)  shopEl.value  = social.shop       || '';
+
+  function bindTextInput(el, key) {
+    if (!el) return;
+    el.addEventListener('input', () => {
+      state.content.siteText[key] = el.value;
+      updateChangeIndicator();
+    });
+  }
+  function bindSocialInput(el, key) {
+    if (!el) return;
+    el.addEventListener('input', () => {
+      state.content.siteText.social[key] = el.value;
+      updateChangeIndicator();
+    });
+  }
+  bindTextInput(nameEl,  'name');
+  bindTextInput(roleEl,  'role');
+  bindTextInput(titleEl, 'pageTitle');
+  bindTextInput(metaEl,  'metaDescription');
+  bindSocialInput(igEl,   'instagram');
+  bindSocialInput(asEl,   'artstation');
+  bindSocialInput(beEl,   'behance');
+  bindSocialInput(ltEl,   'linktree');
+  bindSocialInput(shopEl, 'shop');
+
+  // Category & section title editors
+  if (!catsList) return;
+  catsList.innerHTML = '';
+
+  categories.forEach((cat, catIndex) => {
+    const catItem = document.createElement('div');
+    catItem.className = 'st-cat-item';
+
+    const catLabel = document.createElement('span');
+    catLabel.className = 'st-cat-label';
+    catLabel.textContent = `Category ${catIndex + 1}`;
+
+    const catInput = document.createElement('input');
+    catInput.type = 'text';
+    catInput.value = cat.title || '';
+    catInput.placeholder = `Category ${catIndex + 1} name`;
+    catInput.addEventListener('input', () => {
+      state.content.categories[catIndex].title = catInput.value;
+      updateChangeIndicator();
+    });
+
+    catItem.appendChild(catLabel);
+    catItem.appendChild(catInput);
+
+    // Section titles (if any)
+    if (Array.isArray(cat.sections)) {
+      cat.sections.forEach((section, secIndex) => {
+        const secItem = document.createElement('div');
+        secItem.className = 'st-section-item';
+
+        const secLabel = document.createElement('span');
+        secLabel.className = 'st-section-label';
+        secLabel.textContent = `Section ${secIndex + 1}`;
+
+        const secInput = document.createElement('input');
+        secInput.type = 'text';
+        secInput.value = section.title || '';
+        secInput.placeholder = `Section ${secIndex + 1} name`;
+        secInput.addEventListener('input', () => {
+          state.content.categories[catIndex].sections[secIndex].title = secInput.value;
+          updateChangeIndicator();
+        });
+
+        secItem.appendChild(secLabel);
+        secItem.appendChild(secInput);
+        catItem.appendChild(secItem);
+      });
+    }
+
+    catsList.appendChild(catItem);
+  });
 }
 
 function bindEvents() {

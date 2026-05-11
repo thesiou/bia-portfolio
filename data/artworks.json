@@ -1,5 +1,18 @@
 {
   "featuredImage": "images/loop_no_explo.mp4",
+  "siteText": {
+    "name": "Bianca Banu",
+    "role": "Character Design & Illustration",
+    "pageTitle": "Portfolio — Lunaart / Bianca Banu",
+    "metaDescription": "My portfolio: character design, visual storytelling, illustration and animation.",
+    "social": {
+      "instagram": "https://www.instagram.com/luna_being_productive",
+      "artstation": "https://www.artstation.com/lunaazx",
+      "behance": "https://www.behance.net/lunaarts",
+      "linktree": "https://linktr.ee/lunaarts",
+      "shop": "https://shop.lunaart.net"
+    }
+  },
   "categories": [
     {
       "id": "characters",

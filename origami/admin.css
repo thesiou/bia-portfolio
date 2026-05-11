@@ -346,6 +346,45 @@ textarea {
   margin-top: 0.2rem;
 }
 
+/* Site text panel */
+.text-fieldset {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.9rem 1rem 0.5rem;
+  margin: 0 0 1rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.text-fieldset legend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 0 0.3rem;
+}
+
+.st-cat-item {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.st-cat-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.st-section-item {
+  margin-left: 1rem;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.st-section-label {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
 .advanced-box {
   border: 1px dashed var(--line);
   border-radius: 10px;

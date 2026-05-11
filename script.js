@@ -85,6 +85,20 @@ function applyAspectClass(img, el, landscapeClass) {
    ============================================================ */
 if (isPortfolio) {
 
+  // Apply siteText from artworks.json (name, role, page title)
+  const siteText = window.ARTWORKS?.siteText || {};
+  if (siteText.name) {
+    const nameEl = document.getElementById('intro-name-text');
+    if (nameEl) nameEl.textContent = siteText.name;
+  }
+  if (siteText.role) {
+    const roleEl = document.getElementById('intro-name-role');
+    if (roleEl) roleEl.innerHTML = siteText.role;
+  }
+  if (siteText.pageTitle) {
+    document.title = siteText.pageTitle;
+  }
+
   let categories   = [];
   let currentIndex = 0;
   let isTransition = false;
@@ -364,28 +378,40 @@ if (isPortfolio) {
 
   // ── Build footer (injected into each slide) ──────────────
   function buildFooter() {
+    const st     = window.ARTWORKS?.siteText || {};
+    const social = st.social || {};
+    const name   = st.name || 'Bianca Banu';
+
     const footer = document.createElement('footer');
     footer.className = 'slide-footer';
+
+    const brandHref = social.linktree || social.instagram || '#';
+    let iconsHtml = '';
+    if (social.instagram) iconsHtml +=
+      `<a href="${esc(social.instagram)}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">` +
+        `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>` +
+      `</a>`;
+    if (social.artstation) iconsHtml +=
+      `<a href="${esc(social.artstation)}" target="_blank" rel="noopener noreferrer" aria-label="ArtStation">` +
+        `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20.5L12 3l10 17.5H2z"/><path d="M7 14h10"/></svg>` +
+      `</a>`;
+    if (social.behance) iconsHtml +=
+      `<a href="${esc(social.behance)}" target="_blank" rel="noopener noreferrer" aria-label="Behance">` +
+        `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h6a3.5 3.5 0 0 1 0 7H5V4z"/><path d="M5 11h7a4 4 0 0 1 0 8H5V11z"/><line x1="14.5" y1="7" x2="20" y2="7"/></svg>` +
+      `</a>`;
+    if (social.linktree) iconsHtml +=
+      `<a href="${esc(social.linktree)}" target="_blank" rel="noopener noreferrer" aria-label="Linktree">` +
+        `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>` +
+      `</a>`;
+
     footer.innerHTML =
-      `<a href="https://linktr.ee/lunaarts" target="_blank" rel="noopener noreferrer" class="footer-brand">` +
+      `<a href="${esc(brandHref)}" target="_blank" rel="noopener noreferrer" class="footer-brand">` +
         `<img src="logo.png" alt="" class="footer-brand-logo" aria-hidden="true" />` +
-        `<span class="footer-brand-name">Bianca Banu</span>` +
+        `<span class="footer-brand-name">${esc(name)}</span>` +
       `</a>` +
-      `<a href="https://shop.lunaart.net" target="_blank" rel="noopener noreferrer" class="footer-shop-link">Shop →</a>` +
-      `<div class="footer-icons">` +
-        `<a href="https://www.instagram.com/luna_being_productive" target="_blank" rel="noopener noreferrer" aria-label="Instagram">` +
-          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>` +
-        `</a>` +
-        `<a href="https://www.artstation.com/lunaazx" target="_blank" rel="noopener noreferrer" aria-label="ArtStation">` +
-          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20.5L12 3l10 17.5H2z"/><path d="M7 14h10"/></svg>` +
-        `</a>` +
-        `<a href="https://www.behance.net/lunaarts" target="_blank" rel="noopener noreferrer" aria-label="Behance">` +
-          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h6a3.5 3.5 0 0 1 0 7H5V4z"/><path d="M5 11h7a4 4 0 0 1 0 8H5V11z"/><line x1="14.5" y1="7" x2="20" y2="7"/></svg>` +
-        `</a>` +
-        `<a href="https://linktr.ee/lunaarts" target="_blank" rel="noopener noreferrer" aria-label="Linktree">` +
-          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>` +
-        `</a>` +
-      `</div>`;
+      (social.shop ? `<a href="${esc(social.shop)}" target="_blank" rel="noopener noreferrer" class="footer-shop-link">Shop →</a>` : '') +
+      (iconsHtml ? `<div class="footer-icons">${iconsHtml}</div>` : '');
+
     return footer;
   }
 
@@ -811,6 +837,41 @@ if (isPortfolio) {
    PIECE DETAIL PAGE
    ============================================================ */
 if (isPiece) {
+  // Populate footer from siteText
+  (() => {
+    const st     = window.ARTWORKS?.siteText || {};
+    const social = st.social || {};
+    const name   = st.name || 'Bianca Banu';
+    const footerEl = document.getElementById('site-footer');
+    if (!footerEl) return;
+
+    const brandHref = social.linktree || social.instagram || '#';
+    let iconsHtml = '';
+    if (social.instagram) iconsHtml +=
+      `<a href="${esc(social.instagram)}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">` +
+        `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>` +
+      `</a>`;
+    if (social.artstation) iconsHtml +=
+      `<a href="${esc(social.artstation)}" target="_blank" rel="noopener noreferrer" aria-label="ArtStation">` +
+        `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20.5L12 3l10 17.5H2z"/><path d="M7 14h10"/></svg>` +
+      `</a>`;
+    if (social.behance) iconsHtml +=
+      `<a href="${esc(social.behance)}" target="_blank" rel="noopener noreferrer" aria-label="Behance">` +
+        `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h6a3.5 3.5 0 0 1 0 7H5V4z"/><path d="M5 11h7a4 4 0 0 1 0 8H5V11z"/><line x1="14.5" y1="7" x2="20" y2="7"/></svg>` +
+      `</a>`;
+    if (social.linktree) iconsHtml +=
+      `<a href="${esc(social.linktree)}" target="_blank" rel="noopener noreferrer" aria-label="Linktree">` +
+        `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>` +
+      `</a>`;
+
+    footerEl.innerHTML =
+      `<a href="${esc(brandHref)}" target="_blank" rel="noopener noreferrer" class="footer-brand">` +
+        `<img src="logo.png" alt="" class="footer-brand-logo" aria-hidden="true" />` +
+        `<span class="footer-brand-name">${esc(name)}</span>` +
+      `</a>` +
+      (iconsHtml ? `<div class="footer-icons">${iconsHtml}</div>` : '');
+  })();
+
   const params     = new URLSearchParams(window.location.search);
   const catIndex   = parseInt(params.get('cat')   ?? '0', 10);
   const pieceIndex = parseInt(params.get('piece') ?? '0', 10);
@@ -875,7 +936,7 @@ if (isPiece) {
     if (!sub) {
       document.getElementById('piece-title').textContent = 'Not found.';
     } else {
-      document.title = `${sub.title} — Bianca Banu`;
+      document.title = `${sub.title} — ${window.ARTWORKS?.siteText?.name || 'Bianca Banu'}`;
       document.body.classList.add('page-subcategory');
 
       const backLink = document.getElementById('piece-back');
@@ -909,7 +970,7 @@ if (isPiece) {
   if (!piece || !isPieceActive(piece)) {
     document.getElementById('piece-title').textContent = 'Piece not found.';
   } else {
-    document.title = `${piece.title} — Bianca Banu`;
+    document.title = `${piece.title} — ${window.ARTWORKS?.siteText?.name || 'Bianca Banu'}`;
 
     const backLabel = document.getElementById('piece-back-label');
     if (backLabel) backLabel.textContent = 'Back';
