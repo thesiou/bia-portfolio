@@ -153,7 +153,7 @@
       "pieces": [
         {
           "title": "'Coffee Time' Illustration",
-          "year": "",
+          "year": "March 2026",
           "software": [
             "Clip Studio Paint"
           ],
@@ -185,7 +185,7 @@
         {
           "active": true,
           "title": "MHA Girls Fan Art Illustration ",
-          "year": "",
+          "year": "March-Apr 2026",
           "software": [],
           "mainImage": "images/uploads/mhagirlsfin2.webp",
           "description": "",
@@ -193,7 +193,7 @@
         },
         {
           "title": "Izuku Midoriya Fan Art Illustration",
-          "year": "",
+          "year": "Jan2026",
           "software": [
             "Clip Studio Paint"
           ],
@@ -220,7 +220,7 @@
         },
         {
           "title": "CSP Contest 45 Illustration",
-          "year": "",
+          "year": "Oct-Nov2025",
           "software": [
             "Clip Studio Paint"
           ],
@@ -231,7 +231,7 @@
         {
           "active": true,
           "title": "Ghost Deku and Wolf Katsuki Illustration",
-          "year": "",
+          "year": "Jan2026",
           "software": [],
           "mainImage": "images/uploads/19.02fin.webp",
           "description": "",
@@ -240,9 +240,18 @@
         {
           "active": true,
           "title": "",
-          "year": "",
+          "year": "Apr2026",
           "software": [],
           "mainImage": "images/uploads/0604finished.webp",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "active": true,
+          "title": "Ed and AL ",
+          "year": "March2026",
+          "software": [],
+          "mainImage": "images/uploads/illustrationfhdpage.webp",
           "description": "",
           "detailImages": []
         }
