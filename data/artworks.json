@@ -192,6 +192,24 @@
           "detailImages": []
         },
         {
+          "active": true,
+          "title": "Summertime MHA Fan Art Illustration",
+          "year": "April2026",
+          "software": [],
+          "mainImage": "images/uploads/crop1.webp",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "active": true,
+          "title": "",
+          "year": "Apr2026",
+          "software": [],
+          "mainImage": "images/uploads/0604finished.webp",
+          "description": "",
+          "detailImages": []
+        },
+        {
           "title": "Izuku Midoriya Fan Art Illustration",
           "year": "Jan2026",
           "software": [
@@ -239,16 +257,7 @@
         },
         {
           "active": true,
-          "title": "",
-          "year": "Apr2026",
-          "software": [],
-          "mainImage": "images/uploads/0604finished.webp",
-          "description": "",
-          "detailImages": []
-        },
-        {
-          "active": true,
-          "title": "Ed and AL ",
+          "title": "Ed and AL FMA Fan Art Illustration",
           "year": "March2026",
           "software": [],
           "mainImage": "images/uploads/illustrationfhdpage.webp",
