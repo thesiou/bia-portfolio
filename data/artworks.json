@@ -183,6 +183,15 @@
           ]
         },
         {
+          "active": true,
+          "title": "MHA Girls Fan Art Illustration ",
+          "year": "",
+          "software": [],
+          "mainImage": "images/uploads/mhagirlsfin2.webp",
+          "description": "",
+          "detailImages": []
+        },
+        {
           "title": "Izuku Midoriya Fan Art Illustration",
           "year": "",
           "software": [
@@ -225,15 +234,6 @@
           "year": "",
           "software": [],
           "mainImage": "images/uploads/19.02fin.webp",
-          "description": "",
-          "detailImages": []
-        },
-        {
-          "active": true,
-          "title": "Hawks Fan Art Illustration ",
-          "year": "",
-          "software": [],
-          "mainImage": "images/uploads/hawksfin3.webp",
           "description": "",
           "detailImages": []
         },
