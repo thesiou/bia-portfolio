@@ -277,6 +277,24 @@
           "pieces": [
             {
               "active": true,
+              "title": "Illustration Manga",
+              "year": "March 2026",
+              "software": [],
+              "mainImage": "images/uploads/citylife_as_pros-(1).webp",
+              "description": "",
+              "detailImages": [
+                {
+                  "src": "images/uploads/citylife_as_pros-(3).webp",
+                  "caption": ""
+                },
+                {
+                  "src": "images/uploads/bikezqq3.webp",
+                  "caption": ""
+                }
+              ]
+            },
+            {
+              "active": true,
               "title": "BKG Birthday Storyboards",
               "year": "apr2026",
               "software": [],
@@ -290,15 +308,6 @@
               "year": "Apr 2026",
               "software": [],
               "mainImage": "images/uploads/detailed-sbsbasecolor.webp",
-              "description": "",
-              "detailImages": []
-            },
-            {
-              "active": true,
-              "title": "",
-              "year": "",
-              "software": [],
-              "mainImage": "images/uploads/sketches.webp",
               "description": "",
               "detailImages": []
             },
@@ -387,18 +396,9 @@
               "title": "",
               "year": "",
               "software": [],
-              "mainImage": "images/uploads/citylife_as_pros-(1).webp",
+              "mainImage": "images/uploads/1604xport3.webp",
               "description": "",
-              "detailImages": [
-                {
-                  "src": "images/uploads/citylife_as_pros-(3).webp",
-                  "caption": ""
-                },
-                {
-                  "src": "images/uploads/bikezqq3.webp",
-                  "caption": ""
-                }
-              ]
+              "detailImages": []
             }
           ]
         },
