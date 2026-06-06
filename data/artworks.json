@@ -305,6 +305,15 @@
         },
         {
           "active": true,
+          "title": "",
+          "year": "",
+          "software": [],
+          "mainImage": "images/uploads/3526fin.webp",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "active": true,
           "title": "Summertime MHA Fan Art Illustration",
           "year": "April2026",
           "software": [],
