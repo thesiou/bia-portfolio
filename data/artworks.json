@@ -237,7 +237,20 @@
           "software": [],
           "mainImage": "images/uploads/16052fin01.webp",
           "description": "",
-          "detailImages": []
+          "detailImages": [
+            {
+              "src": "images/uploads/160522.webp",
+              "caption": ""
+            },
+            {
+              "src": "images/uploads/160522d.webp",
+              "caption": ""
+            },
+            {
+              "src": "images/uploads/illustrationcover2.webp",
+              "caption": ""
+            }
+          ]
         },
         {
           "active": true,
