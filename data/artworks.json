@@ -312,15 +312,6 @@
           "pieces": [
             {
               "active": true,
-              "title": "Dynamys Storyboards",
-              "year": "May2026",
-              "software": [],
-              "mainImage": "images/uploads/3526fin.webp",
-              "description": "",
-              "detailImages": []
-            },
-            {
-              "active": true,
               "title": "Illustration Manga",
               "year": "April 2026",
               "software": [],
@@ -374,6 +365,61 @@
               "detailImages": []
             },
             {
+              "active": true,
+              "title": "",
+              "year": "",
+              "software": [],
+              "mainImage": "images/uploads/more_002.webp",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "active": true,
+              "title": "",
+              "year": "",
+              "software": [],
+              "mainImage": "images/uploads/more_003.webp",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "active": true,
+              "title": "",
+              "year": "",
+              "software": [],
+              "mainImage": "images/uploads/more_005.webp",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "active": true,
+              "title": "",
+              "year": "",
+              "software": [],
+              "mainImage": "images/uploads/more_006.webp",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "active": true,
+              "title": "",
+              "year": "",
+              "software": [],
+              "mainImage": "images/uploads/more_004.webp",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "title": "",
+              "year": "",
+              "software": [
+                "Clip Studio Paint"
+              ],
+              "mainImage": "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (3).webp",
+              "description": "",
+              "detailImages": []
+            },
+            {
               "title": "",
               "year": "",
               "software": [
@@ -390,16 +436,6 @@
                 "Clip Studio Paint"
               ],
               "mainImage": "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (2).webp",
-              "description": "",
-              "detailImages": []
-            },
-            {
-              "title": "",
-              "year": "",
-              "software": [
-                "Clip Studio Paint"
-              ],
-              "mainImage": "images/otherfunstuff/storyboards:comics/latest manga work 2026 (in progress)/page (3).webp",
               "description": "",
               "detailImages": []
             },
