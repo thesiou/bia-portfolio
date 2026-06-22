@@ -355,7 +355,12 @@
           "software": [],
           "mainImage": "images/uploads/0606f.webp",
           "description": "",
-          "detailImages": []
+          "detailImages": [
+            {
+              "src": "images/uploads/0606.webp",
+              "caption": ""
+            }
+          ]
         },
         {
           "active": true,
