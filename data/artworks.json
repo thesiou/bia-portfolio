@@ -352,11 +352,11 @@
     },
     {
       "id": "comics-storyboards",
-      "title": "Comics & Storyboards",
+      "title": "Comics & Manga",
       "gridLayout": "compact",
       "sections": [
         {
-          "title": "Storyboards & Manga Illustration (2026) Finished and Work in Progress One-shot",
+          "title": " Manga/Comics (2026) & WIP Storyboards",
           "gridLayout": "pages",
           "pieces": [
             {
@@ -550,7 +550,7 @@
           ]
         },
         {
-          "title": "Manga Work 2025 (finished)",
+          "title": "2025",
           "gridLayout": "pages",
           "pieces": [
             {
@@ -703,7 +703,7 @@
     },
     {
       "id": "concepts",
-      "title": "Concepts",
+      "title": "Visual Development & Storyboards",
       "gridLayout": "concept-hero",
       "pieces": [
         {
