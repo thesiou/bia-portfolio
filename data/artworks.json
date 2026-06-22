@@ -361,6 +361,15 @@
           "pieces": [
             {
               "active": true,
+              "title": "",
+              "year": "",
+              "software": [],
+              "mainImage": "images/uploads/1306spiderversefinale.webp",
+              "description": "",
+              "detailImages": []
+            },
+            {
+              "active": true,
               "title": "Illustration Manga",
               "year": "April 2026",
               "software": [],
