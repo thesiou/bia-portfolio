@@ -85,16 +85,8 @@ function applyAspectClass(img, el, landscapeClass) {
    ============================================================ */
 if (isPortfolio) {
 
-  // Apply siteText from artworks.json (name, role, page title)
+  // Apply siteText from artworks.json (page title)
   const siteText = window.ARTWORKS?.siteText || {};
-  if (siteText.name) {
-    const nameEl = document.getElementById('intro-name-text');
-    if (nameEl) nameEl.textContent = siteText.name;
-  }
-  if (siteText.role) {
-    const roleEl = document.getElementById('intro-name-role');
-    if (roleEl) roleEl.innerHTML = siteText.role;
-  }
   if (siteText.pageTitle) {
     document.title = siteText.pageTitle;
   }
@@ -159,54 +151,6 @@ if (isPortfolio) {
     if (e.key === 'Escape' && lbEl?.classList.contains('open')) closePortfolioLightbox();
   });
 
-  // ── Intro overlay ─────────────────────────────────────────
-  (() => {
-    const overlay = document.getElementById('intro-overlay');
-    if (!overlay) return;
-    if (sessionStorage.getItem('introSeen')) {
-      overlay.style.display = 'none';
-      return;
-    }
-    sessionStorage.setItem('introSeen', '1');
-
-    const pieces = overlay.querySelectorAll('.intro-piece-inner');
-
-    // Pieces drift up and fade in, staggered
-    pieces.forEach((el, i) => {
-      setTimeout(() => {
-        el.style.opacity   = '1';
-        el.style.translate = '0 0';
-      }, 200 + i * 320);
-    });
-
-    // Auto-dismiss: wait for last piece to finish fading in, then hold
-    const lastPieceFinish = 200 + (pieces.length - 1) * 320 + 720;
-    const holdTime        = 800;
-
-    function dismissIntro() {
-      if (overlay.dataset.dismissed) return;
-      overlay.dataset.dismissed = '1';
-
-      // Stagger pieces out: drift up + fade
-      pieces.forEach((el, i) => {
-        setTimeout(() => {
-          el.style.opacity   = '0';
-          el.style.translate = '0 -20px';
-        }, i * 55);
-      });
-
-      // Once all pieces have started leaving, fade the overlay itself
-      const allStarted = (pieces.length - 1) * 55 + 180;
-      setTimeout(() => {
-        overlay.style.opacity = '0';
-        setTimeout(() => { overlay.style.display = 'none'; }, 500);
-      }, allStarted);
-    }
-
-    setTimeout(dismissIntro, lastPieceFinish + holdTime);
-    overlay.addEventListener('click', dismissIntro);
-  })();
-
   // ── Init ─────────────────────────────────────────────────
   (() => {
     categories = getCategories();
@@ -260,7 +204,11 @@ if (isPortfolio) {
     });
   }
 
+    const navEl = document.getElementById('portfolio-nav');
+    if (navEl) navEl.classList.add('nav-no-transition');
     updateUI();
+    requestAnimationFrame(() => { if (navEl) navEl.classList.remove('nav-no-transition'); });
+
     bindKeyboard();
     bindWheel();
     // Only bind touch swipe on non-touch devices — mobile uses chevron buttons
@@ -269,7 +217,6 @@ if (isPortfolio) {
     if (window.matchMedia('(hover: none)').matches) {
       initPieceDots();
       bindSlideScrollDots();
-      showSwipeHint();
     }
   })();
 
@@ -649,14 +596,22 @@ if (isPortfolio) {
       btn.className = 'nav-tab' + (i === currentIndex ? ' active' : '');
       btn.setAttribute('role', 'tab');
       btn.setAttribute('aria-selected', i === currentIndex ? 'true' : 'false');
-      btn.innerHTML = `<span>${esc(cat.title)}</span>`;
+      const displayTitle = cat.id === 'characters' ? 'Home' : cat.title;
+      btn.innerHTML = `<span>${esc(displayTitle)}</span>`;
       btn.addEventListener('click', () => goToSlide(i));
       container.appendChild(btn);
     });
   }
 
   // ── UI ────────────────────────────────────────────────────
-  function updateUI() { updateCounter(); updateTabs(); updateSideNav(); refreshPieceDots(); }
+  function updateUI() {
+    updateCounter();
+    updateTabs();
+    updateSideNav();
+    refreshPieceDots();
+    document.body.classList.toggle('on-home', currentIndex === 0);
+    document.getElementById('portfolio-nav')?.classList.toggle('nav-at-top', currentIndex !== 0);
+  }
 
   function updateCounter() {
     const el = document.getElementById('counter-current');
@@ -665,8 +620,10 @@ if (isPortfolio) {
 
   function updateTabs() {
     document.querySelectorAll('.nav-tab').forEach((tab, i) => {
-      tab.classList.toggle('active', i === currentIndex);
-      tab.setAttribute('aria-selected', i === currentIndex ? 'true' : 'false');
+      const isActive = i === currentIndex;
+      tab.classList.toggle('active', isActive);
+      tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      if (isActive) tab.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
     });
   }
 

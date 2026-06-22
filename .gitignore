@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Claude Code
+.claude/
+
+# Wrangler / Cloudflare
+.wrangler/
+**/wrangler.toml.bak
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+
+# Env / secrets
+.env
+.env.*
+*.local

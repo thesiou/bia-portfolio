@@ -54,129 +54,6 @@ a {
 }
 
 /* ============================================================
-   INTRO OVERLAY  (portfolio.html, first visit)
-   ============================================================ */
-
-#intro-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 500;
-  background: var(--bg);
-  overflow: hidden;
-  cursor: pointer;
-  opacity: 1;
-  transition: opacity 0.5s ease;
-}
-
-/* Individual pieces — positioned absolutely, rotated via inner wrapper */
-.intro-piece {
-  position: absolute;
-}
-
-.intro-piece-inner {
-  opacity: 0;
-  translate: 0 14px;
-  transition: opacity 0.65s ease, translate 0.72s cubic-bezier(0.22, 0.61, 0.36, 1);
-  box-shadow: 0 20px 100px rgba(0, 0, 0, 0.9), 0 6px 30px rgba(0, 0, 0, 0.7);
-}
-
-.intro-piece img,
-.intro-piece video {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/*
-  Desktop layout — five zones, no meaningful overlap:
-
-  [char · left]   [name · center]   [comics · right]
-  [illus · mid-left]               [char2 · mid-right]
-               [animation · bottom center]
-*/
-
-/* Piece 1 — animation (landscape ~16:9), bottom center */
-.intro-piece-1 {
-  width: clamp(440px, 62vw, 920px);
-  left: 50%;
-  bottom: 4%;
-  transform: translateX(-50%);
-  z-index: 2;
-}
-.intro-piece-1 .intro-piece-inner { transform: rotate(-1deg); }
-
-/* Piece 2 — character (portrait), upper left */
-.intro-piece-2 {
-  width: clamp(190px, 24vw, 360px);
-  left: 3%;
-  top: 5%;
-  z-index: 3;
-}
-.intro-piece-2 .intro-piece-inner { transform: rotate(-2.5deg); }
-
-/* Piece 3 — comics (portrait), upper right */
-.intro-piece-3 {
-  width: clamp(180px, 22vw, 340px);
-  right: 3%;
-  top: 5%;
-  z-index: 3;
-}
-.intro-piece-3 .intro-piece-inner { transform: rotate(2deg); }
-
-/* Piece 4 — illustration (landscape), mid left */
-.intro-piece-4 {
-  width: clamp(230px, 32vw, 480px);
-  left: 2%;
-  bottom: 22%;
-  z-index: 4;
-}
-.intro-piece-4 .intro-piece-inner { transform: rotate(1.5deg); }
-
-/* Piece 5 — character (portrait), mid right */
-.intro-piece-5 {
-  width: clamp(180px, 23vw, 350px);
-  right: 2%;
-  bottom: 22%;
-  z-index: 4;
-}
-.intro-piece-5 .intro-piece-inner { transform: rotate(-2deg); }
-
-/* ── Name + role — centred vertically between top pieces and animation */
-#intro-name {
-  position: absolute;
-  left: 50%;
-  top: 24%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 10;
-  pointer-events: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-#intro-name-text {
-  display: block;
-  font-size: clamp(3.2rem, 6.5vw, 6rem);
-  font-weight: 300;
-  letter-spacing: -0.02em;
-  color: rgba(255, 255, 255, 0.92);
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.6);
-  white-space: nowrap;
-}
-
-#intro-name-role {
-  display: block;
-  font-size: 0.65rem;
-  font-weight: 400;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
-  white-space: nowrap;
-}
-
-/* ============================================================
    PORTFOLIO PAGE
    ============================================================ */
 
@@ -186,31 +63,48 @@ a {
   overflow: hidden; /* carousel manages its own scroll */
 }
 
-/* ── Top navigation ──────────────────────────────────────── */
+/* ── Navigation pill ─────────────────────────────────────── */
 #portfolio-nav {
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  /* Center pill at 30% from bottom (70% from top), enlarged on home */
+  transform: translateX(-50%) translateY(calc(70dvh - 50%)) scale(1.2);
+  transition: transform 0.58s cubic-bezier(0.76, 0, 0.24, 1);
   z-index: 100;
   display: flex;
   align-items: center;
-  padding: 28px 36px;
+  gap: 2px;
+  padding: 6px 8px;
+  pointer-events: auto;
+  background: rgba(14, 14, 16, 0.45);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12);
+  white-space: nowrap;
+}
+
+/* Slide pill to top and shrink to normal size when on any non-Characters tab */
+#portfolio-nav.nav-at-top {
+  transform: translateX(-50%) translateY(20px) scale(1);
+}
+
+/* Suppress transition on initial page load (added/removed by JS) */
+#portfolio-nav.nav-no-transition {
+  transition: none !important;
+}
+
+/* Characters page: cards are decorative — no clicks, no hover state */
+body.on-home .slide[data-index="0"] .piece-card {
   pointer-events: none;
 }
-
-#nav-tabs {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  pointer-events: auto;
-}
-
-#portfolio-nav > * {
-  pointer-events: auto;
+body.on-home .slide[data-index="0"] .piece-card-overlay {
+  display: none;
 }
 
 #nav-home {
@@ -262,21 +156,9 @@ a {
   transition: color 0.2s ease, opacity 0.3s ease;
 }
 
-/* Desktop: fixed on screen edges */
+/* Desktop: arrows are redundant when tab names are directly clickable */
 @media (min-width: 769px) {
-  .side-nav {
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 100;
-    width: 44px;
-    height: 44px;
-    filter: drop-shadow(0 1px 4px rgba(0,0,0,1)) drop-shadow(0 0 16px rgba(0,0,0,0.8));
-  }
-  .side-nav:hover { color: rgba(255, 255, 255, 1); }
-  .side-nav:disabled { opacity: 0; pointer-events: none; }
-  #nav-prev { left: 12px; }
-  #nav-next { right: 12px; }
+  .side-nav { display: none; }
 }
 
 /* ── Category tabs ───────────────────────────────────────── */
@@ -287,12 +169,12 @@ a {
 }
 
 .nav-tab {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 400;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
-  padding: 6px 12px;
+  color: rgba(255, 255, 255, 0.72);
+  padding: 8px 16px;
   transition: color 0.2s ease, background 0.2s ease;
   white-space: nowrap;
 }
@@ -306,22 +188,20 @@ a {
   font-weight: 500;
 }
 
-/* Desktop: single pill wrapping all tabs */
+/* Desktop: tabs sit directly in the glass pill — no secondary background */
 @media (min-width: 769px) {
   #nav-tabs {
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 999px;
-    padding: 4px;
+    padding: 2px;
     gap: 0;
   }
   .nav-tab {
     border-radius: 999px;
   }
   .nav-tab:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.1);
   }
   .nav-tab.active {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.18);
   }
   .nav-tab-sep { display: none; }
 }
@@ -555,7 +435,6 @@ html::-webkit-scrollbar { display: none; }
   grid-template-columns: 1fr;
   grid-template-rows: auto;
   height: auto;
-  padding-top: 72px;
 }
 
 /* ~1.5 animations per viewport */
@@ -577,8 +456,7 @@ html::-webkit-scrollbar { display: none; }
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto;
   height: auto;
-  padding-top: 72px; /* clear fixed nav */
-  background: var(--bg); /* prevent gap colour showing in padding area */
+  background: var(--bg);
 }
 
 .slide-grid[data-layout="compact"] .piece-card {
@@ -616,7 +494,6 @@ html::-webkit-scrollbar { display: none; }
   grid-template-columns: repeat(5, minmax(0, 1fr));
   grid-template-rows: auto;
   height: auto;
-  padding-top: 72px;
   background: var(--bg);
 }
 
@@ -640,13 +517,12 @@ html::-webkit-scrollbar { display: none; }
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto;
   height: auto;
-  padding-top: 72px;
   background: var(--bg);
 }
 
 .slide-grid[data-layout="concept-hero"] .piece-card:first-child {
   grid-column: 1 / -1;
-  height: calc(100dvh - 72px);
+  height: 100dvh;
 }
 
 /* Secondary pieces: square cells, uncropped */
@@ -771,7 +647,7 @@ html::-webkit-scrollbar { display: none; }
 }
 
 .slide-section-label:first-child {
-  padding-top: 92px;
+  padding-top: 48px;
 }
 
 /* ── Subcategory cards (card design) ─────────────────────── */
@@ -1757,127 +1633,94 @@ body.piece-expanded #piece-img {
    ============================================================ */
 
 @media (max-width: 768px) {
-  /* Intro overlay: same five-zone logic scaled for narrow screens */
-
-  /* Animation — bottom center, nearly full width */
-  .intro-piece-1 {
-    width: 90vw;
-    left: 50%;
-    bottom: 6%;
-    transform: translateX(-50%);
-  }
-
-  /* Character — upper left */
-  .intro-piece-2 {
-    width: 44vw;
-    left: 3%;
-    top: 5%;
-    transform: none;
-  }
-
-  /* Comics — upper right */
-  .intro-piece-3 {
-    width: 42vw;
-    right: 3%;
-    top: 5%;
-    transform: none;
-  }
-
-  /* Illustration — mid left */
-  .intro-piece-4 {
-    width: 52vw;
-    left: 2%;
-    bottom: 26%;
-    transform: none;
-  }
-
-  /* Character 2 — mid right */
-  .intro-piece-5 {
-    width: 38vw;
-    right: 2%;
-    bottom: 26%;
-    transform: none;
-  }
-
-  /* Name — upper area */
-  #intro-name {
-    top: 22%;
-    transform: translate(-50%, -50%);
-  }
-
-  #intro-name-text {
-    font-size: clamp(2.6rem, 11vw, 3.8rem);
-  }
-
-  #intro-name-role {
-    font-size: 0.58rem;
-    letter-spacing: 0.18em;
-  }
-}
-
-@media (max-width: 768px) {
-  /* Portfolio nav: compact pill at bottom center */
-  #portfolio-nav {
+  /* Portfolio nav: full-width scrollable tab strip pinned to bottom */
+  #portfolio-nav,
+  #portfolio-nav.nav-at-top {
     top: auto;
-    bottom: max(20px, calc(env(safe-area-inset-bottom) + 8px));
-    left: 50%;
-    right: auto;
-    width: auto;
-    transform: translateX(-50%);
-    padding: 10px 16px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    transform: none;
+    transition: none;
+    border-radius: 0;
+    padding: 0;
+    padding-bottom: env(safe-area-inset-bottom);
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 24px;
+    align-items: stretch;
+    gap: 0;
+    background: rgba(14, 14, 16, 0.50);
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.25);
   }
 
-  /* Hide Bianca Banu on mobile */
-  #nav-home { display: none; }
+  /* Right-edge fade signals there are more tabs to scroll to */
+  #portfolio-nav::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 48px;
+    background: linear-gradient(to right, transparent, rgba(14, 14, 16, 0.50));
+    pointer-events: none;
+    z-index: 1;
+  }
 
-  /* Arrows slot into the pill — generous hit area */
-  .side-nav {
+  /* Scrollable tab row */
+  #nav-tabs {
     position: static;
     transform: none;
-    width: 44px;
-    height: 44px;
-    filter: none;
-    color: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0 4px;
+    gap: 0;
   }
 
-  #nav-prev { order: 1; }
-  #nav-tabs  { order: 2; }
-  #nav-next { order: 3; }
+  #nav-tabs::-webkit-scrollbar { display: none; }
 
-  .side-nav svg path { stroke-width: 2; }
+  /* Arrows not needed — direct tab tapping replaces them */
+  .side-nav { display: none; }
 
-  .side-nav:disabled { opacity: 0.2; }
-
-  /* Collapse inactive tabs to dots, active tab shows name */
+  /* Tabs: full labels in a scrollable row */
   .nav-tab-sep { display: none; }
-  .nav-tab span { display: none; }
+  .nav-tab span { display: inline; }
   .nav-tab {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    padding: 0;
-    background: rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    padding: 16px 18px;
+    background: none;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.5);
+    white-space: nowrap;
+    flex-shrink: 0;
+    border-bottom: 1.5px solid transparent;
+    transition: color 0.2s ease;
   }
+  .nav-tab:hover { background: none; }
   .nav-tab.active {
     width: auto;
     height: auto;
-    border-radius: 4px;
-    padding: 5px 12px;
+    border-radius: 0;
+    padding: 16px 18px;
     background: none;
-    color: rgba(255, 255, 255, 1);
+    color: rgba(255, 255, 255, 0.95);
     font-weight: 500;
+    border-bottom: 1.5px solid rgba(255, 255, 255, 0.6);
   }
-  .nav-tab.active span {
-    display: inline;
-  }
+  .nav-tab.active span { display: inline; }
 
   .hero-info {
     padding: 32px 24px;
@@ -1932,18 +1775,12 @@ body.piece-expanded #piece-img {
     background: #000;
   }
 
-  /* Tabs: reset absolute centering, flex handles it */
-  #nav-tabs {
-    position: static;
-    transform: none;
-  }
-
   /* ── Portfolio grid → 1 column snap-scroll on mobile ─── */
 
-  /* Each slide scrolls vertically with snap; padding-bottom clears the fixed navbar */
+  /* Each slide scrolls vertically with snap; padding-bottom clears the tab strip */
   .slide {
     scroll-snap-type: y mandatory;
-    padding-bottom: 90px;
+    padding-bottom: calc(50px + env(safe-area-inset-bottom));
   }
 
   /* Animation + compact + pages + concept-hero + comics-grid: free scroll, no snap */
@@ -2130,7 +1967,7 @@ body.piece-expanded #piece-img {
   #swipe-hint {
     display: block;
     position: fixed;
-    bottom: calc(max(20px, env(safe-area-inset-bottom)) + 56px);
+    bottom: calc(56px + env(safe-area-inset-bottom) + 16px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 90;
