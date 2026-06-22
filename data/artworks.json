@@ -716,16 +716,6 @@
       "gridLayout": "concept-hero",
       "pieces": [
         {
-          "title": "",
-          "year": "",
-          "software": [
-            "Clip Studio Paint"
-          ],
-          "mainImage": "images/otherfunstuff/concepts/concept1.jpeg",
-          "description": "",
-          "detailImages": []
-        },
-        {
           "active": true,
           "title": "",
           "year": "",
@@ -740,7 +730,25 @@
           "software": [
             "Clip Studio Paint"
           ],
-          "mainImage": "images/otherfunstuff/concepts/bgs.jpeg",
+          "mainImage": "images/otherfunstuff/concepts/shop3.jpg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "active": true,
+          "title": "",
+          "year": "",
+          "software": [],
+          "mainImage": "images/uploads/bkg-birthdayfin_.webp",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "active": true,
+          "title": "",
+          "year": "",
+          "software": [],
+          "mainImage": "images/uploads/2904fin.webp",
           "description": "",
           "detailImages": []
         },
@@ -760,7 +768,25 @@
           "software": [
             "Clip Studio Paint"
           ],
-          "mainImage": "images/otherfunstuff/concepts/shop2.jpg",
+          "mainImage": "images/otherfunstuff/concepts/concept1.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "active": true,
+          "title": "",
+          "year": "",
+          "software": [],
+          "mainImage": "images/uploads/detailed-sbsfin.webp",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "active": true,
+          "title": "",
+          "year": "",
+          "software": [],
+          "mainImage": "images/uploads/n1_thumbnails2.webp",
           "description": "",
           "detailImages": []
         },
@@ -770,7 +796,17 @@
           "software": [
             "Clip Studio Paint"
           ],
-          "mainImage": "images/otherfunstuff/concepts/shop3.jpg",
+          "mainImage": "images/otherfunstuff/concepts/bgs.jpeg",
+          "description": "",
+          "detailImages": []
+        },
+        {
+          "title": "",
+          "year": "",
+          "software": [
+            "Clip Studio Paint"
+          ],
+          "mainImage": "images/otherfunstuff/concepts/shop2.jpg",
           "description": "",
           "detailImages": []
         }
